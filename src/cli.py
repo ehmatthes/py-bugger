@@ -18,7 +18,7 @@ def parse_cli_args():
     parser.add_argument(
         "--target-dir",
         type=str,
-        help="What code directory to target."
+        help="What code directory to target. (Be careful when using this arg!)"
     )
 
     args = parser.parse_args()
