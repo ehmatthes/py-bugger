@@ -49,8 +49,12 @@ def test_bare_call(tmp_path_factory, python_cmd, e2e_config):
     cmd = f"py-bugger"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
-    msg = "A bare py-bugger call makes no changes to your project.\nYou must be explicit about what kinds of errors you want to induce in the project."
-    assert msg in stdout    
+    # msg = "A bare py-bugger call makes no changes to your project.\nYou must be explicit about what kinds of errors you want to induce in the project."
+    # assert msg in stdout
+    path_reference_files = e2e_config.path_root / "tests" / "e2e_tests" / "reference_files"
+    path_bare_output = path_reference_files / "bare.txt"
+    assert stdout == path_bare_output.read_text()
+
 
     # Check that file is unchanged.
     assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
