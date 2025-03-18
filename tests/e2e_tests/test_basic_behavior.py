@@ -36,9 +36,11 @@ def test_bare_call(tmp_path_factory):
     subprocess.run(cmd_parts, check=True)
 
     # Make bare py-bugger call.
-    cmd = f"py-bugger {tmp_path.as_posix()}"
+    cmd = f"py-bugger"
     cmd_parts = shlex.split(cmd)
-    subprocess.run(cmd_parts)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    msg = "A bare py-bugger call makes no changes to your project.\nYou must be explicit about what kinds of errors you want to induce in the project."
+    assert msg in stdout    
 
     # Check that file is unchanged.
     assert filecmp.cmp(path_name_picker, path_dst)
