@@ -4,6 +4,7 @@ import random
 from pathlib import Path
 
 import cli
+import cli_messages
 
 
 class ImportModifier(cst.CSTTransformer):
@@ -33,6 +34,10 @@ def main():
 
     args = cli.parse_cli_args()
 
+    # Show message about bare `py-bugger` calls.
+    if not any([a for a in vars(args).values()]):
+        print(cli_messages.msg_bare_call)
+
     if args.exception_type == "ModuleNotFoundError":
         print("Introducing a ModuleNotFoundError...")
 
@@ -42,7 +47,7 @@ def main():
             assert path_project.exists()
         else:
             path_project = Path(os.getcwd())
-            
+
         py_files = path_project.glob("*.py")
         path = next(py_files)
 
