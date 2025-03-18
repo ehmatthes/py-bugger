@@ -14,7 +14,19 @@ import filecmp
 import pytest
 
 
-def test_bare_call(tmp_path_factory):
+# --- Fixtures ---
+
+@pytest.fixture(scope="session")
+def python_cmd():
+    """Return path to Python executable."""
+    path_root = Path(__file__).parents[2]
+    return path_root / ".venv" / "bin" / "python"
+
+
+# --- Test functions ---
+
+
+def test_bare_call(tmp_path_factory, python_cmd):
     """Test that bare py-bugger call does not modify file."""
 
     # Copy sample code to tmp dir.
@@ -30,8 +42,7 @@ def test_bare_call(tmp_path_factory):
     shutil.copyfile(path_name_picker, path_dst)
 
     # Run file, should raise no issues.
-    python_exe = path_root / ".venv" / "bin" / "python"
-    cmd = f"{python_exe} {path_dst.as_posix()}"
+    cmd = f"{python_cmd} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     subprocess.run(cmd_parts, check=True)
 
@@ -46,10 +57,9 @@ def test_bare_call(tmp_path_factory):
     assert filecmp.cmp(path_name_picker, path_dst)
 
 
-def test_help():
+def test_help(python_cmd):
     """Test output of `py-bugger --help`."""
     path_root = Path(__file__).parents[2]
-    python_exe = path_root / ".venv" / "bin" / "python"
     cmd = "py-bugger --help"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -61,7 +71,7 @@ def test_help():
     assert stdout == help_txt
 
 
-def test_modulenotfounderror(tmp_path_factory):
+def test_modulenotfounderror(tmp_path_factory, python_cmd):
     """py-bugger --exception-type ModuleNotFoundError"""
 
     # Copy sample code to tmp dir.
@@ -77,8 +87,7 @@ def test_modulenotfounderror(tmp_path_factory):
     shutil.copyfile(path_name_picker, path_dst)
 
     # Run file, should raise no issues.
-    python_exe = path_root / ".venv" / "bin" / "python"
-    cmd = f"{python_exe} {path_dst.as_posix()}"
+    cmd = f"{python_cmd} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     subprocess.run(cmd_parts, check=True)
 
@@ -88,7 +97,7 @@ def test_modulenotfounderror(tmp_path_factory):
     subprocess.run(cmd_parts)
 
     # Run file again, should raise ModuleNotFoundError.
-    cmd = f"{python_exe} {path_dst.as_posix()}"
+    cmd = f"{python_cmd} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
