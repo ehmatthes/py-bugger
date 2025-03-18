@@ -34,10 +34,15 @@ def test_modulenotfounderror(tmp_path_factory):
     cmd_parts = shlex.split(cmd)
     subprocess.run(cmd_parts, check=True)
 
+    # Run py-bugger against file.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
     cmd_parts = shlex.split(cmd)
     subprocess.run(cmd_parts)
 
+    # Run file again, should raise ModuleNotFoundError.
     cmd = f"{python_exe} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
-    subprocess.run(cmd_parts, check=True)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'name_picker.py", line 1, in <module>' in stderr
+    assert "ModuleNotFoundError: No module named" in stderr
