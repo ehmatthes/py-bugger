@@ -7,6 +7,8 @@
 
 from pathlib import Path
 import shutil
+import shlex
+import subprocess
 
 import pytest
 
@@ -26,5 +28,16 @@ def test_modulenotfounderror(tmp_path_factory):
     path_dst = tmp_path / path_name_picker.name
     shutil.copyfile(path_name_picker, path_dst)
 
-    
+    # Run file, should raise no issues.
+    python_exe = path_root / ".venv" / "bin" / "python"
+    cmd = f"{python_exe} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts, check=True)
 
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts)
+
+    cmd = f"{python_exe} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts, check=True)
