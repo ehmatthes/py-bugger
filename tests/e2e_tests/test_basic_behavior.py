@@ -9,8 +9,40 @@ from pathlib import Path
 import shutil
 import shlex
 import subprocess
+import filecmp
 
 import pytest
+
+
+def test_bare_call(tmp_path_factory):
+    """Test that bare py-bugger call does not modify file."""
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_root = Path(__file__).parents[2]
+    path_sample_code = path_root / "tests"/ "sample_code" / "sample_scripts"
+    path_name_picker = path_sample_code / "name_picker.py"
+    assert path_name_picker.exists()
+
+    path_dst = tmp_path / path_name_picker.name
+    shutil.copyfile(path_name_picker, path_dst)
+
+    # Run file, should raise no issues.
+    python_exe = path_root / ".venv" / "bin" / "python"
+    cmd = f"{python_exe} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts, check=True)
+
+    # Make bare py-bugger call.
+    cmd = f"py-bugger {tmp_path.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts)
+
+    # Check that file is unchanged.
+    assert filecmp.cmp(path_name_picker, path_dst)
+    
 
 
 def test_modulenotfounderror(tmp_path_factory):
