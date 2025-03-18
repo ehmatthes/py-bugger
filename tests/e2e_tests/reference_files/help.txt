@@ -1,0 +1,10 @@
+usage: py-bugger [-h] [-e EXCEPTION_TYPE] [--target-dir TARGET_DIR]
+
+Practice debugging, by intentionally introducing bugs into an existing codebase.
+
+options:
+  -h, --help            show this help message and exit
+  -e EXCEPTION_TYPE, --exception-type EXCEPTION_TYPE
+                        What kind of exception to induce.
+  --target-dir TARGET_DIR
+                        What code directory to target. (Be careful when using this arg!)

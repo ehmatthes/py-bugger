@@ -44,7 +44,21 @@ def test_bare_call(tmp_path_factory):
 
     # Check that file is unchanged.
     assert filecmp.cmp(path_name_picker, path_dst)
-    
+
+
+def test_help():
+    """Test output of `py-bugger --help`."""
+    path_root = Path(__file__).parents[2]
+    python_exe = path_root / ".venv" / "bin" / "python"
+    cmd = "py-bugger --help"
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    path_reference_files = path_root / "tests" / "e2e_tests" / "reference_files"
+    path_help_output = path_reference_files / "help.txt"
+    help_txt = path_help_output.read_text()
+
+    assert stdout == help_txt
 
 
 def test_modulenotfounderror(tmp_path_factory):
