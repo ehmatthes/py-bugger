@@ -22,24 +22,36 @@ def python_cmd():
     path_root = Path(__file__).parents[2]
     return path_root / ".venv" / "bin" / "python"
 
+@pytest.fixture(scope="session")
+def e2e_config():
+    """Resources useful to most tests."""
+    class Config:
+        path_root = Path(__file__).parents[2]
+        path_sample_code = path_root / "tests"/ "sample_code" / "sample_scripts"
+        path_name_picker = path_sample_code / "name_picker.py"
+
+    return Config()
+
+
 
 # --- Test functions ---
 
 
-def test_bare_call(tmp_path_factory, python_cmd):
+def test_bare_call(tmp_path_factory, python_cmd, e2e_config):
     """Test that bare py-bugger call does not modify file."""
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
+    # breakpoint()
 
-    path_root = Path(__file__).parents[2]
-    path_sample_code = path_root / "tests"/ "sample_code" / "sample_scripts"
-    path_name_picker = path_sample_code / "name_picker.py"
-    assert path_name_picker.exists()
+    # path_root = Path(__file__).parents[2]
+    # path_sample_code = path_root / "tests"/ "sample_code" / "sample_scripts"
+    # path_name_picker = path_sample_code / "name_picker.py"
+    # assert e2e_config.path_name_picker.exists()
 
-    path_dst = tmp_path / path_name_picker.name
-    shutil.copyfile(path_name_picker, path_dst)
+    path_dst = tmp_path / e2e_config.path_name_picker.name
+    shutil.copyfile(e2e_config.path_name_picker, path_dst)
 
     # Run file, should raise no issues.
     cmd = f"{python_cmd} {path_dst.as_posix()}"
@@ -54,7 +66,7 @@ def test_bare_call(tmp_path_factory, python_cmd):
     assert msg in stdout    
 
     # Check that file is unchanged.
-    assert filecmp.cmp(path_name_picker, path_dst)
+    assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
 
 
 def test_help(python_cmd):
