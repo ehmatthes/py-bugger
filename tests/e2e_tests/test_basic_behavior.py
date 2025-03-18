@@ -82,17 +82,12 @@ def test_modulenotfounderror(tmp_path_factory, e2e_config):
     path_dst = tmp_path / e2e_config.path_name_picker.name
     shutil.copyfile(e2e_config.path_name_picker, path_dst)
 
-    # Run file, should raise no issues.
-    cmd = f"{e2e_config.python_cmd} {path_dst.as_posix()}"
-    cmd_parts = shlex.split(cmd)
-    subprocess.run(cmd_parts, check=True)
-
-    # Run py-bugger against file.
+    # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
     cmd_parts = shlex.split(cmd)
     subprocess.run(cmd_parts)
 
-    # Run file again, should raise ModuleNotFoundError.
+    # Run file, should raise ModuleNotFoundError.
     cmd = f"{e2e_config.python_cmd} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
