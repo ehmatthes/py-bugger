@@ -14,6 +14,13 @@ def parse_cli_args():
         help="What kind of exception to induce.",
     )
 
+    # The --target-dir arg is useful for testing, and may be useful for end users as well.
+    parser.add_argument(
+        "--target-dir",
+        type=str,
+        help="What code directory to target."
+    )
+
     args = parser.parse_args()
 
     return args

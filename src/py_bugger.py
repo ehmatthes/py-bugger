@@ -37,7 +37,12 @@ def main():
         print("Introducing a ModuleNotFoundError...")
 
         # Get the first .py file in the project's root dir.
-        path_project = Path(os.getcwd())
+        if args.target_dir:
+            path_project = Path(args.target_dir)
+            assert path_project.exists()
+        else:
+            path_project = Path(os.getcwd())
+            
         py_files = path_project.glob("*.py")
         path = next(py_files)
 
