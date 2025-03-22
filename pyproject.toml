@@ -5,7 +5,7 @@ readme = "README.md"
 version = "0.1.0"
 requires-python = ">=3.9"
 
-dependencies = ["libcst"]
+dependencies = ["libcst", "click"]
 
 [project.optional-dependencies]
 dev = [
