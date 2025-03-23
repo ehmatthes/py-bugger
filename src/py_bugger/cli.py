@@ -2,7 +2,7 @@ import sys
 
 import click
 
-import py_bugger
+from py_bugger import py_bugger
 # import python_bugger.cli_messages as cli_messages
 from py_bugger import cli_messages
 
