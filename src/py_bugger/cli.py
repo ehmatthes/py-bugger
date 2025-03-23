@@ -1,6 +1,10 @@
+import sys
+
 import click
 
 import py_bugger
+# import python_bugger.cli_messages as cli_messages
+from py_bugger import cli_messages
 
 
 @click.command()
@@ -19,6 +23,7 @@ def cli(exception_type, target_dir):
     """CLI entrypoint for python-bugger."""
     if not exception_type:
         click.echo(cli_messages.msg_bare_call)
+        sys.exit()
 
     py_bugger.main(exception_type, target_dir)
 
