@@ -16,7 +16,7 @@ from py_bugger import cli_messages
 @click.option(
     "--target-dir",
     type=str,
-    help="What code directory to target. (Be careful when using this arg!)"
+    help="What code directory to target. (Be careful when using this arg!)",
 )
 def cli(exception_type, target_dir):
     """CLI entrypoint for python-bugger."""

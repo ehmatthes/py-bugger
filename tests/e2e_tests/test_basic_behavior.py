@@ -14,6 +14,7 @@ import os
 
 # --- Test functions ---
 
+
 def test_bare_call(tmp_path_factory, e2e_config):
     """Test that bare py-bugger call does not modify file."""
 
@@ -31,7 +32,9 @@ def test_bare_call(tmp_path_factory, e2e_config):
 
     # Verify output.
     path_bare_output = e2e_config.path_reference_files / "bare.txt"
-    assert stdout.replace("\r\n", "\n") == path_bare_output.read_text().replace("\r\n", "\n")
+    assert stdout.replace("\r\n", "\n") == path_bare_output.read_text().replace(
+        "\r\n", "\n"
+    )
 
     # Check that .py file is unchanged.
     assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
@@ -48,7 +51,9 @@ def test_help(e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True, env=env).stdout.decode()
 
     path_help_output = e2e_config.path_reference_files / "help.txt"
-    assert stdout.replace("\r\n", "\n") == path_help_output.read_text().replace("\r\n", "\n")
+    assert stdout.replace("\r\n", "\n") == path_help_output.read_text().replace(
+        "\r\n", "\n"
+    )
 
 
 def test_modulenotfounderror(tmp_path_factory, e2e_config):
