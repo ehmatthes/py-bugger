@@ -1,7 +1,7 @@
 Changelog: python-bugger
 ===
 
-0.1 - Proof of concept
+0.1 - Proof of concept (one exception type implemented)
 ---
 
 This series of releases will serve as a proof of concept for the project. If it continues to be interesting and useful to people, particularly people teaching Python, I'll continue to develop it.
