@@ -7,4 +7,5 @@ Options:
   -e, --exception-type TEXT  What kind of exception to induce.
   --target-dir TEXT          What code directory to target. (Be careful when
                              using this arg!)
+  -n, --num-bugs INTEGER     How many bugs to introduce.
   --help                     Show this message and exit.
