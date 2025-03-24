@@ -13,10 +13,14 @@ I'm aiming for a stable API, but that is not guaranteed until the 1.0 release. I
 #### External changes
 
 - Require `click`.
+- Includes a `--num-bugs` arg.
+- Modifies specified number of import nodes.
+- Randomly selects which relevant node to modify.
 
 #### Internal changes
 
 - CLI is built on `click`, rather than `argparse`.
+- Uses a random seed when `PY_BUGGER_RANDOM_SEED` env var is set, for testing.
 
 ### 0.1.0
 
