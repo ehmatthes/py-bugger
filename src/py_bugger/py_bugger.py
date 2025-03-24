@@ -26,7 +26,6 @@ class ImportModifier(cst.CSTTransformer):
         names = updated_node.names
 
         if original_node in self.nodes_to_break:
-            print("HERE")
             original_name = names[0].name.value
 
             # Remove one letter from the package name.
@@ -44,6 +43,10 @@ class ImportModifier(cst.CSTTransformer):
 
 
 def main(exception_type, target_dir, num_bugs):
+
+    # Set a random seed when testing.
+    if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
+        random.seed(int(seed))
 
     if exception_type == "ModuleNotFoundError":
         print("Introducing a ModuleNotFoundError...")
