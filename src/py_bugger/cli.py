@@ -31,4 +31,4 @@ def cli(exception_type, target_dir, num_bugs):
         click.echo(cli_messages.msg_bare_call)
         sys.exit()
 
-    py_bugger.main(exception_type, target_dir)
+    py_bugger.main(exception_type, target_dir, num_bugs)

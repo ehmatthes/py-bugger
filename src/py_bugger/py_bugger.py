@@ -7,8 +7,8 @@ from pathlib import Path
 class ImportModifier(cst.CSTTransformer):
     """Modify imports in the user's project."""
 
-    def __init__(self, num_errors=1):
-        self.num_errors = num_errors
+    def __init__(self, num_bugs=1):
+        self.num_bugs = num_bugs
         self.num_introduced = 0
 
     def leave_Import(self, original_node, updated_node):
@@ -18,7 +18,7 @@ class ImportModifier(cst.CSTTransformer):
         if names:
             original_name = names[0].name.value
 
-            if self.num_introduced < self.num_errors:
+            if self.num_introduced < self.num_bugs:
                 # Remove one letter from the package name.
                 chars = list(original_name)
                 char_remove = random.choice(chars)
@@ -37,7 +37,7 @@ class ImportModifier(cst.CSTTransformer):
         return updated_node
 
 
-def main(exception_type, target_dir):
+def main(exception_type, target_dir, num_bugs):
 
     if exception_type == "ModuleNotFoundError":
         print("Introducing a ModuleNotFoundError...")
@@ -57,7 +57,7 @@ def main(exception_type, target_dir):
         tree = cst.parse_module(source)
 
         # Modify user's code.
-        modified_tree = tree.visit(ImportModifier())
+        modified_tree = tree.visit(ImportModifier(num_bugs=num_bugs))
 
         # Rewrite user's code.
         path.write_text(modified_tree.code)
