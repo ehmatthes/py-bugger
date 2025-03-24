@@ -7,17 +7,27 @@ from pathlib import Path
 class ImportModifier(cst.CSTTransformer):
     """Modify imports in the user's project."""
 
+    def __init__(self, num_errors=1):
+        self.num_errors = num_errors
+        self.num_introduced = 0
+
     def leave_Import(self, original_node, updated_node):
         """Modify a direct `import <package>` statement."""
         names = updated_node.names
+
         if names:
             original_name = names[0].name.value
 
-            # Remove one letter from the package name.
-            chars = list(original_name)
-            char_remove = random.choice(chars)
-            chars.remove(char_remove)
-            new_name = "".join(chars)
+            if self.num_introduced < self.num_errors:
+                # Remove one letter from the package name.
+                chars = list(original_name)
+                char_remove = random.choice(chars)
+                chars.remove(char_remove)
+                new_name = "".join(chars)
+
+                self.num_introduced += 1
+            else:
+                new_name = original_name
 
             # Modify the node name.
             new_names = [cst.ImportAlias(name=cst.Name(new_name))]
