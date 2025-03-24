@@ -109,3 +109,33 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     # Read modified file; should have changed only one import statement.
     modified_source = path_dst.read_text()
     assert "import sys" in modified_source or "import os" in modified_source
+
+def test_two_bugs(tmp_path_factory, e2e_config):
+    """py-bugger --exception-type ModuleNotFoundError --num-bugs 2
+
+    Test that both import statements are modified.
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_dst = tmp_path / e2e_config.path_system_info.name
+    shutil.copyfile(e2e_config.path_system_info, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --num-bugs 2 --target-dir {tmp_path.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts)
+
+    # Run file, should raise ModuleNotFoundError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'system_info_script.py", line 3, in <module>' in stderr
+    assert "ModuleNotFoundError: No module named" in stderr
+
+    # Read modified file; should have changed both import statements.
+    modified_source = path_dst.read_text()
+    assert "import sys"  not in modified_source
+    assert "import os" not in modified_source
