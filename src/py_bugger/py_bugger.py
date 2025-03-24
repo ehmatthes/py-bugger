@@ -3,6 +3,8 @@ import os
 import random
 from pathlib import Path
 
+from py_bugger.utils import file_utils
+
 
 class ImportCollector(cst.CSTVisitor):
     """Visit all import nodes, without modifying."""
@@ -58,8 +60,10 @@ def main(exception_type, target_dir, num_bugs):
         else:
             path_project = Path(os.getcwd())
 
-        py_files = path_project.glob("*.py")
-        path = next(py_files)
+        # py_files = path_project.glob("*.py")
+        # path = next(py_files)
+        py_files = file_utils.get_py_files(path_project)
+        path = py_files[0]
 
         # Read user's code.
         source = path.read_text()
