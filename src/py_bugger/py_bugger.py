@@ -55,10 +55,6 @@ def main(exception_type, target_dir, num_bugs):
         random.seed(int(seed))
 
     # Get a list of .py files we can consider modifying.
-    if target_dir:
-        target_dir = Path(target_dir)
-    else:
-        target_dir = Path(os.getcwd())
     py_files = file_utils.get_py_files(target_dir)
 
     # Track bugs that are introduced.
