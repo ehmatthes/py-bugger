@@ -5,14 +5,19 @@ from py_bugger.utils import file_utils
 from py_bugger.utils import buggers
 
 
-def main(exception_type, target_dir, num_bugs):
+def main(exception_type, target_dir, target_file, num_bugs):
 
     # Set a random seed when testing.
     if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
         random.seed(int(seed))
 
     # Get a list of .py files we can consider modifying.
-    py_files = file_utils.get_py_files(target_dir)
+    if target_file:
+        # User requested a single target file.
+        py_files = [target_file]
+    else:
+        py_files = file_utils.get_py_files(target_dir)
+
 
     # Track how many bugs have been added.
     bugs_added = 0

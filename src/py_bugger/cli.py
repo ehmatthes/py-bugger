@@ -21,22 +21,33 @@ from py_bugger import cli_messages
     help="What code directory to target. (Be careful when using this arg!)",
 )
 @click.option(
+    "--target-file",
+    type=str,
+    help="Target a single .py file.",
+)
+@click.option(
     "--num-bugs",
     "-n",
     type=int,
     default=1,
     help="How many bugs to introduce.",
 )
-def cli(exception_type, target_dir, num_bugs):
+def cli(exception_type, target_dir, target_file, num_bugs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
     if not exception_type:
         click.echo(cli_messages.msg_bare_call)
         sys.exit()
 
-    # Make sure target_dir is a Path object, and set to cwd if empty.
-    target_dir = _set_target_dir(target_dir)
+    if target_dir and target_file:
+        click.echo("Target file overrides target dir. Please only pass one of these args.")
+        sys.exit()
 
-    py_bugger.main(exception_type, target_dir, num_bugs)
+    # Make sure we're passing appropriate Path objects.
+    target_dir = _set_target_dir(target_dir)
+    if target_file:
+        target_file = Path(target_file)
+
+    py_bugger.main(exception_type, target_dir, target_file, num_bugs)
 
 
 # --- Helper functions (move to a cli/utils.py module) ---
