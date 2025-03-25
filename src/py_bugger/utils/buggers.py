@@ -1,9 +1,7 @@
 """Utilities for introducing specific kinds of bugs."""
 
 import libcst as cst
-import os
 import random
-from pathlib import Path
 
 
 # --- CST classes ---
