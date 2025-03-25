@@ -21,6 +21,10 @@ I'm aiming for a stable API, but that is not guaranteed until the 1.0 release. I
 
 - CLI is built on `click`, rather than `argparse`.
 - Uses a random seed when `PY_BUGGER_RANDOM_SEED` env var is set, for testing.
+- Utils dir, with initial `file_utils.py` module.
+- Finds all .py files we can consider changing.
+    - If using Git, returns all tracked .py files not related to testing.
+    - If not using Git, returns all .py files not in venv, dist, build, or tests.
 
 ### 0.1.0
 
