@@ -248,3 +248,18 @@ def test_no_bugs(tmp_path_factory, e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     assert "Unable to introduce any of the requested bugs." in stdout
+
+def test_target_dir_and_file(tmp_path_factory, e2e_config):
+    """Test an invalid call including --target-dir and --target-file."""
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_dst = tmp_path / e2e_config.path_zero_imports.name
+    shutil.copyfile(e2e_config.path_zero_imports, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --target-file {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "Target file overrides target dir. Please only pass one of these args." in stdout
