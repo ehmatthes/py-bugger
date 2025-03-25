@@ -1,14 +1,12 @@
 Changelog: python-bugger
 ===
 
-0.1 - Proof of concept (one exception type implemented)
+0.2 - Much wider range of bugs possible
 ---
 
-This series of releases will serve as a proof of concept for the project. If it continues to be interesting and useful to people, particularly people teaching Python, I'll continue to develop it.
+Still only results in a `ModuleNotFoundError`, but creates a much wider range of bugs to induce that error. Also, much better overall structure for continued development.
 
-I'm aiming for a stable API, but that is not guaranteed until the 1.0 release. If you have feedback about usage, please open a [discussion](https://github.com/ehmatthes/py-bugger/discussions/new/choose) or an [issue](https://github.com/ehmatthes/py-bugger/issues/new/choose).
-
-### (Unreleased)
+### 0.2.0
 
 #### External changes
 
@@ -16,6 +14,7 @@ I'm aiming for a stable API, but that is not guaranteed until the 1.0 release. I
 - Includes a `--num-bugs` arg.
 - Modifies specified number of import nodes.
 - Randomly selects which relevant node to modify.
+- Reports level of success.
 
 #### Internal changes
 
@@ -25,6 +24,15 @@ I'm aiming for a stable API, but that is not guaranteed until the 1.0 release. I
 - Finds all .py files we can consider changing.
     - If using Git, returns all tracked .py files not related to testing.
     - If not using Git, returns all .py files not in venv, dist, build, or tests.
+- Catches `TypeError` if unable to make desired change; we can focus on these kinds of changes as the project evolves.
+
+
+0.1 - Proof of concept (one exception type implemented)
+---
+
+This series of releases will serve as a proof of concept for the project. If it continues to be interesting and useful to people, particularly people teaching Python, I'll continue to develop it.
+
+I'm aiming for a stable API, but that is not guaranteed until the 1.0 release. If you have feedback about usage, please open a [discussion](https://github.com/ehmatthes/py-bugger/discussions/new/choose) or an [issue](https://github.com/ehmatthes/py-bugger/issues/new/choose).
 
 ### 0.1.0
 
