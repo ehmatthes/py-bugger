@@ -29,6 +29,7 @@ def _get_py_files_git(target_dir):
     # Convert to path objects. Filter out any test-related files.
     py_files = [Path(f) for f in py_files]
     py_files = [pf for pf in py_files if "tests/" not in pf.as_posix()]
+    py_files = [pf for pf in py_files if pf.name != "conftest.py"]
 
     return py_files
 
@@ -41,5 +42,6 @@ def _get_py_files_non_git(target_dir):
         pf for pf in py_files
         if not any(ex_dir in pf.as_posix() for ex_dir in exclude_dirs)
     ]
+    py_files = [pf for pf in py_files if pf.name != "conftest.py"]
 
     return py_files
