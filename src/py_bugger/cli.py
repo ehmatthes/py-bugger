@@ -39,7 +39,9 @@ def cli(exception_type, target_dir, target_file, num_bugs):
         sys.exit()
 
     if target_dir and target_file:
-        click.echo("Target file overrides target dir. Please only pass one of these args.")
+        click.echo(
+            "Target file overrides target dir. Please only pass one of these args."
+        )
         sys.exit()
 
     # Make sure we're passing appropriate Path objects.

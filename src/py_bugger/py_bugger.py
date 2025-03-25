@@ -18,7 +18,6 @@ def main(exception_type, target_dir, target_file, num_bugs):
     else:
         py_files = file_utils.get_py_files(target_dir)
 
-
     # Track how many bugs have been added.
     bugs_added = 0
 
