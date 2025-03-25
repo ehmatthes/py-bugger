@@ -15,6 +15,8 @@ Still only results in a `ModuleNotFoundError`, but creates a much wider range of
 - Modifies specified number of import nodes.
 - Randomly selects which relevant node to modify.
 - Reports level of success.
+- Supports `--target-file` arg.
+- Better messaging when not including `--exception-type`.
 
 #### Internal changes
 
