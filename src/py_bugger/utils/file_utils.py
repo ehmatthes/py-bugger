@@ -25,9 +25,11 @@ def get_py_files(target_dir):
     # Project does not seem to be using Git. Return all .py files not in .venv, and
     # outside of any tests/ dir, build/ dir, or dist/ dir.
     py_files = target_dir.rglob("*.py")
-    py_files = [pf for pf in py_files if ".venv/" not in pf.as_posix()]
-    py_files = [pf for pf in py_files if "tests/" not in pf.as_posix()]
-    py_files = [pf for pf in py_files if "build/" not in pf.as_posix()]
-    py_files = [pf for pf in py_files if "dist/" not in pf.as_posix()]
+
+    exclude_dirs = [".venv/", "tests", "build/", "dist"]
+    py_files = [
+        pf for pf in py_files
+        if not any(ex_dir in pf.as_posix() for ex_dir in exclude_dirs)
+    ]
 
     return py_files
