@@ -19,4 +19,4 @@ def main(exception_type, target_dir, num_bugs):
     if exception_type == "ModuleNotFoundError":
         new_bugs_made = buggers.module_not_found_bugger(py_files, num_bugs)
 
-        # DEV: Logic here about success or failure.
+        assert new_bugs_made == num_bugs

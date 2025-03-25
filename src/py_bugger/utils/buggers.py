@@ -55,6 +55,31 @@ def module_not_found_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
+    paths_nodes = _get_paths_nodes_import(py_files)
+
+    # Select the set of nodes to modify. If num_bugs is greater than the number
+    # of nodes, just change each node.
+    num_changes = min(len(paths_nodes), num_bugs)
+    paths_nodes_modify = random.choices(paths_nodes, k=num_changes)
+
+    # Modify each relevant path.
+    for path, node in paths_nodes_modify:
+        source = path.read_text()
+        tree = cst.parse_module(source)
+
+        # Modify user's code.
+        modified_tree = tree.visit(ImportModifier(node))
+        path.write_text(modified_tree.code)
+        print(f"Added bug to: {path.as_posix()}")
+
+    return num_changes
+
+
+# --- Helper functions ---
+
+
+def _get_paths_nodes_import(py_files):
+    """Get all import-related nodes."""
     paths_nodes = []
     for path in py_files:
         source = path.read_text()
@@ -67,20 +92,4 @@ def module_not_found_bugger(py_files, num_bugs):
         for node in import_collector.import_nodes:
             paths_nodes.append((path, node))
 
-    # Select the set of nodes to modify. If num_bugs is greater than the number
-    # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), num_bugs)
-    paths_nodes = random.choices(paths_nodes, k=num_changes)
-
-    # Modify each relevant path.
-    for path, node in paths_nodes:
-        # breakpoint()
-        source = path.read_text()
-        tree = cst.parse_module(source)
-
-        # Modify user's code.
-        modified_tree = tree.visit(ImportModifier(node))
-        path.write_text(modified_tree.code)
-        print(f"Added bug to: {path.as_posix()}")
-
-    return num_changes
+    return paths_nodes
