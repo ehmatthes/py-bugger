@@ -166,6 +166,43 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     assert 'ten_imports.py", line 6, in <module>' in stderr
     assert "ModuleNotFoundError: No module named 'clendar'" in stderr
 
-    # Read modified file; should have changed both import statements.
+    # Read modified file; should have changed import statement.
     modified_source = path_dst.read_text()
     assert "import clendar" in modified_source
+
+
+def test_random_py_file_affected(tmp_path_factory, e2e_config):
+    """py-bugger --exception-type ModuleNotFoundError
+
+    Test that a random .py file is modified.
+    """
+    # Copy two sample scripts to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_dst_ten_imports = tmp_path / e2e_config.path_ten_imports.name
+    shutil.copyfile(e2e_config.path_ten_imports, path_dst_ten_imports)
+
+    path_dst_system_info = tmp_path / e2e_config.path_system_info.name
+    shutil.copyfile(e2e_config.path_system_info, path_dst_system_info)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    print(cmd)
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts)
+
+    # Run file, should raise ModuleNotFoundError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst_ten_imports.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'ten_imports.py", line 5, in <module>' in stderr
+    assert "ModuleNotFoundError: No module named 'diffib'" in stderr
+
+    # Read modified file; should have changed import statement.
+    modified_source = path_dst_ten_imports.read_text()
+    assert "import diffib" in modified_source
+
+    # Other file should not be changed.
+    assert filecmp.cmp(e2e_config.path_system_info, path_dst_system_info)
