@@ -55,14 +55,12 @@ def main(exception_type, target_dir, num_bugs):
 
         # Get the first .py file in the project's root dir.
         if target_dir:
-            path_project = Path(target_dir)
-            assert path_project.exists()
+            target_dir = Path(target_dir)
+            assert target_dir.exists()
         else:
-            path_project = Path(os.getcwd())
+            target_dir = Path(os.getcwd())
 
-        # py_files = path_project.glob("*.py")
-        # path = next(py_files)
-        py_files = file_utils.get_py_files(path_project)
+        py_files = file_utils.get_py_files(target_dir)
         path = py_files[0]
 
         # Read user's code.
@@ -72,7 +70,6 @@ def main(exception_type, target_dir, num_bugs):
         # Collect all import nodes.
         import_collector = ImportCollector()
         tree.visit(import_collector)
-        # breakpoint()
 
         nodes_to_break = random.choices(import_collector.import_nodes, k=num_bugs)
 
