@@ -54,6 +54,7 @@ def main(exception_type, target_dir, num_bugs):
     if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
         random.seed(int(seed))
 
+    # Get a list of .py files we can consider modifying.
     if target_dir:
         target_dir = Path(target_dir)
     else:
@@ -61,6 +62,8 @@ def main(exception_type, target_dir, num_bugs):
     py_files = file_utils.get_py_files(target_dir)
 
     # Track bugs that are introduced.
+    # For now, just a list of exceptions that are induced. May expand to a
+    # sequence of dataclass objects with more info about each bug?
     bugs_introduced = []
 
     if exception_type == "ModuleNotFoundError":
