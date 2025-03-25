@@ -8,6 +8,7 @@ import sys
 
 # --- Public functions ---
 
+
 def get_py_files(target_dir):
     """Get all the .py files we can consider modifying when introducing bugs."""
     path_git = target_dir / ".git"
@@ -18,6 +19,7 @@ def get_py_files(target_dir):
 
 
 # --- Helper functions ---
+
 
 def _get_py_files_git(target_dir):
     """Get all relevant .py files from a directory manage.py by Git."""
@@ -34,13 +36,15 @@ def _get_py_files_git(target_dir):
 
     return py_files
 
+
 def _get_py_files_non_git(target_dir):
     """Get all relevant .py files from a directory not managed by Git."""
     py_files = target_dir.rglob("*.py")
 
     exclude_dirs = [".venv/", "venv/", "tests/", "build/", "dist/"]
     py_files = [
-        pf for pf in py_files
+        pf
+        for pf in py_files
         if not any(ex_dir in pf.as_posix() for ex_dir in exclude_dirs)
     ]
     py_files = [pf for pf in py_files if pf.name != "conftest.py"]

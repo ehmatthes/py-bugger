@@ -110,6 +110,7 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     modified_source = path_dst.read_text()
     assert "import sys" in modified_source or "import os" in modified_source
 
+
 def test_two_bugs(tmp_path_factory, e2e_config):
     """py-bugger --exception-type ModuleNotFoundError --num-bugs 2
 
@@ -137,8 +138,9 @@ def test_two_bugs(tmp_path_factory, e2e_config):
 
     # Read modified file; should have changed both import statements.
     modified_source = path_dst.read_text()
-    assert "import sys"  not in modified_source
+    assert "import sys" not in modified_source
     assert "import os" not in modified_source
+
 
 def test_random_import_affected(tmp_path_factory, e2e_config):
     """py-bugger --exception-type ModuleNotFoundError

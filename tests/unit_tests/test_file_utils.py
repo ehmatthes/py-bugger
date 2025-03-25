@@ -25,9 +25,10 @@ def test_get_py_files_git():
     assert "test_basic_behavior.py" not in filenames
     assert "conftest.py" not in filenames
 
+
 def test_get_py_files_non_git(tmp_path_factory):
     """Test function for getting .py files from a dir not managed by Git."""
-    # Build a tmp dir with some files that should be gathered, and some that 
+    # Build a tmp dir with some files that should be gathered, and some that
     # should not.
     tmp_path = tmp_path_factory.mktemp("sample_non_git_dir")
 
