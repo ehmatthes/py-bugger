@@ -6,27 +6,37 @@ from pathlib import Path
 import sys
 
 
+# --- Public functions ---
+
 def get_py_files(target_dir):
     """Get all the .py files we can consider modifying when introducing bugs."""
-    path = target_dir / ".git"
-    using_git = path.exists()
+    path_git = target_dir / ".git"
+    if path_git.exists():
+        return _get_py_files_git(target_dir)
+    else:
+        return _get_py_files_non_git(target_dir)
 
-    if using_git:
-        cmd = 'git ls-files "*.py"'
-        cmd_parts = shlex.split(cmd)
-        py_files = subprocess.run(cmd_parts, capture_output=True).stdout.decode().strip().splitlines()
 
-        # Don't modify any test-related files.
-        py_files = [Path(f) for f in py_files]
-        py_files = [pf for pf in py_files if "tests/" not in pf.as_posix()]
+# --- Helper functions ---
 
-        return py_files
+def _get_py_files_git(target_dir):
+    """Get all relevant .py files from a directory manage.py by Git."""
+    cmd = 'git ls-files "*.py"'
+    cmd_parts = shlex.split(cmd)
+    output = subprocess.run(cmd_parts, capture_output=True)
+    py_files = output.stdout.decode().strip().splitlines()
 
-    # Project does not seem to be using Git. Return all .py files not in .venv, and
-    # outside of any tests/ dir, build/ dir, or dist/ dir.
+    # Convert to path objects. Filter out any test-related files.
+    py_files = [Path(f) for f in py_files]
+    py_files = [pf for pf in py_files if "tests/" not in pf.as_posix()]
+
+    return py_files
+
+def _get_py_files_non_git(target_dir):
+    """Get all relevant .py files from a directory not managed by Git."""
     py_files = target_dir.rglob("*.py")
 
-    exclude_dirs = [".venv/", "tests", "build/", "dist"]
+    exclude_dirs = [".venv/", "venv/", "tests/", "build/", "dist/"]
     py_files = [
         pf for pf in py_files
         if not any(ex_dir in pf.as_posix() for ex_dir in exclude_dirs)
