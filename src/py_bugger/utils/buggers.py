@@ -63,16 +63,26 @@ def module_not_found_bugger(py_files, num_bugs):
     paths_nodes_modify = random.choices(paths_nodes, k=num_changes)
 
     # Modify each relevant path.
+    bugs_added = 0
     for path, node in paths_nodes_modify:
         source = path.read_text()
         tree = cst.parse_module(source)
 
         # Modify user's code.
-        modified_tree = tree.visit(ImportModifier(node))
-        path.write_text(modified_tree.code)
-        print(f"Added bug to: {path.as_posix()}")
+        try:
+            modified_tree = tree.visit(ImportModifier(node))
+        except TypeError:
+            # DEV: Figure out which nodes are ending up here, and update
+            # modifier code to handle these nodes.
+            # For diagnostics, can run against Pillow with -n set to a
+            # really high number.
+            ...
+        else:
+            path.write_text(modified_tree.code)
+            print(f"Added bug to: {path.as_posix()}")
+            bugs_added += 1
 
-    return num_changes
+    return bugs_added
 
 
 # --- Helper functions ---
