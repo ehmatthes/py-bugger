@@ -30,6 +30,7 @@ def _get_py_files_git(target_dir):
     py_files = [Path(f) for f in py_files]
     py_files = [pf for pf in py_files if "tests/" not in pf.as_posix()]
     py_files = [pf for pf in py_files if pf.name != "conftest.py"]
+    py_files = [pf for pf in py_files if not pf.name.startswith("test_")]
 
     return py_files
 
@@ -43,5 +44,6 @@ def _get_py_files_non_git(target_dir):
         if not any(ex_dir in pf.as_posix() for ex_dir in exclude_dirs)
     ]
     py_files = [pf for pf in py_files if pf.name != "conftest.py"]
+    py_files = [pf for pf in py_files if not pf.name.startswith("test_")]
 
     return py_files
