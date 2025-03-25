@@ -35,7 +35,7 @@ from py_bugger import cli_messages
 def cli(exception_type, target_dir, target_file, num_bugs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
     if not exception_type:
-        click.echo(cli_messages.msg_bare_call)
+        click.echo(cli_messages.msg_exception_type_required)
         sys.exit()
 
     if target_dir and target_file:

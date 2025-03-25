@@ -15,8 +15,8 @@ import os
 # --- Test functions ---
 
 
-def test_bare_call(tmp_path_factory, e2e_config):
-    """Test that bare py-bugger call does not modify file."""
+def test_no_exception_type(tmp_path_factory, e2e_config):
+    """Test output for not passing --exception-type."""
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
@@ -31,10 +31,8 @@ def test_bare_call(tmp_path_factory, e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     # Verify output.
-    path_bare_output = e2e_config.path_reference_files / "bare.txt"
-    assert stdout.replace("\r\n", "\n") == path_bare_output.read_text().replace(
-        "\r\n", "\n"
-    )
+    path = e2e_config.path_reference_files / "no_exception_type.txt"
+    assert stdout.replace("\r\n", "\n") == path.read_text().replace("\r\n", "\n")
 
     # Check that .py file is unchanged.
     assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
