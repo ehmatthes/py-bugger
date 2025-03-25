@@ -6,6 +6,7 @@ import random
 
 # --- CST classes ---
 
+
 class ImportCollector(cst.CSTVisitor):
     """Visit all import nodes, without modifying."""
 
@@ -49,6 +50,7 @@ class ImportModifier(cst.CSTTransformer):
 
 
 ### --- *_bugger functions ---
+
 
 def module_not_found_bugger(py_files, num_bugs):
     """Induce a ModuleNotFoundError.

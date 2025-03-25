@@ -33,12 +33,13 @@ def cli(exception_type, target_dir, num_bugs):
         sys.exit()
 
     # Make sure target_dir is a Path object, and set to cwd if empty.
-    target_dir = _set_target_dir(target_dir)    
+    target_dir = _set_target_dir(target_dir)
 
     py_bugger.main(exception_type, target_dir, num_bugs)
 
 
 # --- Helper functions (move to a cli/utils.py module) ---
+
 
 def _set_target_dir(target_dir):
     """Set an appropriate target directory."""
