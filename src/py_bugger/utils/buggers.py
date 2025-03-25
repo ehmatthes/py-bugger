@@ -64,7 +64,6 @@ def module_not_found_bugger(py_files, num_bugs):
     # not returned as a number of bugs.
     bugs_introduced = []
 
-    # while py_files and bug_count < num_bugs:
     while py_files and len(bugs_introduced) < num_bugs:
         # Parse .py file.
         path = py_files.pop()
@@ -78,7 +77,6 @@ def module_not_found_bugger(py_files, num_bugs):
         if not import_collector.import_nodes:
             continue
 
-        # bugs_needed = num_bugs - bug_count
         bugs_needed = num_bugs - len(bugs_introduced)
         nodes_to_break = random.choices(import_collector.import_nodes, k=bugs_needed)
 
