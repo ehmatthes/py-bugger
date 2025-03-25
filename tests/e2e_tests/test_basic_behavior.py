@@ -215,6 +215,7 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     # Other file should not be changed.
     assert filecmp.cmp(e2e_config.path_system_info, path_dst_system_info)
 
+
 def test_unable_insert_all_bugs(tmp_path_factory, e2e_config):
     """Test for appropriate message when unable to generate all requested bugs."""
     # Copy sample code to tmp dir.
@@ -231,6 +232,7 @@ def test_unable_insert_all_bugs(tmp_path_factory, e2e_config):
 
     assert "Inserted 2 bugs." in stdout
     assert "Unable to introduce additional bugs of the requested type." in stdout
+
 
 def test_no_bugs(tmp_path_factory, e2e_config):
     """Test for appropriate message when unable to introduce any requested bugs."""
