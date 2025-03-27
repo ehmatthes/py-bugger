@@ -10,6 +10,7 @@ import shlex
 import subprocess
 import filecmp
 import os
+import sys
 
 
 # --- Test functions ---
@@ -311,6 +312,10 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
     cmd_parts = shlex.split(cmd)
+
+
+    output = subprocess.run(cmd_parts)
+    sys.exit()
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     assert "All requested bugs inserted." in stdout

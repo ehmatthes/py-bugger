@@ -44,6 +44,16 @@ class ImportModifier(cst.CSTTransformer):
 
         return updated_node
 
+class AttributeCollector(cst.CSTVisitor):
+    """Visit all attribute-releated nodes, without modifying."""
+
+    def __init__(self):
+        self.attribute_nodes = []
+
+    def visit_Attribute(self, node):
+        """Collect all import nodes."""
+        self.attribute_nodes.append(node)
+
 
 ### --- *_bugger functions ---
 
@@ -137,6 +147,22 @@ def _get_paths_nodes_import(py_files):
         tree.visit(import_collector)
 
         for node in import_collector.import_nodes:
+            paths_nodes.append((path, node))
+
+    return paths_nodes
+
+def _get_paths_nodes_attribute_error(py_files):
+    """Get all nodes representing attributes."""
+    paths_nodes = []
+    for path in py_files:
+        source = path.read_text()
+        tree = cst.parse_module(source)
+
+        # Collect all import nodes.
+        attribute_collector = AttributeCollector()
+        tree.visit(attribute_collector)
+
+        for node in attribute_collector.attribute_nodes:
             paths_nodes.append((path, node))
 
     return paths_nodes
