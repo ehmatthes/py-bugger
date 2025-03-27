@@ -26,6 +26,9 @@ def main(exception_type, target_dir, target_file, num_bugs):
     if exception_type == "ModuleNotFoundError":
         new_bugs_made = buggers.module_not_found_bugger(py_files, num_bugs)
         bugs_added += new_bugs_made
+    elif exception_type == "AttributeError":
+        new_bugs_made = buggers.attribute_error_bugger(py_files, num_bugs)
+        bugs_added += new_bugs_made
 
     # Show a final success/fail message.
     if bugs_added == num_bugs:
