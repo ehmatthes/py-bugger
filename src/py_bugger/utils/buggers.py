@@ -44,6 +44,7 @@ class ImportModifier(cst.CSTTransformer):
 
         return updated_node
 
+
 class AttributeCollector(cst.CSTVisitor):
     """Visit all attribute-releated nodes, without modifying."""
 
@@ -55,8 +56,34 @@ class AttributeCollector(cst.CSTVisitor):
         self.attribute_nodes.append(node)
 
 
-### --- *_bugger functions ---
+class AttributeModifier(cst.CSTTransformer):
+    """Modify attributes in the user's project."""
 
+    def __init__(self, node_to_break):
+        self.node_to_break = node_to_break
+
+    def leave_Attribute(self, original_node, updated_node):
+        """Modify an attribute name, to generate AttributeError."""
+        attr = updated_node.attr
+
+        if original_node.deep_equals(self.node_to_break):
+            original_identifier = attr.value
+
+            # Remove one letter from the attribute name.
+            chars = list(original_identifier)
+            char_remove = random.choice(chars)
+            chars.remove(char_remove)
+            new_identifier = "".join(chars)
+
+            # Modify the node name.
+            new_attr = cst.Name(new_identifier)
+
+            return updated_node.with_changes(attr=new_attr)
+
+        return updated_node
+
+
+### --- *_bugger functions ---
 
 def module_not_found_bugger(py_files, num_bugs):
     """Induce a ModuleNotFoundError.
@@ -102,7 +129,6 @@ def attribute_error_bugger(py_files, num_bugs):
     """
     # Find all relevant nodes.
     paths_nodes = _get_paths_nodes_attribute_error(py_files)
-    breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -117,7 +143,7 @@ def attribute_error_bugger(py_files, num_bugs):
 
         # Modify user's code.
         try:
-            modified_tree = tree.visit(ImportModifier(node))
+            modified_tree = tree.visit(AttributeModifier(node))
         except TypeError:
             # DEV: Figure out which nodes are ending up here, and update
             # modifier code to handle these nodes.
@@ -133,7 +159,6 @@ def attribute_error_bugger(py_files, num_bugs):
 
 
 # --- Helper functions ---
-
 
 def _get_paths_nodes_import(py_files):
     """Get all import-related nodes."""

@@ -313,9 +313,6 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
     cmd_parts = shlex.split(cmd)
 
-
-    output = subprocess.run(cmd_parts)
-    sys.exit()
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     assert "All requested bugs inserted." in stdout
@@ -325,5 +322,5 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'name_picker.py", line 1, in <module>' in stderr
-    assert "AttributeError: No module named" in stderr
+    assert 'name_picker.py", line 7, in <module>' in stderr
+    assert "AttributeError: 'str' object has no attribute 'tite'. Did you mean: 'title'?" in stderr
