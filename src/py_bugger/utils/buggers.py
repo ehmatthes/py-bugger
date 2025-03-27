@@ -84,6 +84,43 @@ def module_not_found_bugger(py_files, num_bugs):
 
     return bugs_added
 
+def attribute_error_bugger(py_files, num_bugs):
+    """Induce an AttributeError.
+
+    Returns:
+        Int: Number of bugs made.
+    """
+    # Find all relevant nodes.
+    paths_nodes = _get_paths_nodes_attribute_error(py_files)
+    breakpoint()
+
+    # Select the set of nodes to modify. If num_bugs is greater than the number
+    # of nodes, just change each node.
+    num_changes = min(len(paths_nodes), num_bugs)
+    paths_nodes_modify = random.choices(paths_nodes, k=num_changes)
+
+    # Modify each relevant path.
+    bugs_added = 0
+    for path, node in paths_nodes_modify:
+        source = path.read_text()
+        tree = cst.parse_module(source)
+
+        # Modify user's code.
+        try:
+            modified_tree = tree.visit(ImportModifier(node))
+        except TypeError:
+            # DEV: Figure out which nodes are ending up here, and update
+            # modifier code to handle these nodes.
+            # For diagnostics, can run against Pillow with -n set to a
+            # really high number.
+            ...
+        else:
+            path.write_text(modified_tree.code)
+            print(f"Added bug to: {path.as_posix()}")
+            bugs_added += 1
+
+    return bugs_added
+
 
 # --- Helper functions ---
 
