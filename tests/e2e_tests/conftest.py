@@ -33,6 +33,7 @@ def e2e_config():
         path_system_info = path_sample_scripts / "system_info_script.py"
         path_ten_imports = path_sample_scripts / "ten_imports.py"
         path_zero_imports = path_sample_scripts / "zero_imports.py"
+        path_dog = path_sample_scripts / "dog.py"
 
         # Python executable
         if sys.platform == "win32":

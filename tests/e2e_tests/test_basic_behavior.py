@@ -328,3 +328,33 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     # Make sure only one attribute was affected.
     modified_source = path_dst.read_text()
     assert "random.choice(names)" in modified_source
+
+def test_one_node_changed(tmp_path_factory, e2e_config):
+    """Test that only one node in a file is modified for identical nodes."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_dst = tmp_path / e2e_config.path_dog.name
+    shutil.copyfile(e2e_config.path_dog, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise AttributeError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'dog.py", line 9, in <module>' in stderr
+    assert "AttributeError: 'Dog' object has no attribute 'name'. Did you mean: 'nam'?" in stderr
+
+    # Make sure only one attribute was affected.
+    modified_source = path_dst.read_text()
+    assert "self.name" in modified_source
+    assert "self.nam" in modified_source
