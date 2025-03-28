@@ -19,7 +19,12 @@ class ImportCollector(cst.CSTVisitor):
 
 
 class ImportModifier(cst.CSTTransformer):
-    """Modify imports in the user's project."""
+    """Modify imports in the user's project.
+
+    Note: Each import should be unique, so there shouldn't be any need to track
+    whether a bug was introduced. node_to_break should only match one node in the
+    tree.
+    """
 
     def __init__(self, node_to_break):
         self.node_to_break = node_to_break
@@ -62,11 +67,16 @@ class AttributeModifier(cst.CSTTransformer):
     def __init__(self, node_to_break):
         self.node_to_break = node_to_break
 
+        # Each use of this class should only generate one bug. But multiple nodes
+        # can match node_to_break, so make sure we only modify one node.
+        self.bug_generated = False
+
     def leave_Attribute(self, original_node, updated_node):
         """Modify an attribute name, to generate AttributeError."""
         attr = updated_node.attr
 
-        if original_node.deep_equals(self.node_to_break):
+
+        if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
             original_identifier = attr.value
 
             # Remove one letter from the attribute name.
@@ -77,6 +87,8 @@ class AttributeModifier(cst.CSTTransformer):
 
             # Modify the node name.
             new_attr = cst.Name(new_identifier)
+
+            self.bug_generated = True
 
             return updated_node.with_changes(attr=new_attr)
 
