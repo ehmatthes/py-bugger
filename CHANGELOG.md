@@ -1,6 +1,17 @@
 Changelog: python-bugger
 ===
 
+0.3 - Multiple exception types targeted
+
+Can request more than one type of exception to be induced.
+
+### 0.3.0
+
+#### External changes
+
+- Support for `--exception-type AttributeError`.
+
+
 0.2 - Much wider range of bugs possible
 ---
 
