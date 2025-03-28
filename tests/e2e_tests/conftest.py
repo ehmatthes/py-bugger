@@ -34,6 +34,7 @@ def e2e_config():
         path_ten_imports = path_sample_scripts / "ten_imports.py"
         path_zero_imports = path_sample_scripts / "zero_imports.py"
         path_dog = path_sample_scripts / "dog.py"
+        path_identical_attributes = path_sample_scripts / "identical_attributes.py"
 
         # Python executable
         if sys.platform == "win32":

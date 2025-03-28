@@ -358,3 +358,34 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     modified_source = path_dst.read_text()
     assert "self.name" in modified_source
     assert "self.nam" in modified_source
+
+def test_random_node_changed(tmp_path_factory, e2e_config):
+    """Test that a random node in a file is modified if it has numerous identical nodes.
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_dst = tmp_path / e2e_config.path_identical_attributes.name
+    shutil.copyfile(e2e_config.path_identical_attributes, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise AttributeError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'identical_attributes.py", line 5, in <module>' in stderr
+    assert "AttributeError: module 'random' has no attribute 'choce'. Did you mean: 'choice'?" in stderr
+
+    # Make sure only one attribute was affected.
+    modified_source = path_dst.read_text()
+    assert "random.choce(" in modified_source
+    assert "random.choice(" in modified_source
