@@ -324,3 +324,7 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     assert "Traceback (most recent call last)" in stderr
     assert 'name_picker.py", line 7, in <module>' in stderr
     assert "AttributeError: 'str' object has no attribute 'tite'. Did you mean: 'title'?" in stderr
+
+    # Make sure only one attribute was affected.
+    modified_source = path_dst.read_text()
+    assert "random.choice(names)" in modified_source
