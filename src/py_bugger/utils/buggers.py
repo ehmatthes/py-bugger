@@ -6,29 +6,6 @@ import random
 
 # --- CST classes ---
 
-
-# class ImportCollector(cst.CSTVisitor):
-#     """Visit all import nodes, without modifying."""
-
-#     def __init__(self):
-#         self.import_nodes = []
-
-#     def visit_Import(self, node):
-#         """Collect all import nodes."""
-#         self.import_nodes.append(node)
-
-
-# class AttributeCollector(cst.CSTVisitor):
-#     """Visit all attribute-releated nodes, without modifying."""
-
-#     def __init__(self):
-#         self.attribute_nodes = []
-
-#     def visit_Attribute(self, node):
-#         """Collect all import nodes."""
-#         self.attribute_nodes.append(node)
-
-
 class NodeCollector(cst.CSTVisitor):
     """Collect all nodes of a specific kind."""
     
@@ -38,12 +15,9 @@ class NodeCollector(cst.CSTVisitor):
 
     def on_visit(self, node):
         """Visit each node, collecting nodes that match the node type."""
-        # if type(node) == self.node_type:
         if isinstance(node, self.node_type):
             self.collected_nodes.append(node)
         return True
-
-
 
 
 class ImportModifier(cst.CSTTransformer):
@@ -76,9 +50,6 @@ class ImportModifier(cst.CSTTransformer):
             return updated_node.with_changes(names=new_names)
 
         return updated_node
-
-
-
 
 
 class AttributeModifier(cst.CSTTransformer):
@@ -124,7 +95,8 @@ def module_not_found_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
-    paths_nodes = _get_paths_nodes_import(py_files)
+    # paths_nodes = _get_paths_nodes_import(py_files)
+    paths_nodes = _get_paths_nodes(py_files, node_type=cst.Import)
     # breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
@@ -161,7 +133,8 @@ def attribute_error_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
-    paths_nodes = _get_paths_nodes_attribute_error(py_files)
+    # paths_nodes = _get_paths_nodes_attribute_error(py_files)
+    paths_nodes = _get_paths_nodes(py_files, node_type=cst.Attribute)
     # breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
@@ -195,15 +168,14 @@ def attribute_error_bugger(py_files, num_bugs):
 
 # --- Helper functions ---
 
-def _get_paths_nodes_import(py_files):
-    """Get all import-related nodes."""
+def _get_paths_nodes(py_files, node_type):
+    """Get all nodes of given type."""
     paths_nodes = []
     for path in py_files:
         source = path.read_text()
         tree = cst.parse_module(source)
 
-        # Collect all import nodes.
-        node_collector = NodeCollector(node_type=cst.Import)
+        node_collector = NodeCollector(node_type=node_type)
         tree.visit(node_collector)
 
         for node in node_collector.collected_nodes:
@@ -211,20 +183,40 @@ def _get_paths_nodes_import(py_files):
 
     return paths_nodes
 
-def _get_paths_nodes_attribute_error(py_files):
-    """Get all nodes representing attributes."""
-    paths_nodes = []
-    for path in py_files:
-        source = path.read_text()
-        tree = cst.parse_module(source)
+# def _get_paths_nodes_import(py_files):
+#     """Get all import-related nodes."""
+#     paths_nodes = []
+#     for path in py_files:
+#         source = path.read_text()
+#         tree = cst.parse_module(source)
 
-        node_collector = NodeCollector(node_type=cst.Attribute)
-        tree.visit(node_collector)
+#         # Collect all import nodes.
+#         node_collector = NodeCollector(node_type=cst.Import)
+#         tree.visit(node_collector)
 
-        for node in node_collector.collected_nodes:
-            paths_nodes.append((path, node))
+#         for node in node_collector.collected_nodes:
+#             paths_nodes.append((path, node))
 
-    return paths_nodes
+#     return paths_nodes
+
+# def _get_paths_nodes_attribute_error(py_files):
+#     """Get all nodes representing attributes."""
+#     paths_nodes = []
+#     for path in py_files:
+#         source = path.read_text()
+#         tree = cst.parse_module(source)
+
+#         node_collector = NodeCollector(node_type=cst.Attribute)
+#         tree.visit(node_collector)
+
+#         for node in node_collector.collected_nodes:
+#             paths_nodes.append((path, node))
+
+#     return paths_nodes
+
+
+
+
 
 # def _count_nodes(path, node, node_type):
 #     """Count the number of nodes in path that match node.
