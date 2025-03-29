@@ -1,0 +1,22 @@
+Attribute(
+    value=Name(
+        value='random',
+        lpar=[],
+        rpar=[],
+    ),
+    attr=Name(
+        value='choice',
+        lpar=[],
+        rpar=[],
+    ),
+    dot=Dot(
+        whitespace_before=SimpleWhitespace(
+            value='',
+        ),
+        whitespace_after=SimpleWhitespace(
+            value='',
+        ),
+    ),
+    lpar=[],
+    rpar=[],
+)

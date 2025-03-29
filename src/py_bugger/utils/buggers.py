@@ -18,6 +18,31 @@ class ImportCollector(cst.CSTVisitor):
         self.import_nodes.append(node)
 
 
+class AttributeCollector(cst.CSTVisitor):
+    """Visit all attribute-releated nodes, without modifying."""
+
+    def __init__(self):
+        self.attribute_nodes = []
+
+    def visit_Attribute(self, node):
+        """Collect all import nodes."""
+        self.attribute_nodes.append(node)
+
+
+class NodeCollector(cst.CSTVisitor):
+    """Collect all nodes of a specific kind."""
+    
+    def __init__(self, node_type):
+        self.node_type = node_type
+        self.collected_nodes = []
+
+    def visit(self):
+        """Visit each node, collecting nodes that match the node type."""
+        ...
+
+
+
+
 class ImportModifier(cst.CSTTransformer):
     """Modify imports in the user's project.
 
@@ -50,15 +75,7 @@ class ImportModifier(cst.CSTTransformer):
         return updated_node
 
 
-class AttributeCollector(cst.CSTVisitor):
-    """Visit all attribute-releated nodes, without modifying."""
 
-    def __init__(self):
-        self.attribute_nodes = []
-
-    def visit_Attribute(self, node):
-        """Collect all import nodes."""
-        self.attribute_nodes.append(node)
 
 
 class AttributeModifier(cst.CSTTransformer):
@@ -105,6 +122,7 @@ def module_not_found_bugger(py_files, num_bugs):
     """
     # Find all relevant nodes.
     paths_nodes = _get_paths_nodes_import(py_files)
+    breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -141,6 +159,7 @@ def attribute_error_bugger(py_files, num_bugs):
     """
     # Find all relevant nodes.
     paths_nodes = _get_paths_nodes_attribute_error(py_files)
+    breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -150,6 +169,7 @@ def attribute_error_bugger(py_files, num_bugs):
     # Modify each relevant path.
     bugs_added = 0
     for path, node in paths_nodes_modify:
+        # breakpoint()
         source = path.read_text()
         tree = cst.parse_module(source)
 
@@ -203,3 +223,22 @@ def _get_paths_nodes_attribute_error(py_files):
             paths_nodes.append((path, node))
 
     return paths_nodes
+
+# def _count_nodes(path, node, node_type):
+#     """Count the number of nodes in path that match node.
+
+#     Useful when a file has multiple identical nodes, and we want to choose one.
+#     """
+#     source = path.read_text()
+#     tree = cst.parse_module(source)
+
+#     # Collect all relevant nodes.
+#     # DEV: Is there a way to inspect the caller?
+#     if node_type == "ModuleNotFoundError":
+#         ...
+#     elif node_type == "AttributeError":
+#         node_collector = AttributeCollector()
+
+#     tree.visit(node_collector)
+#     # Generalize those methods!
+#     # for node in node_collector.
