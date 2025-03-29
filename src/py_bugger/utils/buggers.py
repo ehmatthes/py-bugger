@@ -7,26 +7,26 @@ import random
 # --- CST classes ---
 
 
-class ImportCollector(cst.CSTVisitor):
-    """Visit all import nodes, without modifying."""
+# class ImportCollector(cst.CSTVisitor):
+#     """Visit all import nodes, without modifying."""
 
-    def __init__(self):
-        self.import_nodes = []
+#     def __init__(self):
+#         self.import_nodes = []
 
-    def visit_Import(self, node):
-        """Collect all import nodes."""
-        self.import_nodes.append(node)
+#     def visit_Import(self, node):
+#         """Collect all import nodes."""
+#         self.import_nodes.append(node)
 
 
-class AttributeCollector(cst.CSTVisitor):
-    """Visit all attribute-releated nodes, without modifying."""
+# class AttributeCollector(cst.CSTVisitor):
+#     """Visit all attribute-releated nodes, without modifying."""
 
-    def __init__(self):
-        self.attribute_nodes = []
+#     def __init__(self):
+#         self.attribute_nodes = []
 
-    def visit_Attribute(self, node):
-        """Collect all import nodes."""
-        self.attribute_nodes.append(node)
+#     def visit_Attribute(self, node):
+#         """Collect all import nodes."""
+#         self.attribute_nodes.append(node)
 
 
 class NodeCollector(cst.CSTVisitor):
@@ -203,24 +203,11 @@ def _get_paths_nodes_import(py_files):
         tree = cst.parse_module(source)
 
         # Collect all import nodes.
-        # import_collector = ImportCollector()
-        # tree.visit(import_collector)
-
-        # for node in import_collector.import_nodes:
-        #     paths_nodes.append((path, node))
-
-
-
         node_collector = NodeCollector(node_type=cst.Import)
         tree.visit(node_collector)
 
-        # breakpoint()
-
         for node in node_collector.collected_nodes:
             paths_nodes.append((path, node))
-
-
-
 
     return paths_nodes
 
@@ -231,11 +218,10 @@ def _get_paths_nodes_attribute_error(py_files):
         source = path.read_text()
         tree = cst.parse_module(source)
 
-        # Collect all import nodes.
-        attribute_collector = AttributeCollector()
-        tree.visit(attribute_collector)
+        node_collector = NodeCollector(node_type=cst.Attribute)
+        tree.visit(node_collector)
 
-        for node in attribute_collector.attribute_nodes:
+        for node in node_collector.collected_nodes:
             paths_nodes.append((path, node))
 
     return paths_nodes
