@@ -6,9 +6,10 @@ import random
 
 # --- CST classes ---
 
+
 class NodeCollector(cst.CSTVisitor):
     """Collect all nodes of a specific kind."""
-    
+
     def __init__(self, node_type):
         self.node_type = node_type
         self.collected_nodes = []
@@ -66,7 +67,6 @@ class AttributeModifier(cst.CSTTransformer):
         """Modify an attribute name, to generate AttributeError."""
         attr = updated_node.attr
 
-
         if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
             original_identifier = attr.value
 
@@ -87,6 +87,7 @@ class AttributeModifier(cst.CSTTransformer):
 
 
 ### --- *_bugger functions ---
+
 
 def module_not_found_bugger(py_files, num_bugs):
     """Induce a ModuleNotFoundError.
@@ -123,6 +124,7 @@ def module_not_found_bugger(py_files, num_bugs):
             bugs_added += 1
 
     return bugs_added
+
 
 def attribute_error_bugger(py_files, num_bugs):
     """Induce an AttributeError.
@@ -163,6 +165,7 @@ def attribute_error_bugger(py_files, num_bugs):
 
 # --- Helper functions ---
 
+
 def _get_paths_nodes(py_files, node_type):
     """Get all nodes of given type."""
     paths_nodes = []
@@ -177,9 +180,6 @@ def _get_paths_nodes(py_files, node_type):
             paths_nodes.append((path, node))
 
     return paths_nodes
-
-
-
 
 
 # def _count_nodes(path, node, node_type):

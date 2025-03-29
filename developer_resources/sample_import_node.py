@@ -2,7 +2,7 @@ Import(
     names=[
         ImportAlias(
             name=Name(
-                value='os',
+                value="os",
                 lpar=[],
                 rpar=[],
             ),
@@ -12,6 +12,6 @@ Import(
     ],
     semicolon=MaybeSentinel.DEFAULT,
     whitespace_after_import=SimpleWhitespace(
-        value=' ',
+        value=" ",
     ),
 )
