@@ -56,8 +56,12 @@ class ImportModifier(cst.CSTTransformer):
 class AttributeModifier(cst.CSTTransformer):
     """Modify attributes in the user's project."""
 
-    def __init__(self, node_to_break):
+    def __init__(self, node_to_break, node_index):
         self.node_to_break = node_to_break
+
+        # There may be identical nodes in the tree. node_index determines which to modify.
+        self.node_index = node_index
+        self.identical_nodes_visited = 0
 
         # Each use of this class should only generate one bug. But multiple nodes
         # can match node_to_break, so make sure we only modify one node.
@@ -68,6 +72,13 @@ class AttributeModifier(cst.CSTTransformer):
         attr = updated_node.attr
 
         if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
+
+            # If there are identical nodes and this isn't the right one, bump count
+            # and return unmodified node.
+            if self.identical_nodes_visited != self.node_index:
+                self.identical_nodes_visited += 1
+                return updated_node
+
             original_identifier = attr.value
 
             # Remove one letter from the attribute name.
@@ -148,11 +159,11 @@ def attribute_error_bugger(py_files, num_bugs):
 
         # Pick node to modify if more than one match in the file.
         node_count = _count_nodes(tree, cst.Attribute)
-        breakpoint()
+        node_index = random.randrange(0, node_count-1)
 
         # Modify user's code.
         try:
-            modified_tree = tree.visit(AttributeModifier(node))
+            modified_tree = tree.visit(AttributeModifier(node, node_index))
         except TypeError:
             # DEV: Figure out which nodes are ending up here, and update
             # modifier code to handle these nodes.

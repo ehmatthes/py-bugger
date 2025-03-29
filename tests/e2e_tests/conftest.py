@@ -11,6 +11,7 @@ import pytest
 @pytest.fixture(autouse=True, scope="session")
 def set_random_seed_env():
     """Make random selections repeatable."""
+    # To verify a random action, set autouse to False and run one test.
     os.environ["PY_BUGGER_RANDOM_SEED"] = "10"
 
 

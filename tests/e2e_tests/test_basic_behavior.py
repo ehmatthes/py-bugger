@@ -362,7 +362,7 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     assert "Traceback (most recent call last)" in stderr
     assert 'dog.py", line 10, in <module>' in stderr
     assert (
-        "AttributeError: 'Dog' object has no attribute 'name'. Did you mean: 'nam'?"
+        "AttributeError: 'Dog' object has no attribute 'nam'. Did you mean: 'name'?"
         in stderr
     )
 
@@ -387,7 +387,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     )
     cmd_parts = shlex.split(cmd)
 
-    stdout = subprocess.run(cmd_parts)#, capture_output=True).stdout.decode()
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     assert "All requested bugs inserted." in stdout
 
@@ -396,7 +396,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'identical_attributes.py", line 5, in <module>' in stderr
+    assert 'identical_attributes.py", line 18, in <module>' in stderr
     assert (
         "AttributeError: module 'random' has no attribute 'choce'. Did you mean: 'choice'?"
         in stderr
