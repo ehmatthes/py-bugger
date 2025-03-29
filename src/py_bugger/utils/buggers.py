@@ -146,6 +146,10 @@ def attribute_error_bugger(py_files, num_bugs):
         source = path.read_text()
         tree = cst.parse_module(source)
 
+        # Pick node to modify if more than one match in the file.
+        node_count = _count_nodes(tree, cst.Attribute)
+        breakpoint()
+
         # Modify user's code.
         try:
             modified_tree = tree.visit(AttributeModifier(node))
@@ -182,21 +186,40 @@ def _get_paths_nodes(py_files, node_type):
     return paths_nodes
 
 
-# def _count_nodes(path, node, node_type):
-#     """Count the number of nodes in path that match node.
+class NodeCounter(cst.CSTVisitor):
+    """Count all nodes of a specific kind."""
 
-#     Useful when a file has multiple identical nodes, and we want to choose one.
-#     """
-#     source = path.read_text()
-#     tree = cst.parse_module(source)
+    def __init__(self, node_type):
+        self.node_type = node_type
+        self.node_count = 0
 
-#     # Collect all relevant nodes.
-#     # DEV: Is there a way to inspect the caller?
-#     if node_type == "ModuleNotFoundError":
-#         ...
-#     elif node_type == "AttributeError":
-#         node_collector = AttributeCollector()
+    def on_visit(self, node):
+        """Increment node_count if node matches.."""
+        if isinstance(node, self.node_type):
+            self.node_count += 1
+        return True
 
-#     tree.visit(node_collector)
-#     # Generalize those methods!
-#     # for node in node_collector.
+
+def _count_nodes(tree, node_type):
+    """Count the number of nodes in path that match node.
+
+    Useful when a file has multiple identical nodes, and we want to choose one.
+    """
+    # Count all relevant nodes.
+    node_counter = NodeCounter(node_type)
+    tree.visit(node_counter)
+
+    return node_counter.node_count
+
+
+
+
+    # # DEV: Is there a way to inspect the caller?
+    # if node_type == "ModuleNotFoundError":
+    #     ...
+    # elif node_type == "AttributeError":
+    #     node_collector = AttributeCollector()
+
+    # tree.visit(node_collector)
+    # # Generalize those methods!
+    # # for node in node_collector.
