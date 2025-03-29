@@ -314,6 +314,7 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     cmd = (
         f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
     )
+    print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -362,7 +363,7 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     assert "Traceback (most recent call last)" in stderr
     assert 'dog.py", line 10, in <module>' in stderr
     assert (
-        "AttributeError: 'Dog' object has no attribute 'nam'. Did you mean: 'name'?"
+        "AttributeError: 'Dog' object has no attribute 'name'. Did you mean: 'nam'?"
         in stderr
     )
 

@@ -75,14 +75,14 @@ class AttributeModifier(cst.CSTTransformer):
         attr = updated_node.attr
 
         if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
-            print("HERE", self.node_index, self.identical_nodes_visited)
+            # print("HERE", self.node_index, self.identical_nodes_visited)
             # If there are identical nodes and this isn't the right one, bump count
             # and return unmodified node.
             if self.identical_nodes_visited != self.node_index:
                 self.identical_nodes_visited += 1
                 return updated_node
 
-            print("HEREHERE")
+            # print("HEREHERE")
 
             original_identifier = attr.value
 
@@ -165,10 +165,13 @@ def attribute_error_bugger(py_files, num_bugs):
         # Pick node to modify if more than one match in the file.
         # node_count = _count_nodes(tree, cst.Attribute)
         node_count = _count_nodes(tree, node)
-        node_index = random.randrange(0, node_count-1)
+        if node_count > 1:
+            node_index = random.randrange(0, node_count-1)
+        else:
+            node_index = 0
         # breakpoint()
-        print("nc:", node_count)
-        print("node:", node)
+        # print("nc:", node_count)
+        # print("node:", node)
 
         # Modify user's code.
         try:
