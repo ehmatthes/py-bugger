@@ -95,9 +95,7 @@ def module_not_found_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
-    # paths_nodes = _get_paths_nodes_import(py_files)
     paths_nodes = _get_paths_nodes(py_files, node_type=cst.Import)
-    # breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -133,9 +131,7 @@ def attribute_error_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
-    # paths_nodes = _get_paths_nodes_attribute_error(py_files)
     paths_nodes = _get_paths_nodes(py_files, node_type=cst.Attribute)
-    # breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -145,7 +141,6 @@ def attribute_error_bugger(py_files, num_bugs):
     # Modify each relevant path.
     bugs_added = 0
     for path, node in paths_nodes_modify:
-        # breakpoint()
         source = path.read_text()
         tree = cst.parse_module(source)
 
@@ -182,37 +177,6 @@ def _get_paths_nodes(py_files, node_type):
             paths_nodes.append((path, node))
 
     return paths_nodes
-
-# def _get_paths_nodes_import(py_files):
-#     """Get all import-related nodes."""
-#     paths_nodes = []
-#     for path in py_files:
-#         source = path.read_text()
-#         tree = cst.parse_module(source)
-
-#         # Collect all import nodes.
-#         node_collector = NodeCollector(node_type=cst.Import)
-#         tree.visit(node_collector)
-
-#         for node in node_collector.collected_nodes:
-#             paths_nodes.append((path, node))
-
-#     return paths_nodes
-
-# def _get_paths_nodes_attribute_error(py_files):
-#     """Get all nodes representing attributes."""
-#     paths_nodes = []
-#     for path in py_files:
-#         source = path.read_text()
-#         tree = cst.parse_module(source)
-
-#         node_collector = NodeCollector(node_type=cst.Attribute)
-#         tree.visit(node_collector)
-
-#         for node in node_collector.collected_nodes:
-#             paths_nodes.append((path, node))
-
-#     return paths_nodes
 
 
 
