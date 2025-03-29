@@ -67,17 +67,22 @@ class AttributeModifier(cst.CSTTransformer):
         # can match node_to_break, so make sure we only modify one node.
         self.bug_generated = False
 
+        # DEBUGGING:
+        # self.node_index = min(3, self.node_index)
+
     def leave_Attribute(self, original_node, updated_node):
         """Modify an attribute name, to generate AttributeError."""
         attr = updated_node.attr
 
         if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
-
+            print("HERE", self.node_index, self.identical_nodes_visited)
             # If there are identical nodes and this isn't the right one, bump count
             # and return unmodified node.
             if self.identical_nodes_visited != self.node_index:
                 self.identical_nodes_visited += 1
                 return updated_node
+
+            print("HEREHERE")
 
             original_identifier = attr.value
 
@@ -158,8 +163,12 @@ def attribute_error_bugger(py_files, num_bugs):
         tree = cst.parse_module(source)
 
         # Pick node to modify if more than one match in the file.
-        node_count = _count_nodes(tree, cst.Attribute)
+        # node_count = _count_nodes(tree, cst.Attribute)
+        node_count = _count_nodes(tree, node)
         node_index = random.randrange(0, node_count-1)
+        # breakpoint()
+        print("nc:", node_count)
+        print("node:", node)
 
         # Modify user's code.
         try:
@@ -197,27 +206,51 @@ def _get_paths_nodes(py_files, node_type):
     return paths_nodes
 
 
-class NodeCounter(cst.CSTVisitor):
-    """Count all nodes of a specific kind."""
+# class NodeCounter(cst.CSTVisitor):
+#     """Count all nodes of a specific kind."""
 
-    def __init__(self, node_type):
-        self.node_type = node_type
+#     def __init__(self, node_type):
+#         self.node_type = node_type
+#         self.node_count = 0
+
+#     def on_visit(self, node):
+#         """Increment node_count if node matches.."""
+#         if isinstance(node, self.node_type):
+#             self.node_count += 1
+#         return True
+
+
+# def _count_nodes(tree, node_type):
+#     """Count the number of nodes in path that match node.
+
+#     Useful when a file has multiple identical nodes, and we want to choose one.
+#     """
+#     # Count all relevant nodes.
+#     node_counter = NodeCounter(node_type)
+#     tree.visit(node_counter)
+
+#     return node_counter.node_count
+
+class NodeCounter(cst.CSTVisitor):
+    """Count all nodes matching the target node."""
+
+    def __init__(self, target_node):
+        self.target_node = target_node
         self.node_count = 0
 
     def on_visit(self, node):
         """Increment node_count if node matches.."""
-        if isinstance(node, self.node_type):
+        if node.deep_equals(self.target_node):
             self.node_count += 1
         return True
 
-
-def _count_nodes(tree, node_type):
+def _count_nodes(tree, node):
     """Count the number of nodes in path that match node.
 
     Useful when a file has multiple identical nodes, and we want to choose one.
     """
     # Count all relevant nodes.
-    node_counter = NodeCounter(node_type)
+    node_counter = NodeCounter(node)
     tree.visit(node_counter)
 
     return node_counter.node_count
