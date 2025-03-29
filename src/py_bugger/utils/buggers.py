@@ -221,16 +221,3 @@ def _count_nodes(tree, node_type):
     tree.visit(node_counter)
 
     return node_counter.node_count
-
-
-
-
-    # # DEV: Is there a way to inspect the caller?
-    # if node_type == "ModuleNotFoundError":
-    #     ...
-    # elif node_type == "AttributeError":
-    #     node_collector = AttributeCollector()
-
-    # tree.visit(node_collector)
-    # # Generalize those methods!
-    # # for node in node_collector.
