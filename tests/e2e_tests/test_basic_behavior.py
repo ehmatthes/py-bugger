@@ -445,35 +445,34 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     assert 'simple_indent.py", line 1' in stderr
 
 
-# def test_indentation_error_complex(tmp_path_factory, e2e_config):
-#     """py-bugger --exception-type IndentationError
+def test_indentation_error_complex(tmp_path_factory, e2e_config):
+    """py-bugger --exception-type IndentationError
 
-#     Run against a file with multiple indented blocks of different kinds.
-#     """
+    Run against a file with multiple indented blocks of different kinds.
+    """
 
-#     # Copy sample code to tmp dir.
-#     tmp_path = tmp_path_factory.mktemp("sample_code")
-#     print(f"\nCopying code to: {tmp_path.as_posix()}")
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-#     path_dst = tmp_path / e2e_config.path_many_dogs.name
-#     shutil.copyfile(e2e_config.path_many_dogs, path_dst)
+    path_dst = tmp_path / e2e_config.path_many_dogs.name
+    shutil.copyfile(e2e_config.path_many_dogs, path_dst)
 
-#     # Run py-bugger against directory.
-#     cmd = (
-#         f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
-#     )
-#     print("cmd:", cmd)
-#     cmd_parts = shlex.split(cmd)
+    # Run py-bugger against directory.
+    cmd = (
+        f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    )
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
 
-#     stdout = subprocess.run(cmd_parts)#, capture_output=True).stdout.decode()
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-#     assert "All requested bugs inserted." in stdout
+    assert "All requested bugs inserted." in stdout
 
-#     # Run file, should raise IndentationError.
-#     cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
-#     cmd_parts = shlex.split(cmd)
-#     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
-#     assert "Traceback (most recent call last)" in stderr
-#     assert 'many_dogs.py", line' in stderr
-#     assert "IndentationError" in stderr
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "IndentationError: expected an indented block after 'for' statement on line 9" in stderr
+    assert 'many_dogs.py", line 10' in stderr
 
