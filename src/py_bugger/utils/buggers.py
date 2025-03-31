@@ -85,11 +85,14 @@ class AttributeModifier(cst.CSTTransformer):
 
             original_identifier = attr.value
 
-            # Remove one letter from the attribute name.
-            chars = list(original_identifier)
-            char_remove = random.choice(chars)
-            chars.remove(char_remove)
-            new_identifier = "".join(chars)
+            # Add a typo to the attribute name.
+            new_identifier = bug_utils.make_typo(original_identifier)
+
+            # # Remove one letter from the attribute name.
+            # chars = list(original_identifier)
+            # char_remove = random.choice(chars)
+            # chars.remove(char_remove)
+            # new_identifier = "".join(chars)
 
             # Modify the node name.
             new_attr = cst.Name(new_identifier)
