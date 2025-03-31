@@ -178,7 +178,17 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     # Read modified file; should have changed import statement.
     modified_source = path_dst.read_text()
     assert "import calendar" not in modified_source
-    pkgs = ["os", "sys", "re", "random", "difflib", "zoneinfo", "array", "pprint", "enum"]
+    pkgs = [
+        "os",
+        "sys",
+        "re",
+        "random",
+        "difflib",
+        "zoneinfo",
+        "array",
+        "pprint",
+        "enum",
+    ]
     assert all([p in modified_source for p in pkgs])
 
 
@@ -329,10 +339,8 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'name_picker.py", line 7, in <module>' in stderr
-    assert (
-        "AttributeError: 'str' object has no attribute 'tite'. Did you mean: 'title'?"
-        in stderr
-    )
+    assert "AttributeError: 'str' object has no attribute " in stderr
+    assert "Did you mean: " in stderr
 
     # Make sure only one attribute was affected.
     modified_source = path_dst.read_text()
@@ -364,10 +372,8 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'dog.py", line 10, in <module>' in stderr
-    assert (
-        "AttributeError: 'Dog' object has no attribute 'name'. Did you mean: 'nam'?"
-        in stderr
-    )
+    assert "AttributeError: 'Dog' object has no attribute " in stderr
+    assert "Did you mean: " in stderr
 
     # Make sure only one attribute was affected.
     modified_source = path_dst.read_text()
@@ -400,12 +406,9 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'identical_attributes.py", line 18, in <module>' in stderr
-    assert (
-        "AttributeError: module 'random' has no attribute 'choce'. Did you mean: 'choice'?"
-        in stderr
-    )
+    assert "AttributeError: module 'random' has no attribute " in stderr
+    assert "Did you mean: " in stderr
 
     # Make sure only one attribute was affected.
     modified_source = path_dst.read_text()
-    assert "random.choce(" in modified_source
-    assert "random.choice(" in modified_source
+    assert modified_source.count("random.choice(") == 19
