@@ -106,9 +106,8 @@ class IndentModifier(cst.CSTTransformer):
         # can match node_to_break, so make sure we only modify one node.
         self.bug_generated = False
 
-    def leave_Attribute(self, original_node, updated_node):
+    def leave_For(self, original_node, updated_node):
         """Modify an attribute name, to generate AttributeError."""
-        attr = updated_node.attr
 
         if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
             # If there are identical nodes and this isn't the right one, bump count
@@ -117,22 +116,15 @@ class IndentModifier(cst.CSTTransformer):
                 self.identical_nodes_visited += 1
                 return updated_node
 
-            original_identifier = attr.value
-
-            # # Add a typo to the attribute name.
-            # new_identifier = bug_utils.make_typo(original_identifier)
-            if original_node.indent:
-                updated_node.indent += "    "
+            if original_node.body.indent:
+                updated_node.body.indent += "    "
             else:
-                updated_node.indent = "    "
-
-
-            # Modify the node name.
-            new_attr = cst.Name(new_identifier)
+                print("HERE")
+                # updated_body = updated_node.body.with_changes(indent=cst.SimpleWhitespace(""))
+                updated_body = updated_node.body.with_changes(indent="        ")
 
             self.bug_generated = True
-
-            return updated_node.with_changes()
+            return updated_node.with_changes(body=updated_body)
 
         return updated_node
 
@@ -229,8 +221,6 @@ def indentation_error_bugger(py_files, num_bugs):
     """
     # Find all relevant nodes.
     paths_nodes = _get_paths_nodes(py_files, node_type=cst.For)
-    # nodes = _get_all_nodes(py_files[0])
-    # breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -259,6 +249,7 @@ def indentation_error_bugger(py_files, num_bugs):
             # modifier code to handle these nodes.
             # For diagnostics, can run against Pillow with -n set to a
             # really high number.
+            raise
             ...
         else:
             path.write_text(modified_tree.code)
