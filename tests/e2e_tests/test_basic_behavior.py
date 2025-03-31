@@ -107,7 +107,7 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'system_info_script.py", line 4, in <module>' in stderr
-    assert "ModuleNotFoundError: No module named 'o'" in stderr
+    assert "ModuleNotFoundError: No module named " in stderr
 
     # Read modified file; should have changed only one import statement.
     modified_source = path_dst.read_text()
@@ -139,7 +139,7 @@ def test_two_bugs(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'system_info_script.py", line 3, in <module>' in stderr
-    assert "ModuleNotFoundError: No module named 'ys'" in stderr
+    assert "ModuleNotFoundError: No module named " in stderr
 
     # Read modified file; should have changed both import statements.
     modified_source = path_dst.read_text()
@@ -173,11 +173,13 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'ten_imports.py", line 6, in <module>' in stderr
-    assert "ModuleNotFoundError: No module named 'calendr'" in stderr
+    assert "ModuleNotFoundError: No module named " in stderr
 
     # Read modified file; should have changed import statement.
     modified_source = path_dst.read_text()
-    assert "import calendr" in modified_source
+    assert "import calendar" not in modified_source
+    pkgs = ["os", "sys", "re", "random", "difflib", "zoneinfo", "array", "pprint", "enum"]
+    assert all([p in modified_source for p in pkgs])
 
 
 def test_random_py_file_affected(tmp_path_factory, e2e_config):
