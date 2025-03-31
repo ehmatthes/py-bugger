@@ -5,6 +5,13 @@ When people learn debugging, they typically have to learn it by focusing on what
 
 `py-bugger` lets you intentionally introduce specific kinds and numbers of bugs to a working project. You can introduce bugs to a project with a single file, or a much larger project. This is much different from the typical process of waiting for your next bug to show up, or introducing a bug yourself. `py-bugger` gives people a structured way to learn debugging, just as we approach all other areas of programming.
 
+Installation
+---
+
+```sh
+$ pip install python-bugger
+```
+
 Example usage
 ---
 
