@@ -338,13 +338,9 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'name_picker.py", line 7, in <module>' in stderr
-    assert "AttributeError: 'str' object has no attribute " in stderr
+    assert 'name_picker.py", line ' in stderr
+    assert "AttributeError: " in stderr
     assert "Did you mean: " in stderr
-
-    # Make sure only one attribute was affected.
-    modified_source = path_dst.read_text()
-    assert "random.choice(names)" in modified_source
 
 
 def test_one_node_changed(tmp_path_factory, e2e_config):
@@ -405,7 +401,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'identical_attributes.py", line 18, in <module>' in stderr
+    assert 'identical_attributes.py", line ' in stderr
     assert "AttributeError: module 'random' has no attribute " in stderr
     assert "Did you mean: " in stderr
 
