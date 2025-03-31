@@ -176,6 +176,7 @@ def attribute_error_bugger(py_files, num_bugs):
 
     return bugs_added
 
+
 def indentation_error_bugger(py_files, num_bugs):
     """Induce an IndentationError.
 
@@ -205,6 +206,7 @@ def indentation_error_bugger(py_files, num_bugs):
 
 # --- Helper functions ---
 
+
 def _get_paths_lines(py_files, targets):
     """Get all lines from all files matching targets."""
     paths_lines = []
@@ -216,6 +218,7 @@ def _get_paths_lines(py_files, targets):
                 paths_lines.append((path, line))
 
     return paths_lines
+
 
 def _get_paths_nodes(py_files, node_type):
     """Get all nodes of given type."""
@@ -231,6 +234,7 @@ def _get_paths_nodes(py_files, node_type):
             paths_nodes.append((path, node))
 
     return paths_nodes
+
 
 def _get_all_nodes(path):
     """Get all nodes in a file.

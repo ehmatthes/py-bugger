@@ -1,6 +1,6 @@
 For(
     target=Name(
-        value='num',
+        value="num",
         lpar=[],
         rpar=[],
     ),
@@ -8,37 +8,37 @@ For(
         elements=[
             Element(
                 value=Integer(
-                    value='1',
+                    value="1",
                     lpar=[],
                     rpar=[],
                 ),
                 comma=Comma(
                     whitespace_before=SimpleWhitespace(
-                        value='',
+                        value="",
                     ),
                     whitespace_after=SimpleWhitespace(
-                        value=' ',
+                        value=" ",
                     ),
                 ),
             ),
             Element(
                 value=Integer(
-                    value='2',
+                    value="2",
                     lpar=[],
                     rpar=[],
                 ),
                 comma=Comma(
                     whitespace_before=SimpleWhitespace(
-                        value='',
+                        value="",
                     ),
                     whitespace_after=SimpleWhitespace(
-                        value=' ',
+                        value=" ",
                     ),
                 ),
             ),
             Element(
                 value=Integer(
-                    value='3',
+                    value="3",
                     lpar=[],
                     rpar=[],
                 ),
@@ -47,12 +47,12 @@ For(
         ],
         lbracket=LeftSquareBracket(
             whitespace_after=SimpleWhitespace(
-                value='',
+                value="",
             ),
         ),
         rbracket=RightSquareBracket(
             whitespace_before=SimpleWhitespace(
-                value='',
+                value="",
             ),
         ),
         lpar=[],
@@ -65,36 +65,36 @@ For(
                     Expr(
                         value=Call(
                             func=Name(
-                                value='print',
+                                value="print",
                                 lpar=[],
                                 rpar=[],
                             ),
                             args=[
                                 Arg(
                                     value=Name(
-                                        value='num',
+                                        value="num",
                                         lpar=[],
                                         rpar=[],
                                     ),
                                     keyword=None,
                                     equal=MaybeSentinel.DEFAULT,
                                     comma=MaybeSentinel.DEFAULT,
-                                    star='',
+                                    star="",
                                     whitespace_after_star=SimpleWhitespace(
-                                        value='',
+                                        value="",
                                     ),
                                     whitespace_after_arg=SimpleWhitespace(
-                                        value='',
+                                        value="",
                                     ),
                                 ),
                             ],
                             lpar=[],
                             rpar=[],
                             whitespace_after_func=SimpleWhitespace(
-                                value='',
+                                value="",
                             ),
                             whitespace_before_args=SimpleWhitespace(
-                                value='',
+                                value="",
                             ),
                         ),
                         semicolon=MaybeSentinel.DEFAULT,
@@ -103,7 +103,7 @@ For(
                 leading_lines=[],
                 trailing_whitespace=TrailingWhitespace(
                     whitespace=SimpleWhitespace(
-                        value='',
+                        value="",
                     ),
                     comment=None,
                     newline=Newline(
@@ -114,7 +114,7 @@ For(
         ],
         header=TrailingWhitespace(
             whitespace=SimpleWhitespace(
-                value='',
+                value="",
             ),
             comment=None,
             newline=Newline(
@@ -128,15 +128,15 @@ For(
     asynchronous=None,
     leading_lines=[],
     whitespace_after_for=SimpleWhitespace(
-        value=' ',
+        value=" ",
     ),
     whitespace_before_in=SimpleWhitespace(
-        value=' ',
+        value=" ",
     ),
     whitespace_after_in=SimpleWhitespace(
-        value=' ',
+        value=" ",
     ),
     whitespace_before_colon=SimpleWhitespace(
-        value='',
+        value="",
     ),
 )

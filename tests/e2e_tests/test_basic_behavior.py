@@ -413,6 +413,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     modified_source = path_dst.read_text()
     assert modified_source.count("random.choice(") == 19
 
+
 def test_indentation_error_simple(tmp_path_factory, e2e_config):
     """py-bugger --exception-type IndentationError
 
@@ -427,9 +428,7 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_simple_indent, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
-    )
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -459,9 +458,7 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_many_dogs, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
-    )
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -473,6 +470,8 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
     cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
-    assert "IndentationError: expected an indented block after 'for' statement on line 9" in stderr
+    assert (
+        "IndentationError: expected an indented block after 'for' statement on line 9"
+        in stderr
+    )
     assert 'many_dogs.py", line 10' in stderr
-

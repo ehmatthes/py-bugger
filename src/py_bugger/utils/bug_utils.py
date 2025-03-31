@@ -55,6 +55,7 @@ def modify_char(name):
 
     return "".join(chars)
 
+
 def add_indentation(path, target_line):
     """Add one level of indentation (four spaces) to line."""
     indentation_added = False

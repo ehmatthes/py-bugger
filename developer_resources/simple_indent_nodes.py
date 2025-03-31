@@ -1,195 +1,347 @@
-[Module(
-    body=[
-        For(
-            target=Name(
-                value='num',
-                lpar=[],
-                rpar=[],
-            ),
-            iter=List(
-                elements=[
-                    Element(
-                        value=Integer(
-                            value='1',
-                            lpar=[],
-                            rpar=[],
-                        ),
-                        comma=Comma(
-                            whitespace_before=SimpleWhitespace(
-                                value='',
-                            ),
-                            whitespace_after=SimpleWhitespace(
-                                value=' ',
-                            ),
-                        ),
-                    ),
-                    Element(
-                        value=Integer(
-                            value='2',
-                            lpar=[],
-                            rpar=[],
-                        ),
-                        comma=Comma(
-                            whitespace_before=SimpleWhitespace(
-                                value='',
-                            ),
-                            whitespace_after=SimpleWhitespace(
-                                value=' ',
-                            ),
-                        ),
-                    ),
-                    Element(
-                        value=Integer(
-                            value='3',
-                            lpar=[],
-                            rpar=[],
-                        ),
-                        comma=MaybeSentinel.DEFAULT,
-                    ),
-                ],
-                lbracket=LeftSquareBracket(
-                    whitespace_after=SimpleWhitespace(
-                        value='',
-                    ),
+[
+    Module(
+        body=[
+            For(
+                target=Name(
+                    value="num",
+                    lpar=[],
+                    rpar=[],
                 ),
-                rbracket=RightSquareBracket(
-                    whitespace_before=SimpleWhitespace(
-                        value='',
+                iter=List(
+                    elements=[
+                        Element(
+                            value=Integer(
+                                value="1",
+                                lpar=[],
+                                rpar=[],
+                            ),
+                            comma=Comma(
+                                whitespace_before=SimpleWhitespace(
+                                    value="",
+                                ),
+                                whitespace_after=SimpleWhitespace(
+                                    value=" ",
+                                ),
+                            ),
+                        ),
+                        Element(
+                            value=Integer(
+                                value="2",
+                                lpar=[],
+                                rpar=[],
+                            ),
+                            comma=Comma(
+                                whitespace_before=SimpleWhitespace(
+                                    value="",
+                                ),
+                                whitespace_after=SimpleWhitespace(
+                                    value=" ",
+                                ),
+                            ),
+                        ),
+                        Element(
+                            value=Integer(
+                                value="3",
+                                lpar=[],
+                                rpar=[],
+                            ),
+                            comma=MaybeSentinel.DEFAULT,
+                        ),
+                    ],
+                    lbracket=LeftSquareBracket(
+                        whitespace_after=SimpleWhitespace(
+                            value="",
+                        ),
                     ),
+                    rbracket=RightSquareBracket(
+                        whitespace_before=SimpleWhitespace(
+                            value="",
+                        ),
+                    ),
+                    lpar=[],
+                    rpar=[],
                 ),
-                lpar=[],
-                rpar=[],
-            ),
-            body=IndentedBlock(
-                body=[
-                    SimpleStatementLine(
-                        body=[
-                            Expr(
-                                value=Call(
-                                    func=Name(
-                                        value='print',
+                body=IndentedBlock(
+                    body=[
+                        SimpleStatementLine(
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Name(
+                                            value="print",
+                                            lpar=[],
+                                            rpar=[],
+                                        ),
+                                        args=[
+                                            Arg(
+                                                value=Name(
+                                                    value="num",
+                                                    lpar=[],
+                                                    rpar=[],
+                                                ),
+                                                keyword=None,
+                                                equal=MaybeSentinel.DEFAULT,
+                                                comma=MaybeSentinel.DEFAULT,
+                                                star="",
+                                                whitespace_after_star=SimpleWhitespace(
+                                                    value="",
+                                                ),
+                                                whitespace_after_arg=SimpleWhitespace(
+                                                    value="",
+                                                ),
+                                            ),
+                                        ],
                                         lpar=[],
                                         rpar=[],
-                                    ),
-                                    args=[
-                                        Arg(
-                                            value=Name(
-                                                value='num',
-                                                lpar=[],
-                                                rpar=[],
-                                            ),
-                                            keyword=None,
-                                            equal=MaybeSentinel.DEFAULT,
-                                            comma=MaybeSentinel.DEFAULT,
-                                            star='',
-                                            whitespace_after_star=SimpleWhitespace(
-                                                value='',
-                                            ),
-                                            whitespace_after_arg=SimpleWhitespace(
-                                                value='',
-                                            ),
+                                        whitespace_after_func=SimpleWhitespace(
+                                            value="",
                                         ),
-                                    ],
-                                    lpar=[],
-                                    rpar=[],
-                                    whitespace_after_func=SimpleWhitespace(
-                                        value='',
+                                        whitespace_before_args=SimpleWhitespace(
+                                            value="",
+                                        ),
                                     ),
-                                    whitespace_before_args=SimpleWhitespace(
-                                        value='',
-                                    ),
+                                    semicolon=MaybeSentinel.DEFAULT,
                                 ),
-                                semicolon=MaybeSentinel.DEFAULT,
-                            ),
-                        ],
-                        leading_lines=[],
-                        trailing_whitespace=TrailingWhitespace(
-                            whitespace=SimpleWhitespace(
-                                value='',
-                            ),
-                            comment=None,
-                            newline=Newline(
-                                value=None,
+                            ],
+                            leading_lines=[],
+                            trailing_whitespace=TrailingWhitespace(
+                                whitespace=SimpleWhitespace(
+                                    value="",
+                                ),
+                                comment=None,
+                                newline=Newline(
+                                    value=None,
+                                ),
                             ),
                         ),
+                    ],
+                    header=TrailingWhitespace(
+                        whitespace=SimpleWhitespace(
+                            value="",
+                        ),
+                        comment=None,
+                        newline=Newline(
+                            value=None,
+                        ),
                     ),
-                ],
-                header=TrailingWhitespace(
-                    whitespace=SimpleWhitespace(
-                        value='',
+                    indent=None,
+                    footer=[],
+                ),
+                orelse=None,
+                asynchronous=None,
+                leading_lines=[],
+                whitespace_after_for=SimpleWhitespace(
+                    value=" ",
+                ),
+                whitespace_before_in=SimpleWhitespace(
+                    value=" ",
+                ),
+                whitespace_after_in=SimpleWhitespace(
+                    value=" ",
+                ),
+                whitespace_before_colon=SimpleWhitespace(
+                    value="",
+                ),
+            ),
+        ],
+        header=[],
+        footer=[],
+        encoding="utf-8",
+        default_indent="    ",
+        default_newline="\n",
+        has_trailing_newline=True,
+    ),
+    For(
+        target=Name(
+            value="num",
+            lpar=[],
+            rpar=[],
+        ),
+        iter=List(
+            elements=[
+                Element(
+                    value=Integer(
+                        value="1",
+                        lpar=[],
+                        rpar=[],
                     ),
-                    comment=None,
-                    newline=Newline(
-                        value=None,
+                    comma=Comma(
+                        whitespace_before=SimpleWhitespace(
+                            value="",
+                        ),
+                        whitespace_after=SimpleWhitespace(
+                            value=" ",
+                        ),
                     ),
                 ),
-                indent=None,
-                footer=[],
+                Element(
+                    value=Integer(
+                        value="2",
+                        lpar=[],
+                        rpar=[],
+                    ),
+                    comma=Comma(
+                        whitespace_before=SimpleWhitespace(
+                            value="",
+                        ),
+                        whitespace_after=SimpleWhitespace(
+                            value=" ",
+                        ),
+                    ),
+                ),
+                Element(
+                    value=Integer(
+                        value="3",
+                        lpar=[],
+                        rpar=[],
+                    ),
+                    comma=MaybeSentinel.DEFAULT,
+                ),
+            ],
+            lbracket=LeftSquareBracket(
+                whitespace_after=SimpleWhitespace(
+                    value="",
+                ),
             ),
-            orelse=None,
-            asynchronous=None,
-            leading_lines=[],
-            whitespace_after_for=SimpleWhitespace(
-                value=' ',
+            rbracket=RightSquareBracket(
+                whitespace_before=SimpleWhitespace(
+                    value="",
+                ),
             ),
-            whitespace_before_in=SimpleWhitespace(
-                value=' ',
-            ),
-            whitespace_after_in=SimpleWhitespace(
-                value=' ',
-            ),
-            whitespace_before_colon=SimpleWhitespace(
-                value='',
-            ),
+            lpar=[],
+            rpar=[],
         ),
-    ],
-    header=[],
-    footer=[],
-    encoding='utf-8',
-    default_indent='    ',
-    default_newline='\n',
-    has_trailing_newline=True,
-), For(
-    target=Name(
-        value='num',
+        body=IndentedBlock(
+            body=[
+                SimpleStatementLine(
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(
+                                    value="print",
+                                    lpar=[],
+                                    rpar=[],
+                                ),
+                                args=[
+                                    Arg(
+                                        value=Name(
+                                            value="num",
+                                            lpar=[],
+                                            rpar=[],
+                                        ),
+                                        keyword=None,
+                                        equal=MaybeSentinel.DEFAULT,
+                                        comma=MaybeSentinel.DEFAULT,
+                                        star="",
+                                        whitespace_after_star=SimpleWhitespace(
+                                            value="",
+                                        ),
+                                        whitespace_after_arg=SimpleWhitespace(
+                                            value="",
+                                        ),
+                                    ),
+                                ],
+                                lpar=[],
+                                rpar=[],
+                                whitespace_after_func=SimpleWhitespace(
+                                    value="",
+                                ),
+                                whitespace_before_args=SimpleWhitespace(
+                                    value="",
+                                ),
+                            ),
+                            semicolon=MaybeSentinel.DEFAULT,
+                        ),
+                    ],
+                    leading_lines=[],
+                    trailing_whitespace=TrailingWhitespace(
+                        whitespace=SimpleWhitespace(
+                            value="",
+                        ),
+                        comment=None,
+                        newline=Newline(
+                            value=None,
+                        ),
+                    ),
+                ),
+            ],
+            header=TrailingWhitespace(
+                whitespace=SimpleWhitespace(
+                    value="",
+                ),
+                comment=None,
+                newline=Newline(
+                    value=None,
+                ),
+            ),
+            indent=None,
+            footer=[],
+        ),
+        orelse=None,
+        asynchronous=None,
+        leading_lines=[],
+        whitespace_after_for=SimpleWhitespace(
+            value=" ",
+        ),
+        whitespace_before_in=SimpleWhitespace(
+            value=" ",
+        ),
+        whitespace_after_in=SimpleWhitespace(
+            value=" ",
+        ),
+        whitespace_before_colon=SimpleWhitespace(
+            value="",
+        ),
+    ),
+    SimpleWhitespace(
+        value=" ",
+    ),
+    Name(
+        value="num",
         lpar=[],
         rpar=[],
     ),
-    iter=List(
+    SimpleWhitespace(
+        value=" ",
+    ),
+    SimpleWhitespace(
+        value=" ",
+    ),
+    List(
         elements=[
             Element(
                 value=Integer(
-                    value='1',
+                    value="1",
                     lpar=[],
                     rpar=[],
                 ),
                 comma=Comma(
                     whitespace_before=SimpleWhitespace(
-                        value='',
+                        value="",
                     ),
                     whitespace_after=SimpleWhitespace(
-                        value=' ',
+                        value=" ",
                     ),
                 ),
             ),
             Element(
                 value=Integer(
-                    value='2',
+                    value="2",
                     lpar=[],
                     rpar=[],
                 ),
                 comma=Comma(
                     whitespace_before=SimpleWhitespace(
-                        value='',
+                        value="",
                     ),
                     whitespace_after=SimpleWhitespace(
-                        value=' ',
+                        value=" ",
                     ),
                 ),
             ),
             Element(
                 value=Integer(
-                    value='3',
+                    value="3",
                     lpar=[],
                     rpar=[],
                 ),
@@ -198,54 +350,154 @@
         ],
         lbracket=LeftSquareBracket(
             whitespace_after=SimpleWhitespace(
-                value='',
+                value="",
             ),
         ),
         rbracket=RightSquareBracket(
             whitespace_before=SimpleWhitespace(
-                value='',
+                value="",
             ),
         ),
         lpar=[],
         rpar=[],
     ),
-    body=IndentedBlock(
+    LeftSquareBracket(
+        whitespace_after=SimpleWhitespace(
+            value="",
+        ),
+    ),
+    SimpleWhitespace(
+        value="",
+    ),
+    Element(
+        value=Integer(
+            value="1",
+            lpar=[],
+            rpar=[],
+        ),
+        comma=Comma(
+            whitespace_before=SimpleWhitespace(
+                value="",
+            ),
+            whitespace_after=SimpleWhitespace(
+                value=" ",
+            ),
+        ),
+    ),
+    Integer(
+        value="1",
+        lpar=[],
+        rpar=[],
+    ),
+    Comma(
+        whitespace_before=SimpleWhitespace(
+            value="",
+        ),
+        whitespace_after=SimpleWhitespace(
+            value=" ",
+        ),
+    ),
+    SimpleWhitespace(
+        value="",
+    ),
+    SimpleWhitespace(
+        value=" ",
+    ),
+    Element(
+        value=Integer(
+            value="2",
+            lpar=[],
+            rpar=[],
+        ),
+        comma=Comma(
+            whitespace_before=SimpleWhitespace(
+                value="",
+            ),
+            whitespace_after=SimpleWhitespace(
+                value=" ",
+            ),
+        ),
+    ),
+    Integer(
+        value="2",
+        lpar=[],
+        rpar=[],
+    ),
+    Comma(
+        whitespace_before=SimpleWhitespace(
+            value="",
+        ),
+        whitespace_after=SimpleWhitespace(
+            value=" ",
+        ),
+    ),
+    SimpleWhitespace(
+        value="",
+    ),
+    SimpleWhitespace(
+        value=" ",
+    ),
+    Element(
+        value=Integer(
+            value="3",
+            lpar=[],
+            rpar=[],
+        ),
+        comma=MaybeSentinel.DEFAULT,
+    ),
+    Integer(
+        value="3",
+        lpar=[],
+        rpar=[],
+    ),
+    RightSquareBracket(
+        whitespace_before=SimpleWhitespace(
+            value="",
+        ),
+    ),
+    SimpleWhitespace(
+        value="",
+    ),
+    SimpleWhitespace(
+        value="",
+    ),
+    IndentedBlock(
         body=[
             SimpleStatementLine(
                 body=[
                     Expr(
                         value=Call(
                             func=Name(
-                                value='print',
+                                value="print",
                                 lpar=[],
                                 rpar=[],
                             ),
                             args=[
                                 Arg(
                                     value=Name(
-                                        value='num',
+                                        value="num",
                                         lpar=[],
                                         rpar=[],
                                     ),
                                     keyword=None,
                                     equal=MaybeSentinel.DEFAULT,
                                     comma=MaybeSentinel.DEFAULT,
-                                    star='',
+                                    star="",
                                     whitespace_after_star=SimpleWhitespace(
-                                        value='',
+                                        value="",
                                     ),
                                     whitespace_after_arg=SimpleWhitespace(
-                                        value='',
+                                        value="",
                                     ),
                                 ),
                             ],
                             lpar=[],
                             rpar=[],
                             whitespace_after_func=SimpleWhitespace(
-                                value='',
+                                value="",
                             ),
                             whitespace_before_args=SimpleWhitespace(
-                                value='',
+                                value="",
                             ),
                         ),
                         semicolon=MaybeSentinel.DEFAULT,
@@ -254,7 +506,7 @@
                 leading_lines=[],
                 trailing_whitespace=TrailingWhitespace(
                     whitespace=SimpleWhitespace(
-                        value='',
+                        value="",
                     ),
                     comment=None,
                     newline=Newline(
@@ -265,7 +517,7 @@
         ],
         header=TrailingWhitespace(
             whitespace=SimpleWhitespace(
-                value='',
+                value="",
             ),
             comment=None,
             newline=Newline(
@@ -275,405 +527,195 @@
         indent=None,
         footer=[],
     ),
-    orelse=None,
-    asynchronous=None,
-    leading_lines=[],
-    whitespace_after_for=SimpleWhitespace(
-        value=' ',
-    ),
-    whitespace_before_in=SimpleWhitespace(
-        value=' ',
-    ),
-    whitespace_after_in=SimpleWhitespace(
-        value=' ',
-    ),
-    whitespace_before_colon=SimpleWhitespace(
-        value='',
-    ),
-), SimpleWhitespace(
-    value=' ',
-), Name(
-    value='num',
-    lpar=[],
-    rpar=[],
-), SimpleWhitespace(
-    value=' ',
-), SimpleWhitespace(
-    value=' ',
-), List(
-    elements=[
-        Element(
-            value=Integer(
-                value='1',
-                lpar=[],
-                rpar=[],
-            ),
-            comma=Comma(
-                whitespace_before=SimpleWhitespace(
-                    value='',
-                ),
-                whitespace_after=SimpleWhitespace(
-                    value=' ',
-                ),
-            ),
-        ),
-        Element(
-            value=Integer(
-                value='2',
-                lpar=[],
-                rpar=[],
-            ),
-            comma=Comma(
-                whitespace_before=SimpleWhitespace(
-                    value='',
-                ),
-                whitespace_after=SimpleWhitespace(
-                    value=' ',
-                ),
-            ),
-        ),
-        Element(
-            value=Integer(
-                value='3',
-                lpar=[],
-                rpar=[],
-            ),
-            comma=MaybeSentinel.DEFAULT,
-        ),
-    ],
-    lbracket=LeftSquareBracket(
-        whitespace_after=SimpleWhitespace(
-            value='',
-        ),
-    ),
-    rbracket=RightSquareBracket(
-        whitespace_before=SimpleWhitespace(
-            value='',
-        ),
-    ),
-    lpar=[],
-    rpar=[],
-), LeftSquareBracket(
-    whitespace_after=SimpleWhitespace(
-        value='',
-    ),
-), SimpleWhitespace(
-    value='',
-), Element(
-    value=Integer(
-        value='1',
-        lpar=[],
-        rpar=[],
-    ),
-    comma=Comma(
-        whitespace_before=SimpleWhitespace(
-            value='',
-        ),
-        whitespace_after=SimpleWhitespace(
-            value=' ',
-        ),
-    ),
-), Integer(
-    value='1',
-    lpar=[],
-    rpar=[],
-), Comma(
-    whitespace_before=SimpleWhitespace(
-        value='',
-    ),
-    whitespace_after=SimpleWhitespace(
-        value=' ',
-    ),
-), SimpleWhitespace(
-    value='',
-), SimpleWhitespace(
-    value=' ',
-), Element(
-    value=Integer(
-        value='2',
-        lpar=[],
-        rpar=[],
-    ),
-    comma=Comma(
-        whitespace_before=SimpleWhitespace(
-            value='',
-        ),
-        whitespace_after=SimpleWhitespace(
-            value=' ',
-        ),
-    ),
-), Integer(
-    value='2',
-    lpar=[],
-    rpar=[],
-), Comma(
-    whitespace_before=SimpleWhitespace(
-        value='',
-    ),
-    whitespace_after=SimpleWhitespace(
-        value=' ',
-    ),
-), SimpleWhitespace(
-    value='',
-), SimpleWhitespace(
-    value=' ',
-), Element(
-    value=Integer(
-        value='3',
-        lpar=[],
-        rpar=[],
-    ),
-    comma=MaybeSentinel.DEFAULT,
-), Integer(
-    value='3',
-    lpar=[],
-    rpar=[],
-), RightSquareBracket(
-    whitespace_before=SimpleWhitespace(
-        value='',
-    ),
-), SimpleWhitespace(
-    value='',
-), SimpleWhitespace(
-    value='',
-), IndentedBlock(
-    body=[
-        SimpleStatementLine(
-            body=[
-                Expr(
-                    value=Call(
-                        func=Name(
-                            value='print',
-                            lpar=[],
-                            rpar=[],
-                        ),
-                        args=[
-                            Arg(
-                                value=Name(
-                                    value='num',
-                                    lpar=[],
-                                    rpar=[],
-                                ),
-                                keyword=None,
-                                equal=MaybeSentinel.DEFAULT,
-                                comma=MaybeSentinel.DEFAULT,
-                                star='',
-                                whitespace_after_star=SimpleWhitespace(
-                                    value='',
-                                ),
-                                whitespace_after_arg=SimpleWhitespace(
-                                    value='',
-                                ),
-                            ),
-                        ],
-                        lpar=[],
-                        rpar=[],
-                        whitespace_after_func=SimpleWhitespace(
-                            value='',
-                        ),
-                        whitespace_before_args=SimpleWhitespace(
-                            value='',
-                        ),
-                    ),
-                    semicolon=MaybeSentinel.DEFAULT,
-                ),
-            ],
-            leading_lines=[],
-            trailing_whitespace=TrailingWhitespace(
-                whitespace=SimpleWhitespace(
-                    value='',
-                ),
-                comment=None,
-                newline=Newline(
-                    value=None,
-                ),
-            ),
-        ),
-    ],
-    header=TrailingWhitespace(
+    TrailingWhitespace(
         whitespace=SimpleWhitespace(
-            value='',
+            value="",
         ),
         comment=None,
         newline=Newline(
             value=None,
         ),
     ),
-    indent=None,
-    footer=[],
-), TrailingWhitespace(
-    whitespace=SimpleWhitespace(
-        value='',
+    SimpleWhitespace(
+        value="",
     ),
-    comment=None,
-    newline=Newline(
+    Newline(
         value=None,
     ),
-), SimpleWhitespace(
-    value='',
-), Newline(
-    value=None,
-), SimpleStatementLine(
-    body=[
-        Expr(
-            value=Call(
-                func=Name(
-                    value='print',
+    SimpleStatementLine(
+        body=[
+            Expr(
+                value=Call(
+                    func=Name(
+                        value="print",
+                        lpar=[],
+                        rpar=[],
+                    ),
+                    args=[
+                        Arg(
+                            value=Name(
+                                value="num",
+                                lpar=[],
+                                rpar=[],
+                            ),
+                            keyword=None,
+                            equal=MaybeSentinel.DEFAULT,
+                            comma=MaybeSentinel.DEFAULT,
+                            star="",
+                            whitespace_after_star=SimpleWhitespace(
+                                value="",
+                            ),
+                            whitespace_after_arg=SimpleWhitespace(
+                                value="",
+                            ),
+                        ),
+                    ],
                     lpar=[],
                     rpar=[],
-                ),
-                args=[
-                    Arg(
-                        value=Name(
-                            value='num',
-                            lpar=[],
-                            rpar=[],
-                        ),
-                        keyword=None,
-                        equal=MaybeSentinel.DEFAULT,
-                        comma=MaybeSentinel.DEFAULT,
-                        star='',
-                        whitespace_after_star=SimpleWhitespace(
-                            value='',
-                        ),
-                        whitespace_after_arg=SimpleWhitespace(
-                            value='',
-                        ),
+                    whitespace_after_func=SimpleWhitespace(
+                        value="",
                     ),
-                ],
-                lpar=[],
-                rpar=[],
-                whitespace_after_func=SimpleWhitespace(
-                    value='',
+                    whitespace_before_args=SimpleWhitespace(
+                        value="",
+                    ),
                 ),
-                whitespace_before_args=SimpleWhitespace(
-                    value='',
-                ),
+                semicolon=MaybeSentinel.DEFAULT,
             ),
-            semicolon=MaybeSentinel.DEFAULT,
-        ),
-    ],
-    leading_lines=[],
-    trailing_whitespace=TrailingWhitespace(
-        whitespace=SimpleWhitespace(
-            value='',
-        ),
-        comment=None,
-        newline=Newline(
-            value=None,
+        ],
+        leading_lines=[],
+        trailing_whitespace=TrailingWhitespace(
+            whitespace=SimpleWhitespace(
+                value="",
+            ),
+            comment=None,
+            newline=Newline(
+                value=None,
+            ),
         ),
     ),
-), Expr(
-    value=Call(
+    Expr(
+        value=Call(
+            func=Name(
+                value="print",
+                lpar=[],
+                rpar=[],
+            ),
+            args=[
+                Arg(
+                    value=Name(
+                        value="num",
+                        lpar=[],
+                        rpar=[],
+                    ),
+                    keyword=None,
+                    equal=MaybeSentinel.DEFAULT,
+                    comma=MaybeSentinel.DEFAULT,
+                    star="",
+                    whitespace_after_star=SimpleWhitespace(
+                        value="",
+                    ),
+                    whitespace_after_arg=SimpleWhitespace(
+                        value="",
+                    ),
+                ),
+            ],
+            lpar=[],
+            rpar=[],
+            whitespace_after_func=SimpleWhitespace(
+                value="",
+            ),
+            whitespace_before_args=SimpleWhitespace(
+                value="",
+            ),
+        ),
+        semicolon=MaybeSentinel.DEFAULT,
+    ),
+    Call(
         func=Name(
-            value='print',
+            value="print",
             lpar=[],
             rpar=[],
         ),
         args=[
             Arg(
                 value=Name(
-                    value='num',
+                    value="num",
                     lpar=[],
                     rpar=[],
                 ),
                 keyword=None,
                 equal=MaybeSentinel.DEFAULT,
                 comma=MaybeSentinel.DEFAULT,
-                star='',
+                star="",
                 whitespace_after_star=SimpleWhitespace(
-                    value='',
+                    value="",
                 ),
                 whitespace_after_arg=SimpleWhitespace(
-                    value='',
+                    value="",
                 ),
             ),
         ],
         lpar=[],
         rpar=[],
         whitespace_after_func=SimpleWhitespace(
-            value='',
+            value="",
         ),
         whitespace_before_args=SimpleWhitespace(
-            value='',
+            value="",
         ),
     ),
-    semicolon=MaybeSentinel.DEFAULT,
-), Call(
-    func=Name(
-        value='print',
+    Name(
+        value="print",
         lpar=[],
         rpar=[],
     ),
-    args=[
-        Arg(
-            value=Name(
-                value='num',
-                lpar=[],
-                rpar=[],
-            ),
-            keyword=None,
-            equal=MaybeSentinel.DEFAULT,
-            comma=MaybeSentinel.DEFAULT,
-            star='',
-            whitespace_after_star=SimpleWhitespace(
-                value='',
-            ),
-            whitespace_after_arg=SimpleWhitespace(
-                value='',
-            ),
+    SimpleWhitespace(
+        value="",
+    ),
+    SimpleWhitespace(
+        value="",
+    ),
+    Arg(
+        value=Name(
+            value="num",
+            lpar=[],
+            rpar=[],
         ),
-    ],
-    lpar=[],
-    rpar=[],
-    whitespace_after_func=SimpleWhitespace(
-        value='',
+        keyword=None,
+        equal=MaybeSentinel.DEFAULT,
+        comma=MaybeSentinel.DEFAULT,
+        star="",
+        whitespace_after_star=SimpleWhitespace(
+            value="",
+        ),
+        whitespace_after_arg=SimpleWhitespace(
+            value="",
+        ),
     ),
-    whitespace_before_args=SimpleWhitespace(
-        value='',
+    SimpleWhitespace(
+        value="",
     ),
-), Name(
-    value='print',
-    lpar=[],
-    rpar=[],
-), SimpleWhitespace(
-    value='',
-), SimpleWhitespace(
-    value='',
-), Arg(
-    value=Name(
-        value='num',
+    Name(
+        value="num",
         lpar=[],
         rpar=[],
     ),
-    keyword=None,
-    equal=MaybeSentinel.DEFAULT,
-    comma=MaybeSentinel.DEFAULT,
-    star='',
-    whitespace_after_star=SimpleWhitespace(
-        value='',
+    SimpleWhitespace(
+        value="",
     ),
-    whitespace_after_arg=SimpleWhitespace(
-        value='',
+    TrailingWhitespace(
+        whitespace=SimpleWhitespace(
+            value="",
+        ),
+        comment=None,
+        newline=Newline(
+            value=None,
+        ),
     ),
-), SimpleWhitespace(
-    value='',
-), Name(
-    value='num',
-    lpar=[],
-    rpar=[],
-), SimpleWhitespace(
-    value='',
-), TrailingWhitespace(
-    whitespace=SimpleWhitespace(
-        value='',
+    SimpleWhitespace(
+        value="",
     ),
-    comment=None,
-    newline=Newline(
+    Newline(
         value=None,
     ),
-), SimpleWhitespace(
-    value='',
-), Newline(
-    value=None,
-)]
+]
