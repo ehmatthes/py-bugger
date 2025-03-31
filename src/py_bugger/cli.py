@@ -13,7 +13,7 @@ from py_bugger import cli_messages
     "--exception-type",
     "-e",
     type=str,
-    help="What kind of exception to induce.",
+    help="What kind of exception to induce: ModuleNotFoundError, AttributeError, or IndentationError",
 )
 @click.option(
     "--target-dir",
