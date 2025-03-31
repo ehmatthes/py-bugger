@@ -54,3 +54,24 @@ def modify_char(name):
     chars[index] = new_char
 
     return "".join(chars)
+
+def add_indentation(path, target_line):
+    """Add one level of indentation (four spaces) to line."""
+    indentation_added = False
+
+    lines = path.read_text().splitlines()
+
+    modified_lines = []
+    for line in lines:
+        if line == target_line:
+            line = f"    {line}"
+
+            indentation_added = True
+            print(f"Added bug to: {path.as_posix()}")
+
+        modified_lines.append(line)
+
+    modified_source = "\n".join(modified_lines)
+    path.write_text(modified_source)
+
+    return indentation_added
