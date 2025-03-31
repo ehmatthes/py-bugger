@@ -449,7 +449,6 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
 
     Run against a file with multiple indented blocks of different kinds.
     """
-
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
@@ -470,8 +469,31 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
     cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
-    assert (
-        "IndentationError: expected an indented block after function definition on line 5"
-        in stderr
-    )
-    assert 'many_dogs.py", line 6' in stderr
+    assert "IndentationError: unexpected indent" in stderr
+    assert 'many_dogs.py", line 1' in stderr
+
+
+def test_all_indentation_blocks(tmp_path_factory, e2e_config):
+    """Test that all kinds of indented blocks can be modified."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_dst = tmp_path / e2e_config.path_all_indentation_blocks.name
+    shutil.copyfile(e2e_config.path_all_indentation_blocks, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type IndentationError --num-bugs 6 --target-dir {tmp_path.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "IndentationError: unexpected indent" in stderr
+    assert 'all_indentation_blocks.py", line 1' in stderr

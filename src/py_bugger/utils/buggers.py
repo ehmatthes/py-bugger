@@ -193,7 +193,7 @@ def indentation_error_bugger(py_files, num_bugs):
     # Select the set of lines to modify. If num_bugs is greater than the number
     # of lines, just change each line.
     num_changes = min(len(paths_lines), num_bugs)
-    paths_lines_modify = random.choices(paths_lines, k=num_changes)
+    paths_lines_modify = random.sample(paths_lines, k=num_changes)
 
     # Modify each relevant path.
     bugs_added = 0
