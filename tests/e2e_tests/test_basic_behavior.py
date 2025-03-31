@@ -470,7 +470,11 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
 
 
 def test_all_indentation_blocks(tmp_path_factory, e2e_config):
-    """Test that all kinds of indented blocks can be modified."""
+    """Test that all kinds of indented blocks can be modified.
+
+    Note: There are a couple blocks that aren't currently in all_indentation_blocks.py
+        match, case, finally
+    """
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
@@ -479,7 +483,7 @@ def test_all_indentation_blocks(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_all_indentation_blocks, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --num-bugs 6 --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --num-bugs 12 --target-dir {tmp_path.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
