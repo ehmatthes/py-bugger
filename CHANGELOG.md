@@ -12,6 +12,7 @@ Can request more than one type of exception to be induced.
 - Wider variety of bugs generated to induce requested exception type.
     - Greater variety of typos.
     - Greater variety in placement of bugs.
+- Supports `-e IndentationError`.
 
 #### Internal changes
 
@@ -19,6 +20,8 @@ Can request more than one type of exception to be induced.
 - Uses a generic `NodeCollector` class.
 - Utility functions for generating bugs, ie `utils/bug_utils.make_typo()`.
 - End to end tests are less specific, so more resilient to changes in bugmaking algos, while still ensuring the requested exception type is induced.
+- Helper function to get all nodes in a file, to support development work.
+- Use `random.sample()` (no replacement) rather than `random.choices()` (uses replacement) when selecting which nodes to modify.
 
 ### 0.3.0
 
