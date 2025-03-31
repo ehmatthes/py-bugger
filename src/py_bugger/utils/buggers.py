@@ -3,6 +3,8 @@
 import libcst as cst
 import random
 
+from utils import bug_utils
+
 
 # --- CST classes ---
 
@@ -40,10 +42,11 @@ class ImportModifier(cst.CSTTransformer):
             original_name = names[0].name.value
 
             # Remove one letter from the package name.
-            chars = list(original_name)
-            char_remove = random.choice(chars)
-            chars.remove(char_remove)
-            new_name = "".join(chars)
+            new_name = bug_utils.make_typo(name)
+            # chars = list(original_name)
+            # char_remove = random.choice(chars)
+            # chars.remove(char_remove)
+            # new_name = "".join(chars)
 
             # Modify the node name.
             new_names = [cst.ImportAlias(name=cst.Name(new_name))]
