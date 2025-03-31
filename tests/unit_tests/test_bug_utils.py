@@ -8,7 +8,7 @@ def test_remove_char():
 
     Take a short name. Call remove_char() 25 times. Should end up with all variations.
     """
-    name = "part"
-    new_names = set([bug_utils.remove_char(name) for _ in range(25)])
+    name = "event"
+    new_names = set([bug_utils.remove_char(name) for _ in range(1000)])
 
-    assert new_names == {"art", "prt", "pat", "par"}
+    assert new_names == {"vent", "eent", "evnt", "evet", "even"}
