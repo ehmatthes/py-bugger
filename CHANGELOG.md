@@ -5,6 +5,21 @@ Changelog: python-bugger
 
 Can request more than one type of exception to be induced.
 
+### 0.3.1
+
+#### External changes
+
+- Wider variety of bugs generated to induce requested exception type.
+    - Greater variety of typos.
+    - Greater variety in placement of bugs.
+
+#### Internal changes
+
+- The `developer_resources/` dir contains sample nodes.
+- Uses a generic `NodeCollector` class.
+- Utility functions for generating bugs, ie `utils/bug_utils.make_typo()`.
+- End to end tests are less specific, so more resilient to changes in bugmaking algos, while still ensuring the requested exception type is induced.
+
 ### 0.3.0
 
 #### External changes
