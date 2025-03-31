@@ -430,7 +430,7 @@ def test_indentation_error(tmp_path_factory, e2e_config):
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
-    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    stdout = subprocess.run(cmd_parts)#, capture_output=True).stdout.decode()
 
     assert "All requested bugs inserted." in stdout
 

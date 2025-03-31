@@ -176,6 +176,52 @@ def attribute_error_bugger(py_files, num_bugs):
 
     return bugs_added
 
+def indentation_error_bugger(py_files, num_bugs):
+    """Induce an AttributeError.
+
+    Returns:
+        Int: Number of bugs made.
+    """
+    # Find all relevant nodes.
+    paths_nodes = _get_paths_nodes(py_files, node_type=cst.CSTNode)
+    nodes = _get_all_nodes(py_files[0])
+    breakpoint()
+
+    # Select the set of nodes to modify. If num_bugs is greater than the number
+    # of nodes, just change each node.
+    num_changes = min(len(paths_nodes), num_bugs)
+    paths_nodes_modify = random.choices(paths_nodes, k=num_changes)
+
+    # Modify each relevant path.
+    bugs_added = 0
+    for path, node in paths_nodes_modify:
+        source = path.read_text()
+        tree = cst.parse_module(source)
+
+        # Pick node to modify if more than one match in the file.
+        # node_count = _count_nodes(tree, cst.Attribute)
+        node_count = _count_nodes(tree, node)
+        if node_count > 1:
+            node_index = random.randrange(0, node_count - 1)
+        else:
+            node_index = 0
+
+        # Modify user's code.
+        try:
+            modified_tree = tree.visit(AttributeModifier(node, node_index))
+        except TypeError:
+            # DEV: Figure out which nodes are ending up here, and update
+            # modifier code to handle these nodes.
+            # For diagnostics, can run against Pillow with -n set to a
+            # really high number.
+            ...
+        else:
+            path.write_text(modified_tree.code)
+            print(f"Added bug to: {path.as_posix()}")
+            bugs_added += 1
+
+    return bugs_added
+
 
 # --- Helper functions ---
 
@@ -194,6 +240,23 @@ def _get_paths_nodes(py_files, node_type):
             paths_nodes.append((path, node))
 
     return paths_nodes
+
+def _get_all_nodes(path):
+    """Get all nodes in a file.
+
+    This is primarily for development work, where we want to see all the nodes
+    in a short representative file.
+
+    Example usage, from a #_bugger() function:
+        nodes = _get_all_nodes(py_files[0])
+    """
+    source = path.read_text()
+    tree = cst.parse_module(source)
+
+    node_collector = NodeCollector(node_type=cst.CSTNode)
+    tree.visit(node_collector)
+
+    return node_collector.collected_nodes
 
 
 class NodeCounter(cst.CSTVisitor):
