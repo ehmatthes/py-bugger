@@ -12,3 +12,12 @@ def test_remove_char():
     new_names = set([bug_utils.remove_char(name) for _ in range(1000)])
 
     assert new_names == {"vent", "eent", "evnt", "evet", "even"}
+
+def test_insert_char():
+    """Test utility for inserting a random character into a name."""
+
+    name = "event"
+    new_name = bug_utils.insert_char(name)
+
+    assert new_name != name
+    assert len(new_name) == len(name) + 1

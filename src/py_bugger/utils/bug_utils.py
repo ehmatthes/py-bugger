@@ -16,12 +16,16 @@ def remove_char(name):
     chars = list(name)
     index_remove = random.randint(0, len(chars) - 1)
     del chars[index_remove]
-    new_name = "".join(chars)
 
-    return new_name
+    return "".join(chars)
 
+def insert_char(name):
+    """Insert a character into the name."""
+    chars = list(name)
+    new_char = random.choice("abcdefghijklmnopqrstuvwxyz")
+    index = random.randint(0, len(chars))
+    chars.insert(index, new_char)
 
-def insert_char(name): ...
-
+    return "".join(chars)
 
 def modify_char(name): ...
