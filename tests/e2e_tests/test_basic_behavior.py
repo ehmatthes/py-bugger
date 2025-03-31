@@ -106,7 +106,7 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'system_info_script.py", line 4, in <module>' in stderr
+    assert 'system_info_script.py", line ' in stderr
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Read modified file; should have changed only one import statement.
@@ -172,24 +172,24 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'ten_imports.py", line 6, in <module>' in stderr
+    assert 'ten_imports.py", line ' in stderr
     assert "ModuleNotFoundError: No module named " in stderr
 
-    # Read modified file; should have changed import statement.
+    # Read modified file; should have changed one import statement.
     modified_source = path_dst.read_text()
-    assert "import calendar" not in modified_source
     pkgs = [
         "os",
         "sys",
         "re",
         "random",
         "difflib",
+        "calendar",
         "zoneinfo",
         "array",
         "pprint",
         "enum",
     ]
-    assert all([p in modified_source for p in pkgs])
+    assert sum([p in modified_source for p in pkgs]) == 9
 
 
 def test_random_py_file_affected(tmp_path_factory, e2e_config):
@@ -220,7 +220,7 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'ten_imports.py", line 7, in <module>' in stderr
+    assert 'ten_imports.py", line ' in stderr
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.
@@ -305,7 +305,7 @@ def test_target_file(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
-    assert 'system_info_script.py", line 4, in <module>' in stderr
+    assert 'system_info_script.py", line ' in stderr
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.

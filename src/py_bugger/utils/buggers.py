@@ -107,7 +107,7 @@ def module_not_found_bugger(py_files, num_bugs):
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
     num_changes = min(len(paths_nodes), num_bugs)
-    paths_nodes_modify = random.choices(paths_nodes, k=num_changes)
+    paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
 
     # Modify each relevant path.
     bugs_added = 0
