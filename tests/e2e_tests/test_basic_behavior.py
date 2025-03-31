@@ -412,3 +412,33 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     # Make sure only one attribute was affected.
     modified_source = path_dst.read_text()
     assert modified_source.count("random.choice(") == 19
+
+def test_indentation_error(tmp_path_factory, e2e_config):
+    """py-bugger --exception-type IndentationError"""
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_dst = tmp_path / e2e_config.path_many_dogs.name
+    shutil.copyfile(e2e_config.path_many_dogs, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = (
+        f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    )
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'many_dogs.py", line' in stderr
+    assert "IndentationError" in stderr
+
