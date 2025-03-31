@@ -196,25 +196,9 @@ def indentation_error_bugger(py_files, num_bugs):
     # Modify each relevant path.
     bugs_added = 0
     for path, target_line in paths_lines_modify:
-        bug_added = bug_utils.add_indentation(path, target_line)
-
-        if bug_added:
+        if bug_utils.add_indentation(path, target_line):
             print(f"Added bug to: {path.as_posix()}")
             bugs_added += 1
-
-
-        # lines = path.read_text().splitlines()
-        # modified_lines = []
-        # for line in lines:
-        #     if line == target_line:
-        #         line = f"    {line}"
-        #         bugs_added += 1
-        #         print(f"Added bug to: {path.as_posix()}")
-
-        #     modified_lines.append(line)
-
-        # modified_source = "\n".join(modified_lines)
-        # path.write_text(modified_source)
 
     return bugs_added
 

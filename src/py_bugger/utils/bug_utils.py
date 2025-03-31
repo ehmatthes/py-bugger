@@ -65,11 +65,10 @@ def add_indentation(path, target_line):
     for line in lines:
         if line == target_line:
             line = f"    {line}"
-
+            modified_lines.append(line)
             indentation_added = True
-            print(f"Added bug to: {path.as_posix()}")
-
-        modified_lines.append(line)
+        else:
+            modified_lines.append(line)
 
     modified_source = "\n".join(modified_lines)
     path.write_text(modified_source)
