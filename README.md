@@ -80,7 +80,7 @@ If you're interested in trying the project at this early stage, keep the followi
 
 You can also clone a working Python project from GitHub, and then install and run `py-bugger`. If you run the project, you should see the expected error. If you run the test suite, it should fail in the expected way.
 
-[Pillow](https://github.com/python-pillow/Pillow/tree/main) is a great library to try this against, because it's a well-established project but the test suite runs in under a minute:
+[Pillow](https://github.com/python-pillow/Pillow/tree/main) is a great library to try `py-bugger` against, because it's a well-established project but the test suite runs in under a minute:
 
 ```sh
 $ git clone https://github.com/python-pillow/Pillow.git
@@ -105,7 +105,7 @@ src/PIL/TiffImagePlugin.py:506: AttributeError
 Brief Roadmap
 ---
 
-If this project is useful or interesting to people, here's a brief roadmap of where I'm planning to take it:
+If `py-bugger` is useful or interesting to people, here's a brief roadmap of where I'm planning to take it:
 
 - Check for a clean Git state before introducing any bugs.
 - Make a new commit after introducing bugs.
