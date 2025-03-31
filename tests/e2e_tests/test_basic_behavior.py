@@ -173,11 +173,11 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'ten_imports.py", line 6, in <module>' in stderr
-    assert "ModuleNotFoundError: No module named 'clendar'" in stderr
+    assert "ModuleNotFoundError: No module named 'calendr'" in stderr
 
     # Read modified file; should have changed import statement.
     modified_source = path_dst.read_text()
-    assert "import clendar" in modified_source
+    assert "import calendr" in modified_source
 
 
 def test_random_py_file_affected(tmp_path_factory, e2e_config):
