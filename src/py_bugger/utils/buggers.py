@@ -216,36 +216,67 @@ def attribute_error_bugger(py_files, num_bugs):
     return bugs_added
 
 def indentation_error_bugger(py_files, num_bugs):
-    """Induce an AttributeError.
+    """Induce an IndentationError.
+
+    This simply parses raw source files. Conditions are pretty concrete, and LibCST
+    doesn't make it easy to create invalid syntax.
 
     Returns:
         Int: Number of bugs made.
     """
-    # Find all relevant nodes.
-    paths_nodes = _get_paths_nodes(py_files, node_type=cst.For)
+    # Find relevant files and lines.
+    paths_lines = _get_paths_lines(py_files, targets=["for"])
 
-    # Select the set of nodes to modify. If num_bugs is greater than the number
-    # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), num_bugs)
-    paths_nodes_modify = random.choices(paths_nodes, k=num_changes)
+    # Select the set of lines to modify. If num_bugs is greater than the number
+    # of lines, just change each line.
+    num_changes = min(len(paths_lines), num_bugs)
+    paths_lines_modify = random.choices(paths_lines, k=num_changes)
 
     # Modify each relevant path.
     bugs_added = 0
-    for path, node in paths_nodes_modify:
-        source = path.read_text()
-        lines = source.splitlines()
+    for path, target_line in paths_lines_modify:
+        lines = path.read_text().splitlines()
         modified_lines = []
         for line in lines:
-            if line.startswith("for"):
+            if line == target_line:
                 line = f"    {line}"
-                modified_lines.append(line)
-
                 bugs_added += 1
                 print(f"Added bug to: {path.as_posix()}")
-            else:
-                modified_lines.append(line)
+
+            modified_lines.append(line)
+
         modified_source = "\n".join(modified_lines)
         path.write_text(modified_source)
+
+
+
+
+
+    # # Find all relevant nodes.
+    # paths_nodes = _get_paths_nodes(py_files, node_type=cst.For)
+
+    # # Select the set of nodes to modify. If num_bugs is greater than the number
+    # # of nodes, just change each node.
+    # num_changes = min(len(paths_nodes), num_bugs)
+    # paths_nodes_modify = random.choices(paths_nodes, k=num_changes)
+
+    # # Modify each relevant path.
+    # bugs_added = 0
+    # for path, node in paths_nodes_modify:
+    #     source = path.read_text()
+    #     lines = source.splitlines()
+    #     modified_lines = []
+    #     for line in lines:
+    #         if line.startswith("for"):
+    #             line = f"    {line}"
+    #             modified_lines.append(line)
+
+    #             bugs_added += 1
+    #             print(f"Added bug to: {path.as_posix()}")
+    #         else:
+    #             modified_lines.append(line)
+    #     modified_source = "\n".join(modified_lines)
+    #     path.write_text(modified_source)
 
 
 
@@ -280,6 +311,17 @@ def indentation_error_bugger(py_files, num_bugs):
 
 # --- Helper functions ---
 
+def _get_paths_lines(py_files, targets):
+    """Get all lines from all files matching targets."""
+    paths_lines = []
+    for path in py_files:
+        lines = path.read_text().splitlines()
+        for line in lines:
+            stripped_line = line.strip()
+            if any([stripped_line.startswith(target) for target in targets]):
+                paths_lines.append((path, line))
+
+    return paths_lines
 
 def _get_paths_nodes(py_files, node_type):
     """Get all nodes of given type."""
