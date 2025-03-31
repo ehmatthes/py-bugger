@@ -471,7 +471,7 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert (
-        "IndentationError: expected an indented block after 'for' statement on line 9"
+        "IndentationError: expected an indented block after function definition on line 5"
         in stderr
     )
-    assert 'many_dogs.py", line 10' in stderr
+    assert 'many_dogs.py", line 6' in stderr
