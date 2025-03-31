@@ -41,12 +41,8 @@ class ImportModifier(cst.CSTTransformer):
         if original_node.deep_equals(self.node_to_break):
             original_name = names[0].name.value
 
-            # Remove one letter from the package name.
+            # Add a typo to the name of the module being imported.
             new_name = bug_utils.make_typo(original_name)
-            # chars = list(original_name)
-            # char_remove = random.choice(chars)
-            # chars.remove(char_remove)
-            # new_name = "".join(chars)
 
             # Modify the node name.
             new_names = [cst.ImportAlias(name=cst.Name(new_name))]
