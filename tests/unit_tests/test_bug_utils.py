@@ -15,9 +15,18 @@ def test_remove_char():
 
 def test_insert_char():
     """Test utility for inserting a random character into a name."""
+    for _ in range(100):
+        name = "event"
+        new_name = bug_utils.insert_char(name)
 
-    name = "event"
-    new_name = bug_utils.insert_char(name)
+        assert new_name != name
+        assert len(new_name) == len(name) + 1
 
-    assert new_name != name
-    assert len(new_name) == len(name) + 1
+def test_modify_char():
+    """Test utility for modifying a name."""
+    for _ in range(100):
+        name = "event"
+        new_name = bug_utils.modify_char(name)
+
+        assert new_name != name
+        assert len(new_name) == len(name)

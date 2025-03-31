@@ -28,4 +28,16 @@ def insert_char(name):
 
     return "".join(chars)
 
-def modify_char(name): ...
+def modify_char(name):
+    """Modify a character in a name."""
+    chars = list(name)
+    index = random.randint(0, len(chars)-1)
+
+    # Make sure new_char does not match current char.
+    while True:
+        new_char = random.choice("abcdefghijklmnopqrstuvwxyz")
+        if new_char != chars[index]:
+            break
+    chars[index] = new_char
+
+    return "".join(chars)
