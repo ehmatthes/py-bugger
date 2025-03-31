@@ -37,6 +37,7 @@ def e2e_config():
         path_dog = path_sample_scripts / "dog.py"
         path_many_dogs = path_sample_scripts / "many_dogs.py"
         path_identical_attributes = path_sample_scripts / "identical_attributes.py"
+        path_simple_indent = path_sample_scripts / "simple_indent.py"
 
         # Python executable
         if sys.platform == "win32":

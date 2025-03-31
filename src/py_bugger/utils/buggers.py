@@ -92,6 +92,51 @@ class AttributeModifier(cst.CSTTransformer):
         return updated_node
 
 
+class IndentModifier(cst.CSTTransformer):
+    """Modify indentation in the user's project."""
+
+    def __init__(self, node_to_break, node_index):
+        self.node_to_break = node_to_break
+
+        # There may be identical nodes in the tree. node_index determines which to modify.
+        self.node_index = node_index
+        self.identical_nodes_visited = 0
+
+        # Each use of this class should only generate one bug. But multiple nodes
+        # can match node_to_break, so make sure we only modify one node.
+        self.bug_generated = False
+
+    def leave_Attribute(self, original_node, updated_node):
+        """Modify an attribute name, to generate AttributeError."""
+        attr = updated_node.attr
+
+        if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
+            # If there are identical nodes and this isn't the right one, bump count
+            # and return unmodified node.
+            if self.identical_nodes_visited != self.node_index:
+                self.identical_nodes_visited += 1
+                return updated_node
+
+            original_identifier = attr.value
+
+            # # Add a typo to the attribute name.
+            # new_identifier = bug_utils.make_typo(original_identifier)
+            if original_node.indent:
+                updated_node.indent += "    "
+            else:
+                updated_node.indent = "    "
+
+
+            # Modify the node name.
+            new_attr = cst.Name(new_identifier)
+
+            self.bug_generated = True
+
+            return updated_node.with_changes()
+
+        return updated_node
+
+
 ### --- *_bugger functions ---
 
 
@@ -183,9 +228,9 @@ def indentation_error_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
-    paths_nodes = _get_paths_nodes(py_files, node_type=cst.CSTNode)
-    nodes = _get_all_nodes(py_files[0])
-    breakpoint()
+    paths_nodes = _get_paths_nodes(py_files, node_type=cst.For)
+    # nodes = _get_all_nodes(py_files[0])
+    # breakpoint()
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -208,7 +253,7 @@ def indentation_error_bugger(py_files, num_bugs):
 
         # Modify user's code.
         try:
-            modified_tree = tree.visit(AttributeModifier(node, node_index))
+            modified_tree = tree.visit(IndentModifier(node, node_index))
         except TypeError:
             # DEV: Figure out which nodes are ending up here, and update
             # modifier code to handle these nodes.
