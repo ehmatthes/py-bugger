@@ -169,7 +169,7 @@ def attribute_error_bugger(py_files, num_bugs):
         # node_count = _count_nodes(tree, cst.Attribute)
         node_count = _count_nodes(tree, node)
         if node_count > 1:
-            node_index = random.randrange(0, node_count-1)
+            node_index = random.randrange(0, node_count - 1)
         else:
             node_index = 0
         # breakpoint()
@@ -237,6 +237,7 @@ def _get_paths_nodes(py_files, node_type):
 
 #     return node_counter.node_count
 
+
 class NodeCounter(cst.CSTVisitor):
     """Count all nodes matching the target node."""
 
@@ -249,6 +250,7 @@ class NodeCounter(cst.CSTVisitor):
         if node.deep_equals(self.target_node):
             self.node_count += 1
         return True
+
 
 def _count_nodes(tree, node):
     """Count the number of nodes in path that match node.

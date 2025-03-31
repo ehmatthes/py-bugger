@@ -14,14 +14,14 @@ def make_typo(name):
 def remove_char(name):
     """Remove a character from the name."""
     chars = list(name)
-    index_remove = random.randint(0, len(chars)-1)
+    index_remove = random.randint(0, len(chars) - 1)
     del chars[index_remove]
     new_name = "".join(chars)
 
     return new_name
 
-def insert_char(name):
-    ...
 
-def modify_char(name):
-    ...
+def insert_char(name): ...
+
+
+def modify_char(name): ...
