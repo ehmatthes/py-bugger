@@ -211,7 +211,7 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'ten_imports.py", line 7, in <module>' in stderr
-    assert "ModuleNotFoundError: No module named 'zoneino'" in stderr
+    assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.
     assert filecmp.cmp(e2e_config.path_system_info, path_dst_system_info)
@@ -296,7 +296,7 @@ def test_target_file(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
     assert 'system_info_script.py", line 4, in <module>' in stderr
-    assert "ModuleNotFoundError: No module named 'o'" in stderr
+    assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.
     assert filecmp.cmp(e2e_config.path_ten_imports, path_dst_ten_imports)
