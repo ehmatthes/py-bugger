@@ -92,41 +92,43 @@ class AttributeModifier(cst.CSTTransformer):
         return updated_node
 
 
-class IndentModifier(cst.CSTTransformer):
-    """Modify indentation in the user's project."""
+# class IndentModifier(cst.CSTTransformer):
+#     """Modify indentation in the user's project."""
 
-    def __init__(self, node_to_break, node_index):
-        self.node_to_break = node_to_break
+#     def __init__(self, node_to_break, node_index):
+#         self.node_to_break = node_to_break
 
-        # There may be identical nodes in the tree. node_index determines which to modify.
-        self.node_index = node_index
-        self.identical_nodes_visited = 0
+#         # There may be identical nodes in the tree. node_index determines which to modify.
+#         self.node_index = node_index
+#         self.identical_nodes_visited = 0
 
-        # Each use of this class should only generate one bug. But multiple nodes
-        # can match node_to_break, so make sure we only modify one node.
-        self.bug_generated = False
+#         # Each use of this class should only generate one bug. But multiple nodes
+#         # can match node_to_break, so make sure we only modify one node.
+#         self.bug_generated = False
 
-    def leave_For(self, original_node, updated_node):
-        """Modify an attribute name, to generate AttributeError."""
+#     def leave_For(self, original_node, updated_node):
+#         """Modify an attribute name, to generate AttributeError."""
 
-        if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
-            # If there are identical nodes and this isn't the right one, bump count
-            # and return unmodified node.
-            if self.identical_nodes_visited != self.node_index:
-                self.identical_nodes_visited += 1
-                return updated_node
+#         if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
+#             breakpoint()
+#             # If there are identical nodes and this isn't the right one, bump count
+#             # and return unmodified node.
+#             if self.identical_nodes_visited != self.node_index:
+#                 self.identical_nodes_visited += 1
+#                 return updated_node
 
-            if original_node.body.indent:
-                updated_node.body.indent += "    "
-            else:
-                print("HERE")
-                # updated_body = updated_node.body.with_changes(indent=cst.SimpleWhitespace(""))
-                updated_body = updated_node.body.with_changes(indent="        ")
+#             if original_node.body.indent:
+#                 updated_node.body.indent += "    "
+#             else:
+#                 print("HERE")
+#                 # updated_body = updated_node.body.with_changes(indent=cst.SimpleWhitespace(""))
+#                 updated_body = updated_node.body.with_changes(indent="")
 
-            self.bug_generated = True
-            return updated_node.with_changes(body=updated_body)
+#             self.bug_generated = True
+#             return updated_node.with_changes(body=updated_body)
+#             # return updated_node.with_changes(trailing_whitespace="    ")
 
-        return updated_node
+#         return updated_node
 
 
 ### --- *_bugger functions ---
@@ -231,30 +233,47 @@ def indentation_error_bugger(py_files, num_bugs):
     bugs_added = 0
     for path, node in paths_nodes_modify:
         source = path.read_text()
-        tree = cst.parse_module(source)
+        lines = source.splitlines()
+        modified_lines = []
+        for line in lines:
+            if line.startswith("for"):
+                line = f"    {line}"
+                modified_lines.append(line)
 
-        # Pick node to modify if more than one match in the file.
-        # node_count = _count_nodes(tree, cst.Attribute)
-        node_count = _count_nodes(tree, node)
-        if node_count > 1:
-            node_index = random.randrange(0, node_count - 1)
-        else:
-            node_index = 0
+                bugs_added += 1
+                print(f"Added bug to: {path.as_posix()}")
+            else:
+                modified_lines.append(line)
+        modified_source = "\n".join(modified_lines)
+        path.write_text(modified_source)
 
-        # Modify user's code.
-        try:
-            modified_tree = tree.visit(IndentModifier(node, node_index))
-        except TypeError:
-            # DEV: Figure out which nodes are ending up here, and update
-            # modifier code to handle these nodes.
-            # For diagnostics, can run against Pillow with -n set to a
-            # really high number.
-            raise
-            ...
-        else:
-            path.write_text(modified_tree.code)
-            print(f"Added bug to: {path.as_posix()}")
-            bugs_added += 1
+
+
+
+        # tree = cst.parse_module(source)
+
+        # # Pick node to modify if more than one match in the file.
+        # # node_count = _count_nodes(tree, cst.Attribute)
+        # node_count = _count_nodes(tree, node)
+        # if node_count > 1:
+        #     node_index = random.randrange(0, node_count - 1)
+        # else:
+        #     node_index = 0
+
+        # # Modify user's code.
+        # try:
+        #     modified_tree = tree.visit(IndentModifier(node, node_index))
+        # except TypeError:
+        #     # DEV: Figure out which nodes are ending up here, and update
+        #     # modifier code to handle these nodes.
+        #     # For diagnostics, can run against Pillow with -n set to a
+        #     # really high number.
+        #     raise
+        #     ...
+        # else:
+        #     path.write_text(modified_tree.code)
+        #     print(f"Added bug to: {path.as_posix()}")
+        #     bugs_added += 1
 
     return bugs_added
 
