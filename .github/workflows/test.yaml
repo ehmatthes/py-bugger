@@ -5,8 +5,8 @@ on:
 
   push:
     branches:
-      main
-      setup_ci
+      - main
+      - setup_ci
 
   workflow_dispatch:
 
