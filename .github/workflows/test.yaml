@@ -45,17 +45,17 @@ jobs:
 
           # Install dependencies
           uv pip install -r requirements.txt
-          git clone https://github.com/ehmatthes/py-bugger.git ../py-bugger
-          # uv pip install -e ../py-bugger
+          # git clone https://github.com/ehmatthes/py-bugger.git ../py-bugger
+          uv pip install -e ../py-bugger
 
-          # # Configure Git
-          # git config --global user.email "ci_tester@example.com"
-          # git config --global user.name "Ci Tester"
-          # git config --global init.defaultBranch main
+          # Configure Git
+          git config --global user.email "ci_tester@example.com"
+          git config --global user.name "Ci Tester"
+          git config --global init.defaultBranch main
 
-          # # Run all tests
-          # source .venv/bin/activate
-          # pytest -x
+          # Run all tests
+          source .venv/bin/activate
+          pytest -x
 
       # - name: Run Windows tests
 
