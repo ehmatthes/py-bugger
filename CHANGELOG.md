@@ -14,6 +14,7 @@ Can request more than one type of exception to be induced.
 #### Internal changes
 
 - Set up CI.
+- Move CLI code to a cli/ dir.
 
 ### 0.3.1
 
