@@ -1,0 +1,83 @@
+name: py-bugger CI tests
+
+on:
+  pull_request:
+
+  push:
+    branches:
+      main
+      setup_ci
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run tests on ${{ matrix.os }} with Python ${{ matrix.python-version}}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.12"] #["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # --- macOS and Linux tests ---
+
+      - name: Run macOS and Linux tests
+
+        if: startsWith(matrix.os, 'macos-') || startsWith(matrix.os, 'ubuntu-')
+        run: |
+          # Install uv
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+          # Build and activate virtual environment
+          uv venv .venv
+          source .venv/bin/activate
+
+          # Install dependencies
+          uv pip install -r requirements.txt
+          git clone https://github.com/ehmatthes/py-bugger.git ../py-bugger
+          uv pip install -e ../py-bugger
+
+          # Configure Git
+          git config --global user.email "ci_tester@example.com"
+          git config --global user.name "Ci Tester"
+          git config --global init.defaultBranch main
+
+          # Run all tests
+          source .venv/bin/activate
+          pytest -x
+
+      - name: Run Windows tests
+
+        if: startsWith(matrix.os, 'windows-')
+        run: |
+          # Install uv
+          powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+          $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
+
+          # Build and activate virtual environment
+          uv venv .venv
+          .venv\Scripts\activate
+
+          # Install dependencies
+          uv pip install -r requirements.txt
+          git clone https://github.com/ehmatthes/py-bugger.git ..\py-bugger
+          uv pip install -e ..\py-bugger
+
+          # Configure Git
+          git config --global user.email "ci_tester@example.com"
+          git config --global user.name "Ci Tester"
+          git config --global init.defaultBranch main
+
+          # Run all tests
+          pytest -x

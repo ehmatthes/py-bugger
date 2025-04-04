@@ -24,7 +24,6 @@ pluggy==1.5.0
 pygments==2.19.1
 pyproject-hooks==1.2.0
 pytest==8.3.5
--e file:///Users/eric/projects/py-bugger
 pyyaml==6.0.2
 readme-renderer==44.0
 requests==2.32.3
