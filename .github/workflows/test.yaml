@@ -45,7 +45,6 @@ jobs:
 
           # Install dependencies
           uv pip install -r requirements.txt
-          # git clone https://github.com/ehmatthes/py-bugger.git ../py-bugger
           uv pip install -e ../py-bugger
 
           # Configure Git
@@ -57,27 +56,26 @@ jobs:
           source .venv/bin/activate
           pytest -x
 
-      # - name: Run Windows tests
+      - name: Run Windows tests
 
-      #   if: startsWith(matrix.os, 'windows-')
-      #   run: |
-      #     # Install uv
-      #     powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-      #     $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
+        if: startsWith(matrix.os, 'windows-')
+        run: |
+          # Install uv
+          powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+          $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
 
-      #     # Build and activate virtual environment
-      #     uv venv .venv
-      #     .venv\Scripts\activate
+          # Build and activate virtual environment
+          uv venv .venv
+          .venv\Scripts\activate
 
-      #     # Install dependencies
-      #     uv pip install -r requirements.txt
-      #     git clone https://github.com/ehmatthes/py-bugger.git ..\py-bugger
-      #     uv pip install -e ..\py-bugger
+          # Install dependencies
+          uv pip install -r requirements.txt
+          uv pip install -e ..\py-bugger
 
-      #     # Configure Git
-      #     git config --global user.email "ci_tester@example.com"
-      #     git config --global user.name "Ci Tester"
-      #     git config --global init.defaultBranch main
+          # Configure Git
+          git config --global user.email "ci_tester@example.com"
+          git config --global user.name "Ci Tester"
+          git config --global init.defaultBranch main
 
-      #     # Run all tests
-      #     pytest -x
+          # Run all tests
+          pytest -x
