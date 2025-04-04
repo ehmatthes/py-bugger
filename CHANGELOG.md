@@ -5,6 +5,16 @@ Changelog: python-bugger
 
 Can request more than one type of exception to be induced.
 
+### 0.3.2
+
+#### External changes
+
+- NA
+
+#### Internal changes
+
+- Set up CI.
+
 ### 0.3.1
 
 #### External changes
