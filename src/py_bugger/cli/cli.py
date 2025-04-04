@@ -5,7 +5,7 @@ import os
 import click
 
 from py_bugger import py_bugger
-from py_bugger import cli_messages
+from py_bugger.cli import cli_messages
 
 
 @click.command()
