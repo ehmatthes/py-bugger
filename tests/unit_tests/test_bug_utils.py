@@ -51,3 +51,6 @@ def test_no_builtin_name():
 
         assert new_name != name
         assert new_name != "min"
+
+def test_should_fail():
+    assert False
