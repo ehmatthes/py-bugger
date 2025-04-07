@@ -34,13 +34,7 @@ from py_bugger.cli import cli_messages
 )
 def cli(exception_type, target_dir, target_file, num_bugs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
-    if not exception_type:
-        click.echo(cli_messages.msg_exception_type_required)
-        sys.exit()
-
-    if target_dir and target_file:
-        click.echo(cli_messages.msg_target_file_dir)
-        sys.exit()
+    _validate_cli(exception_type, target_dir, target_file)
 
     # Make sure we're passing appropriate Path objects.
     target_dir = _set_target_dir(target_dir)
@@ -51,6 +45,16 @@ def cli(exception_type, target_dir, target_file, num_bugs):
 
 
 # --- Helper functions (move to a cli/utils.py module) ---
+
+def _validate_cli(exception_type, target_dir, target_file):
+    """Make sure we have a valid call."""
+    if not exception_type:
+        click.echo(cli_messages.msg_exception_type_required)
+        sys.exit()
+
+    if target_dir and target_file:
+        click.echo(cli_messages.msg_target_file_dir)
+        sys.exit()
 
 
 def _set_target_dir(target_dir):
