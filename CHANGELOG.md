@@ -15,6 +15,7 @@ Can request more than one type of exception to be induced.
 
 - Set up CI.
 - Move CLI code to a cli/ dir.
+- Move buggers.py out of utils/.
 
 ### 0.3.1
 
