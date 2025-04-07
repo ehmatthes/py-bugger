@@ -187,7 +187,21 @@ def indentation_error_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find relevant files and lines.
-    targets = ["for", "while", "def", "class", "if", "elif", "else", "with", "match", "case", "try", "except", "finally"]
+    targets = [
+        "for",
+        "while",
+        "def",
+        "class",
+        "if",
+        "elif",
+        "else",
+        "with",
+        "match",
+        "case",
+        "try",
+        "except",
+        "finally",
+    ]
     paths_lines = _get_paths_lines(py_files, targets=targets)
 
     # Select the set of lines to modify. If num_bugs is greater than the number

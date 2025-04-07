@@ -25,13 +25,13 @@ dog = Dog("Willie")
 dog.say_hi()
 
 try:
-    5/0
+    5 / 0
 except ZeroDivisionError:
     print("my bad!")
 
 import random
 
-roll = random.randint(1,6)
+roll = random.randint(1, 6)
 if roll > 3:
     print("Yes!")
 elif roll > 4:
