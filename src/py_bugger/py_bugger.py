@@ -1,8 +1,8 @@
 import os
 import random
 
+from py_bugger import buggers
 from py_bugger.utils import file_utils
-from py_bugger.utils import buggers
 
 
 def main(exception_type, target_dir, target_file, num_bugs):
