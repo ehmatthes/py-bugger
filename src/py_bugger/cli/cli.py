@@ -4,6 +4,7 @@ import click
 
 from py_bugger import py_bugger
 from py_bugger.cli import cli_utils
+from py_bugger.cli.config import Config
 
 
 @click.command()
@@ -32,7 +33,8 @@ from py_bugger.cli import cli_utils
 )
 def cli(exception_type, target_dir, target_file, num_bugs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
-    cli_utils.validate_cli(exception_type, target_dir, target_file)
+    config = Config(exception_type, target_dir, target_file, num_bugs)
+    cli_utils.validate_config(config)
 
     # Make sure we're passing appropriate Path objects.
     target_dir = cli_utils.set_target_dir(target_dir)

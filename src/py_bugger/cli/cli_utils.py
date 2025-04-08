@@ -13,13 +13,13 @@ import click
 from py_bugger.cli import cli_messages
 
 
-def validate_cli(exception_type, target_dir, target_file):
-    """Make sure we have a valid call."""
-    if not exception_type:
+def validate_config(config):
+    """Make sure the CLI options are valid."""
+    if not config.exception_type:
         click.echo(cli_messages.msg_exception_type_required)
         sys.exit()
 
-    if target_dir and target_file:
+    if config.target_dir and config.target_file:
         click.echo(cli_messages.msg_target_file_dir)
         sys.exit()
 
