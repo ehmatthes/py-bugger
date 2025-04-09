@@ -29,6 +29,7 @@ def validate_config():
 
 # --- Helper functions ___
 
+
 def _update_options():
     """Make sure options are ready to use."""
     # Set an appropriate target directory.
