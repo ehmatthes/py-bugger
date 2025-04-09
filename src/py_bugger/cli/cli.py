@@ -4,10 +4,7 @@ import click
 
 from py_bugger import py_bugger
 from py_bugger.cli import cli_utils
-from py_bugger.cli.config import PBConfig
 from py_bugger.cli.config import pb_config
-
-# pb_config = PBConfig()
 
 
 @click.command()
@@ -36,13 +33,12 @@ from py_bugger.cli.config import pb_config
 )
 def cli(exception_type, target_dir, target_file, num_bugs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
-    # config = Config(exception_type, target_dir, target_file, num_bugs)
     pb_config.exception_type = exception_type
     pb_config.target_dir = target_dir
     pb_config.target_file = target_file
     pb_config.num_bugs = num_bugs
 
-    cli_utils.validate_config(pb_config)
+    cli_utils.validate_config()
 
     # Make sure we're passing appropriate Path objects.
     pb_config.target_dir = cli_utils.set_target_dir(pb_config.target_dir)

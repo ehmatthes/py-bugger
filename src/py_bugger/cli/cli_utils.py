@@ -11,15 +11,16 @@ from pathlib import Path
 import click
 
 from py_bugger.cli import cli_messages
+from py_bugger.cli.config import pb_config
 
 
-def validate_config(config):
+def validate_config():
     """Make sure the CLI options are valid."""
-    if not config.exception_type:
+    if not pb_config.exception_type:
         click.echo(cli_messages.msg_exception_type_required)
         sys.exit()
 
-    if config.target_dir and config.target_file:
+    if pb_config.target_dir and pb_config.target_file:
         click.echo(cli_messages.msg_target_file_dir)
         sys.exit()
 
