@@ -40,9 +40,4 @@ def cli(exception_type, target_dir, target_file, num_bugs):
 
     cli_utils.validate_config()
 
-    # Make sure we're passing appropriate Path objects.
-    pb_config.target_dir = cli_utils.set_target_dir(pb_config.target_dir)
-    if pb_config.target_file:
-        pb_config.target_file = Path(pb_config.target_file)
-
     py_bugger.main()

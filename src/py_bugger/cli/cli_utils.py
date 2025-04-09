@@ -24,10 +24,19 @@ def validate_config():
         click.echo(cli_messages.msg_target_file_dir)
         sys.exit()
 
+    _update_options()
 
-def set_target_dir(target_dir):
-    """Set an appropriate target directory."""
-    if target_dir:
-        return Path(target_dir)
+
+# --- Helper functions ___
+
+def _update_options():
+    """Make sure options are ready to use."""
+    # Set an appropriate target directory.
+    if pb_config.target_dir:
+        pb_config.target_dir = Path(pb_config.target_dir)
     else:
-        return Path(os.getcwd())
+        pb_config.target_dir = Path(os.getcwd())
+
+    # Make sure target_file is a Path.
+    if pb_config.target_file:
+        pb_config.target_file = Path(pb_config.target_file)
