@@ -7,8 +7,10 @@ from pathlib import Path
 
 
 @dataclass
-class Config:
-    exception_type: str
-    target_dir: Path
-    target_file: Path
-    num_bugs: int
+class PBConfig:
+    exception_type: str = ""
+    target_dir: Path = ""
+    target_file: Path = ""
+    num_bugs: int = 1
+
+pb_config = PBConfig()
