@@ -5,6 +5,7 @@ from py_bugger import buggers
 from py_bugger.utils import file_utils
 
 from py_bugger.cli.config import pb_config
+from py_bugger.cli import cli_messages
 
 
 # Set a random seed when testing.
@@ -33,11 +34,5 @@ def main():
         bugs_added += new_bugs_made
 
     # Show a final success/fail message.
-    if bugs_added == pb_config.num_bugs:
-        print("All requested bugs inserted.")
-    elif bugs_added == 0:
-        print("Unable to introduce any of the requested bugs.")
-    else:
-        msg = f"Inserted {bugs_added} bugs."
-        msg += "\nUnable to introduce additional bugs of the requested type."
-        print(msg)
+    msg = cli_messages.success_msg(bugs_added, pb_config.num_bugs)
+    print(msg)
