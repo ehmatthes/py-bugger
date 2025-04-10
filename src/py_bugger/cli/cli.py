@@ -31,12 +31,10 @@ from py_bugger.cli.config import pb_config
     default=1,
     help="How many bugs to introduce.",
 )
-def cli(exception_type, target_dir, target_file, num_bugs):
+def cli(**kwargs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
-    pb_config.exception_type = exception_type
-    pb_config.target_dir = target_dir
-    pb_config.target_file = target_file
-    pb_config.num_bugs = num_bugs
+    # Update pb_config using options passed through CLI call.
+    pb_config.__dict__.update(kwargs)
 
     cli_utils.validate_config()
 
