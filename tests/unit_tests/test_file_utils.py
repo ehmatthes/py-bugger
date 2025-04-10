@@ -53,3 +53,26 @@ def test_get_py_files_non_git(tmp_path_factory):
     assert "conftest.py" not in filenames
     assert "test_project.py" not in filenames
 
+
+def test_get_py_files_target_file(tmp_path_factory):
+    """Test function for getting .py files when target_file is set."""
+    # Build a tmp dir with some files that should be gathered, and some that
+    # should not.
+    tmp_path = tmp_path_factory.mktemp("sample_non_git_dir")
+
+    path_tests = Path(tmp_path) / "tests"
+    path_tests.mkdir()
+
+    files = ["hello.py", "goodbye.py", "conftest.py", "tests/test_project.py"]
+    for file in files:
+        path = tmp_path / file
+        path.touch()
+
+        # Set goodbye.py as the target file.
+        if file == "goodbye.py":
+            target_file = path
+
+    # Set one of those files as 
+
+    py_files = file_utils.get_py_files(tmp_path, target_file)
+    assert py_files == [target_file]
