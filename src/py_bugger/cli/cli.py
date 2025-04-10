@@ -35,7 +35,6 @@ def cli(**kwargs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
     # Update pb_config using options passed through CLI call.
     pb_config.__dict__.update(kwargs)
-
     cli_utils.validate_config()
 
     py_bugger.main()
