@@ -7,11 +7,11 @@ from py_bugger.utils import file_utils
 from py_bugger.cli.config import pb_config
 
 
-def main():
+# Set a random seed when testing.
+if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
+    random.seed(int(seed))
 
-    # Set a random seed when testing.
-    if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
-        random.seed(int(seed))
+def main():
 
     # Get a list of .py files we can consider modifying.
     if pb_config.target_file:
