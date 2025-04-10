@@ -11,6 +11,7 @@ from py_bugger.cli.config import pb_config
 if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
     random.seed(int(seed))
 
+
 def main():
 
     # Get a list of .py files we can consider modifying.

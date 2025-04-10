@@ -72,7 +72,5 @@ def test_get_py_files_target_file(tmp_path_factory):
         if file == "goodbye.py":
             target_file = path
 
-    # Set one of those files as 
-
     py_files = file_utils.get_py_files(tmp_path, target_file)
     assert py_files == [target_file]
