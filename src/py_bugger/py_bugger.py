@@ -14,11 +14,7 @@ if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
 def main():
 
     # Get a list of .py files we can consider modifying.
-    if pb_config.target_file:
-        # User requested a single target file.
-        py_files = [pb_config.target_file]
-    else:
-        py_files = file_utils.get_py_files(pb_config.target_dir)
+    py_files = file_utils.get_py_files(pb_config.target_dir)
 
     # Track how many bugs have been added.
     bugs_added = 0

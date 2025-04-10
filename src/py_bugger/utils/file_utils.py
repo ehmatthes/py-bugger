@@ -5,12 +5,20 @@ import shlex
 from pathlib import Path
 import sys
 
+from py_bugger.cli.config import pb_config
+
 
 # --- Public functions ---
 
 
 def get_py_files(target_dir):
     """Get all the .py files we can consider modifying when introducing bugs."""
+
+    # Check if user requested a single target file.
+    if pb_config.target_file:
+        return [pb_config.target_file]
+
+    # Use .gitignore if possible.
     path_git = target_dir / ".git"
     if path_git.exists():
         return _get_py_files_git(target_dir)
