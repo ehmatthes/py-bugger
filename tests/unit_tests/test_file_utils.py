@@ -1,4 +1,8 @@
-"""Tests for utils/file_utils.py."""
+"""Tests for utils/file_utils.py.
+
+This module does not use pb_config directly. That makes unit testing easier. To use
+pb_config here, update tests to create an appropriate pb_config object.
+"""
 
 from pathlib import Path
 
@@ -48,3 +52,4 @@ def test_get_py_files_non_git(tmp_path_factory):
 
     assert "conftest.py" not in filenames
     assert "test_project.py" not in filenames
+
