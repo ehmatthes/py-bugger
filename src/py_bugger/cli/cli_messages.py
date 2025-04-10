@@ -1,6 +1,5 @@
 """Messages for use in CLI output."""
 
-
 # --- Static messages ---
 
 msg_exception_type_required = (
@@ -13,6 +12,7 @@ msg_target_file_dir = (
 
 
 # --- Dynamic messages ---
+
 
 def success_msg(num_added, num_requested):
     """Generate a success message at end of run."""
