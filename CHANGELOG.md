@@ -17,6 +17,10 @@ Can request more than one type of exception to be induced.
 - Move CLI code to a cli/ dir.
 - Move buggers.py out of utils/.
 - Make a cli_utils.py module.
+- Use a `config` object for CLI options.
+- Simpler parsing of CLI options.
+- Simpler approach to getting `py_files` in `main()`.
+- Issue template for bug reports.
 
 ### 0.3.1
 
