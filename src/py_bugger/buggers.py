@@ -4,6 +4,7 @@ import libcst as cst
 import random
 
 from py_bugger.utils import cst_utils
+from py_bugger.utils import file_utils
 from py_bugger.utils import bug_utils
 
 
@@ -116,7 +117,7 @@ def indentation_error_bugger(py_files, num_bugs):
         "except",
         "finally",
     ]
-    paths_lines = _get_paths_lines(py_files, targets=targets)
+    paths_lines = file_utils.get_paths_lines(py_files, targets=targets)
 
     # Select the set of lines to modify. If num_bugs is greater than the number
     # of lines, just change each line.
@@ -134,19 +135,6 @@ def indentation_error_bugger(py_files, num_bugs):
 
 
 # --- Helper functions ---
-
-
-def _get_paths_lines(py_files, targets):
-    """Get all lines from all files matching targets."""
-    paths_lines = []
-    for path in py_files:
-        lines = path.read_text().splitlines()
-        for line in lines:
-            stripped_line = line.strip()
-            if any([stripped_line.startswith(target) for target in targets]):
-                paths_lines.append((path, line))
-
-    return paths_lines
 
 
 def _get_paths_nodes(py_files, node_type):

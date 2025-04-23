@@ -23,6 +23,19 @@ def get_py_files(target_dir, target_file):
         return _get_py_files_non_git(target_dir)
 
 
+def get_paths_lines(py_files, targets):
+    """Get all lines from all files matching targets."""
+    paths_lines = []
+    for path in py_files:
+        lines = path.read_text().splitlines()
+        for line in lines:
+            stripped_line = line.strip()
+            if any([stripped_line.startswith(target) for target in targets]):
+                paths_lines.append((path, line))
+
+    return paths_lines
+
+
 # --- Helper functions ---
 
 
@@ -57,3 +70,4 @@ def _get_py_files_non_git(target_dir):
     py_files = [pf for pf in py_files if not pf.name.startswith("test_")]
 
     return py_files
+
