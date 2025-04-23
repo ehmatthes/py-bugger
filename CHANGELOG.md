@@ -21,6 +21,7 @@ Can request more than one type of exception to be induced.
 - Simpler parsing of CLI options.
 - Simpler approach to getting `py_files` in `main()`.
 - Issue template for bug reports.
+- Move helper functions from buggers.py to appropriate utility modules.
 
 ### 0.3.1
 
