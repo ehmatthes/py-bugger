@@ -137,24 +137,6 @@ def indentation_error_bugger(py_files, num_bugs):
 # --- Helper functions ---
 
 
-def _get_all_nodes(path):
-    """Get all nodes in a file.
-
-    This is primarily for development work, where we want to see all the nodes
-    in a short representative file.
-
-    Example usage, from a #_bugger() function:
-        nodes = _get_all_nodes(py_files[0])
-    """
-    source = path.read_text()
-    tree = cst.parse_module(source)
-
-    node_collector = cst_utils.NodeCollector(node_type=cst.CSTNode)
-    tree.visit(node_collector)
-
-    return node_collector.collected_nodes
-
-
 def _count_nodes(tree, node):
     """Count the number of nodes in path that match node.
 

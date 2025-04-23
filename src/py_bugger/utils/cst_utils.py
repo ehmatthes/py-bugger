@@ -116,3 +116,21 @@ def get_paths_nodes(py_files, node_type):
             paths_nodes.append((path, node))
 
     return paths_nodes
+
+
+def get_all_nodes(path):
+    """Get all nodes in a file.
+
+    This is primarily for development work, where we want to see all the nodes
+    in a short representative file.
+
+    Example usage, from a #_bugger() function:
+        nodes = _get_all_nodes(py_files[0])
+    """
+    source = path.read_text()
+    tree = cst.parse_module(source)
+
+    node_collector = NodeCollector(node_type=cst.CSTNode)
+    tree.visit(node_collector)
+
+    return node_collector.collected_nodes
