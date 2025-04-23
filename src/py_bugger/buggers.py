@@ -10,6 +10,7 @@ from py_bugger.utils import bug_utils
 
 ### --- *_bugger functions ---
 
+
 def module_not_found_bugger(py_files, num_bugs):
     """Induce a ModuleNotFoundError.
 

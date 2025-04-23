@@ -70,4 +70,3 @@ def _get_py_files_non_git(target_dir):
     py_files = [pf for pf in py_files if not pf.name.startswith("test_")]
 
     return py_files
-
