@@ -134,3 +134,15 @@ def get_all_nodes(path):
     tree.visit(node_collector)
 
     return node_collector.collected_nodes
+
+
+def count_nodes(tree, node):
+    """Count the number of nodes in path that match node.
+
+    Useful when a file has multiple identical nodes, and we want to choose one.
+    """
+    # Count all relevant nodes.
+    node_counter = NodeCounter(node)
+    tree.visit(node_counter)
+
+    return node_counter.node_count

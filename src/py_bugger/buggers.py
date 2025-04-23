@@ -68,8 +68,7 @@ def attribute_error_bugger(py_files, num_bugs):
         tree = cst.parse_module(source)
 
         # Pick node to modify if more than one match in the file.
-        # node_count = _count_nodes(tree, cst.Attribute)
-        node_count = _count_nodes(tree, node)
+        node_count = cst_utils.count_nodes(tree, node)
         if node_count > 1:
             node_index = random.randrange(0, node_count - 1)
         else:
@@ -135,15 +134,5 @@ def indentation_error_bugger(py_files, num_bugs):
 
 
 # --- Helper functions ---
-
-
-def _count_nodes(tree, node):
-    """Count the number of nodes in path that match node.
-
-    Useful when a file has multiple identical nodes, and we want to choose one.
-    """
-    # Count all relevant nodes.
-    node_counter = cst_utils.NodeCounter(node)
-    tree.visit(node_counter)
-
-    return node_counter.node_count
+# DEV: This is a good place for helper functions, before they are refined enough
+# to move to utils/.
