@@ -13,6 +13,8 @@ dev = [
     "build>=1.2.1",
     "pytest>=8.3.0",
     "twine>=5.1.1",
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
 ]
 
 [build-system]
@@ -24,3 +26,8 @@ where = ["src"]
 
 [project.scripts]
 py-bugger = "py_bugger.cli.cli:cli"
+
+[project.urls]
+"Documentation" = "https://github.com/ehmatthes/py-bugger"
+"GitHub" = "https://github.com/ehmatthes/py-bugger"
+"Changelog" = "https://github.com/ehmatthes/py-bugger/blob/main/CHANGELOG.md"
