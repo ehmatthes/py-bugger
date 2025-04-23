@@ -17,7 +17,7 @@ def module_not_found_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
-    paths_nodes = _get_paths_nodes(py_files, node_type=cst.Import)
+    paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Import)
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -54,7 +54,7 @@ def attribute_error_bugger(py_files, num_bugs):
         Int: Number of bugs made.
     """
     # Find all relevant nodes.
-    paths_nodes = _get_paths_nodes(py_files, node_type=cst.Attribute)
+    paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Attribute)
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
@@ -135,22 +135,6 @@ def indentation_error_bugger(py_files, num_bugs):
 
 
 # --- Helper functions ---
-
-
-def _get_paths_nodes(py_files, node_type):
-    """Get all nodes of given type."""
-    paths_nodes = []
-    for path in py_files:
-        source = path.read_text()
-        tree = cst.parse_module(source)
-
-        node_collector = cst_utils.NodeCollector(node_type=node_type)
-        tree.visit(node_collector)
-
-        for node in node_collector.collected_nodes:
-            paths_nodes.append((path, node))
-
-    return paths_nodes
 
 
 def _get_all_nodes(path):

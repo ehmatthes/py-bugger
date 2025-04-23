@@ -18,7 +18,7 @@ class NodeCollector(cst.CSTVisitor):
             self.collected_nodes.append(node)
         return True
 
-        
+
 class NodeCounter(cst.CSTVisitor):
     """Count all nodes matching the target node."""
 
@@ -100,3 +100,19 @@ class AttributeModifier(cst.CSTTransformer):
             return updated_node.with_changes(attr=new_attr)
 
         return updated_node
+
+
+def get_paths_nodes(py_files, node_type):
+    """Get all nodes of given type."""
+    paths_nodes = []
+    for path in py_files:
+        source = path.read_text()
+        tree = cst.parse_module(source)
+
+        node_collector = NodeCollector(node_type=node_type)
+        tree.visit(node_collector)
+
+        for node in node_collector.collected_nodes:
+            paths_nodes.append((path, node))
+
+    return paths_nodes
