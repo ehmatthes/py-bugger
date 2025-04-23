@@ -1,0 +1,102 @@
+"""Utilities for working with the CST."""
+
+import libcst as cst
+
+from py_bugger.utils import bug_utils
+
+
+class NodeCollector(cst.CSTVisitor):
+    """Collect all nodes of a specific kind."""
+
+    def __init__(self, node_type):
+        self.node_type = node_type
+        self.collected_nodes = []
+
+    def on_visit(self, node):
+        """Visit each node, collecting nodes that match the node type."""
+        if isinstance(node, self.node_type):
+            self.collected_nodes.append(node)
+        return True
+
+        
+class NodeCounter(cst.CSTVisitor):
+    """Count all nodes matching the target node."""
+
+    def __init__(self, target_node):
+        self.target_node = target_node
+        self.node_count = 0
+
+    def on_visit(self, node):
+        """Increment node_count if node matches.."""
+        if node.deep_equals(self.target_node):
+            self.node_count += 1
+        return True
+
+
+class ImportModifier(cst.CSTTransformer):
+    """Modify imports in the user's project.
+
+    Note: Each import should be unique, so there shouldn't be any need to track
+    whether a bug was introduced. node_to_break should only match one node in the
+    tree.
+    """
+
+    def __init__(self, node_to_break):
+        self.node_to_break = node_to_break
+
+    def leave_Import(self, original_node, updated_node):
+        """Modify a direct `import <package>` statement."""
+        names = updated_node.names
+
+        if original_node.deep_equals(self.node_to_break):
+            original_name = names[0].name.value
+
+            # Add a typo to the name of the module being imported.
+            new_name = bug_utils.make_typo(original_name)
+
+            # Modify the node name.
+            new_names = [cst.ImportAlias(name=cst.Name(new_name))]
+
+            return updated_node.with_changes(names=new_names)
+
+        return updated_node
+
+
+class AttributeModifier(cst.CSTTransformer):
+    """Modify attributes in the user's project."""
+
+    def __init__(self, node_to_break, node_index):
+        self.node_to_break = node_to_break
+
+        # There may be identical nodes in the tree. node_index determines which to modify.
+        self.node_index = node_index
+        self.identical_nodes_visited = 0
+
+        # Each use of this class should only generate one bug. But multiple nodes
+        # can match node_to_break, so make sure we only modify one node.
+        self.bug_generated = False
+
+    def leave_Attribute(self, original_node, updated_node):
+        """Modify an attribute name, to generate AttributeError."""
+        attr = updated_node.attr
+
+        if original_node.deep_equals(self.node_to_break) and not self.bug_generated:
+            # If there are identical nodes and this isn't the right one, bump count
+            # and return unmodified node.
+            if self.identical_nodes_visited != self.node_index:
+                self.identical_nodes_visited += 1
+                return updated_node
+
+            original_identifier = attr.value
+
+            # Add a typo to the attribute name.
+            new_identifier = bug_utils.make_typo(original_identifier)
+
+            # Modify the node name.
+            new_attr = cst.Name(new_identifier)
+
+            self.bug_generated = True
+
+            return updated_node.with_changes(attr=new_attr)
+
+        return updated_node

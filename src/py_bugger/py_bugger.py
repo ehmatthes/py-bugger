@@ -22,7 +22,8 @@ def main():
 
     # Currently, handles just one exception type per call.
     # When multiple are supported, implement more complex logic for choosing which ones
-    # to introduce, and tracking bugs.
+    # to introduce, and tracking bugs. Also consider a more appropriate dispatch approach
+    # as the project evolves.
     if pb_config.exception_type == "ModuleNotFoundError":
         new_bugs_made = buggers.module_not_found_bugger(py_files, pb_config.num_bugs)
         bugs_added += new_bugs_made
