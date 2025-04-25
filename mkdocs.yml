@@ -23,7 +23,9 @@ nav:
   - "Introduction": "index.md"
   - "Quick Start": "quick_start/index.md"
   - "Usage": "usage/index.md"
-  - "Contributing": "contributing/index.md"
+  - "Contributing":
+    - "contributing/index.md"
+    - "Roadmap": "contributing/roadmap.md"
 
 
 

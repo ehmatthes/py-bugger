@@ -19,3 +19,5 @@ People typically have to learn debugging by focusing on whatever bug happens to 
 [Usage](usage/index.md)
 
 [Contributing](contributing/index.md)
+
+[Roadmap](contributing/roadmap.md)
