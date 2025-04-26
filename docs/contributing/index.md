@@ -80,3 +80,32 @@ IndentationError: unexpected indent
 ### Running `py-bugger` against a larger project
 
 Once you have `py-bugger` working against a single .py file, you'll want to run it against a larger project as well. I've been using Pillow in development work, because it's a mature project with lots of nested .py files, and it has a solid test suite that runs in less than a minute. Whatever project you choose, make sure it has a well-developed test suite. Install `py-bugger` in editable mode, run it against the project, and then make sure the tests fail in the expected way due to the bug that was introduced.
+
+Here's how to run py-bugger against Pillow, and verify that it worked as expected:
+
+```sh
+$ git clone https://github.com/python-pillow/Pillow.git pb-pillow
+$ cd pb-pillow
+pb-pillow$ uv venv .venv
+pb-pillow$ source .venv/bin/activate
+(.venv) /pb-pillow$ uv pip install -e ".[tests]"
+(.venv) /pb-pillow$ pytest
+...
+========== 4692 passed, 259 skipped, 3 xfailed in 46.65s ==========
+
+(.venv) /pb-pillow$ uv pip install -e ~/projects/py-bugger
+(.venv) /pb-pillow$ py-bugger -e AttributeError
+Added bug to: src/PIL/TiffImagePlugin.py
+All requested bugs inserted.
+(.venv) /pb-pillow$ pytest -qx
+...
+E   AttributeError: module 'PIL.TiffTags' has no attribute 'LONmG8'. Did you mean: 'LONG8'?
+========== short test summary info ==========
+ERROR Tests/test_file_libtiff.py - AttributeError: module 'PIL.TiffTags' has no attribute 'LONmG8'. Did you mean: 'LONG8'?
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 0.33s
+```
+
+!!! note
+
+    When you install the project you want to test against, make sure you install it in editable mode. I've made the mistake of installing Pillow without the `-e` flag, and the tests keep passing no matter how many bugs I add.
