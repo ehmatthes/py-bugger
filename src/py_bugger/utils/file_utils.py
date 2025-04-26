@@ -49,6 +49,7 @@ def _get_py_files_git(target_dir):
     # Convert to path objects. Filter out any test-related files.
     py_files = [Path(f) for f in py_files]
     py_files = [pf for pf in py_files if "tests/" not in pf.as_posix()]
+    py_files = [pf for pf in py_files if "Tests/" not in pf.as_posix()]
     py_files = [pf for pf in py_files if "test_code/" not in pf.as_posix()]
     py_files = [pf for pf in py_files if pf.name != "conftest.py"]
     py_files = [pf for pf in py_files if not pf.name.startswith("test_")]
@@ -60,7 +61,7 @@ def _get_py_files_non_git(target_dir):
     """Get all relevant .py files from a directory not managed by Git."""
     py_files = target_dir.rglob("*.py")
 
-    exclude_dirs = [".venv/", "venv/", "tests/", "test_code/", "build/", "dist/"]
+    exclude_dirs = [".venv/", "venv/", "tests/", "Tests/", "test_code/", "build/", "dist/"]
     py_files = [
         pf
         for pf in py_files
