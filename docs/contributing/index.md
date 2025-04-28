@@ -102,10 +102,45 @@ All requested bugs inserted.
 E   AttributeError: module 'PIL.TiffTags' has no attribute 'LONmG8'. Did you mean: 'LONG8'?
 ========== short test summary info ==========
 ERROR Tests/test_file_libtiff.py - AttributeError: module 'PIL.TiffTags' has no attribute 'LONmG8'. Did you mean: 'LONG8'?
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!! stopping after 1 failures !!!!!!!!!!
 1 error in 0.33s
 ```
 
 !!! note
 
     When you install the project you want to test against, make sure you install it in editable mode. I've made the mistake of installing Pillow without the `-e` flag, and the tests keep passing no matter how many bugs I add.
+
+## Overall logic
+
+It's helpful to get a quick sense of how the project works.
+
+### `src/py_bugger/cli/cli.py`
+
+The main public interface is defined in `cli.py`. The `cli()` function updates the `pb_config` object based on the current CLI args. These args are then validated, and the `main()` function is called.
+
+### `src/py_bugger/py_bugger.py`
+
+The `main()` function in `py_bugger.py` collects the `py_files` that we can consider modifying. It then calls out to "bugger" functions that inspect the target code, identifying all the ways we could modify it to introduce the requested kind of bug. The actual bug that's introduced is chosen randomly on each run. After introducing bugs, a `success_msg` is generated showing whether the requested bugs were inserted.
+
+### Notes
+
+- This is the ideal take. Currently, we're not identifying all possible ways any given bug could be introduced. Each bug that's supported is implemented in a way that we should see a significant variety of bugs generated in a project of moderate complexity.
+- The initial internal structure has not been fully refactored yet, because there's some behavior yet to refine. To be specific, questions about supporting multiple types of bugs in one call, and supporting logical errors will impact internal structure.
+
+## Testing
+
+`py-bugger` currently has a small set of unit and end-to-end tests. The project is still evolving, and there's likely some significant refactoring that will happen before it fully stabilizes internally. We're aiming for test coverage that preserves current functionality, but isn't overly fragile to refactoring. Currently, the focus is on e2e tests for all significant external behavior, and unit tests for critical and stable utilities.
+
+### Unit tests
+
+Unit tests currently require no setup.
+
+### End-to-end tests
+
+End-to-end tests run `py-bugger` commands just as end users would, against a variety of scripts and small projects. This requires a bit of setup that's helpful to understand.
+
+Randomness plays an important role in creating all bugs, so a random seed is set in `tests/e2e_tests/conftest.py`. This is done in `set_random_seed_env()`, which sets an environment variable with session scope.
+
+The `e2e_config()` fixture returns a session-scoped config object containing paths used in most e2e tests. These include reference files, sample scripts, and the path to the Python interpreter for the current virtual environment. Note that this test config object is *not* the same as the `pb_config` object that's used in the main project.
+
+Most e2e test functions copy sample code to a temp directory, and then make a `py-bugger` call using either `--target-dir` or `--target-file` aimed at that directory. Usually, they run the target file as well. We then make various assertions about the bugs that were introduced, and the results of running the file or project after running `py-bugger`.
