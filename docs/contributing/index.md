@@ -17,7 +17,7 @@ $ git clone https://github.com/ehmatthes/py-bugger.git
 Cloning into 'py-bugger'...
 ...
 
-$ cd py-bugger-sample 
+$ cd py-bugger 
 py-bugger$ uv venv .venv
 py-bugger$ source .venv/bin/activate
 (.venv) py-bugger$ uv pip install -e ".[dev]"
@@ -126,6 +126,14 @@ The `main()` function in `py_bugger.py` collects the `py_files` that we can cons
 
 - This is the ideal take. Currently, we're not identifying all possible ways any given bug could be introduced. Each bug that's supported is implemented in a way that we should see a significant variety of bugs generated in a project of moderate complexity.
 - The initial internal structure has not been fully refactored yet, because there's some behavior yet to refine. To be specific, questions about supporting multiple types of bugs in one call, and supporting logical errors will impact internal structure.
+
+## Parsing code
+
+To introduce bugs, `py-bugger` needs to inspect all the code in the target .py file, or the appropriate set of .py files in a project. For most bugs, `py-bugger` uses a *Concrete Syntax Tree* (CST) to do this. When you convert Python code to an *Abstract Syntax Tree* (AST), it loses all comments and non-significant whitespace. We can't really use an AST, because we need to preserve the original comments and whitespace. A CST is like an AST, with comments and nons-significant whitespace included.
+
+Consider trying to induce an `AttributeError`. We want to find all attributes in a set of .py files. The CST is perfect for that. But if we want to find all indented lines, it can be simpler (and much faster) to just parse all the lines in all the files, and look for any leading whitespace.
+
+As the project evolves, most work will probably be done using the CST. It may be worthwhile to offer a `--quick` or `--fast` argument, which prefers non-CST parsing even if it means a smaller variety of possible bugs.
 
 ## Testing
 

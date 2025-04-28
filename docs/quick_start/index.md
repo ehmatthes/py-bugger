@@ -12,6 +12,10 @@ hide:
 $ pip install python-bugger
 ```
 
+!!! note
+
+    The package name is `python-bugger`, because `py-bugger` was unavailable on PyPI.
+
 ## Introducing a bug into a project
 
 If you don't specify a target directory or file, `py-bugger` will look at all *.py* files in the current directory before deciding where to insert a bug. If the directory is a Git repository, it will follow the rules in *.gitignore*. It will also avoid introducing bugs into test directories and virtual environments that follow familiar naming patterns.
