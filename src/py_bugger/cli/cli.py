@@ -31,6 +31,12 @@ from py_bugger.cli.config import pb_config
     default=1,
     help="How many bugs to introduce.",
 )
+# @click.option(
+#     "--verbose",
+#     "-v",
+#     is_flag=True,
+#     help="Enable verbose output.",
+# )
 def cli(**kwargs):
     """Practice debugging, by intentionally introducing bugs into an existing codebase."""
     # Update pb_config using options passed through CLI call.
