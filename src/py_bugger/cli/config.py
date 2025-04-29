@@ -10,6 +10,7 @@ class PBConfig:
     target_dir: Path = ""
     target_file: Path = ""
     num_bugs: int = 1
+    verbose: bool = True
 
 
 pb_config = PBConfig()
