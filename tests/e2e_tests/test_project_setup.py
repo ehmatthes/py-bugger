@@ -1,5 +1,5 @@
-"""Test aspects of project setup that might interfere with CI and the release process.
-"""
+"""Test aspects of project setup that might interfere with CI and the release process."""
+
 
 def test_editable_requirement(e2e_config):
     """Make sure there's no editable entry for py-bugger in requirements.txt.

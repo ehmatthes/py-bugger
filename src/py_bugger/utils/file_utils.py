@@ -61,7 +61,15 @@ def _get_py_files_non_git(target_dir):
     """Get all relevant .py files from a directory not managed by Git."""
     py_files = target_dir.rglob("*.py")
 
-    exclude_dirs = [".venv/", "venv/", "tests/", "Tests/", "test_code/", "build/", "dist/"]
+    exclude_dirs = [
+        ".venv/",
+        "venv/",
+        "tests/",
+        "Tests/",
+        "test_code/",
+        "build/",
+        "dist/",
+    ]
     py_files = [
         pf
         for pf in py_files

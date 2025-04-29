@@ -140,6 +140,7 @@ def indentation_error_bugger(py_files):
 # DEV: This is a good place for helper functions, before they are refined enough
 # to move to utils/.
 
+
 def _report_bug_added(path_modified):
     """Report that a bug was added."""
     if pb_config.verbose:

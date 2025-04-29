@@ -30,6 +30,7 @@ def test_verbose_flag_true(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
     assert "name_picker.py" in stdout
 
+
 def test_verbose_flag_false(tmp_path_factory, e2e_config):
     """py-bugger --exception-type ModuleNotFoundError"""
 
