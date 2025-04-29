@@ -5,6 +5,16 @@ Changelog: python-bugger
 
 Can request more than one type of exception to be induced.
 
+### 0.3.3
+
+#### External changes
+
+- Added a `--verbose` (`-v`) flag. Only shows where bugs were added when this flag is present.
+
+#### Internal changes
+
+- The `pb_config` object is imported directly into *buggers.py*, and does not need to be passed to each bugger function.
+
 ### 0.3.2
 
 #### External changes
