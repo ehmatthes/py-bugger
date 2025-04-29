@@ -44,7 +44,7 @@ def module_not_found_bugger(py_files):
             ...
         else:
             path.write_text(modified_tree.code)
-            print(f"Added bug to: {path.as_posix()}")
+            _report_bug_added(path)
             bugs_added += 1
 
     return bugs_added
@@ -88,7 +88,7 @@ def attribute_error_bugger(py_files):
             ...
         else:
             path.write_text(modified_tree.code)
-            print(f"Added bug to: {path.as_posix()}")
+            _report_bug_added(path)
             bugs_added += 1
 
     return bugs_added
@@ -130,7 +130,7 @@ def indentation_error_bugger(py_files):
     bugs_added = 0
     for path, target_line in paths_lines_modify:
         if bug_utils.add_indentation(path, target_line):
-            print(f"Added bug to: {path.as_posix()}")
+            _report_bug_added(path)
             bugs_added += 1
 
     return bugs_added
@@ -139,3 +139,7 @@ def indentation_error_bugger(py_files):
 # --- Helper functions ---
 # DEV: This is a good place for helper functions, before they are refined enough
 # to move to utils/.
+
+def _report_bug_added(path_modified):
+    """Report that a bug was added."""
+    print(f"Added bug to: {path_modified.as_posix()}")
