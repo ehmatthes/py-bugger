@@ -50,7 +50,7 @@ def module_not_found_bugger(py_files):
     return bugs_added
 
 
-def attribute_error_bugger(py_files, num_bugs):
+def attribute_error_bugger(py_files):
     """Induce an AttributeError.
 
     Returns:
@@ -61,7 +61,7 @@ def attribute_error_bugger(py_files, num_bugs):
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), num_bugs)
+    num_changes = min(len(paths_nodes), pb_config.num_bugs)
     paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
 
     # Modify each relevant path.
@@ -94,7 +94,7 @@ def attribute_error_bugger(py_files, num_bugs):
     return bugs_added
 
 
-def indentation_error_bugger(py_files, num_bugs):
+def indentation_error_bugger(py_files):
     """Induce an IndentationError.
 
     This simply parses raw source files. Conditions are pretty concrete, and LibCST
@@ -123,7 +123,7 @@ def indentation_error_bugger(py_files, num_bugs):
 
     # Select the set of lines to modify. If num_bugs is greater than the number
     # of lines, just change each line.
-    num_changes = min(len(paths_lines), num_bugs)
+    num_changes = min(len(paths_lines), pb_config.num_bugs)
     paths_lines_modify = random.sample(paths_lines, k=num_changes)
 
     # Modify each relevant path.
