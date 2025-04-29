@@ -142,4 +142,7 @@ def indentation_error_bugger(py_files):
 
 def _report_bug_added(path_modified):
     """Report that a bug was added."""
-    print(f"Added bug to: {path_modified.as_posix()}")
+    if pb_config.verbose:
+        print(f"Added bug to: {path_modified.as_posix()}")
+    else:
+        print(f"Added bug.")
