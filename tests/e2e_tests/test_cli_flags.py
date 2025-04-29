@@ -46,4 +46,5 @@ def test_verbose_flag_false(tmp_path_factory, e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     assert "All requested bugs inserted." in stdout
+    assert "Added bug." in stdout
     assert "name_picker.py" not in stdout
