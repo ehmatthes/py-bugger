@@ -24,6 +24,7 @@ Options:
                              using this arg!)
   --target-file TEXT         Target a single .py file.
   -n, --num-bugs INTEGER     How many bugs to introduce.
+  -v, --verbose              Enable verbose output.
   --help                     Show this message and exit.
 ```
 

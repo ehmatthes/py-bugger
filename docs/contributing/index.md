@@ -62,7 +62,7 @@ pb-simple-test$ source .venv/bin/activate
 3
 
 (.venv) pb-simple-test$ py-bugger -e IndentationError
-Added bug to: simple_indent.py
+Added bug.
 All requested bugs inserted.
 
 (.venv) pb-simple-test$ python simple_indent.py 
@@ -95,7 +95,7 @@ pb-pillow$ source .venv/bin/activate
 
 (.venv) /pb-pillow$ uv pip install -e ~/projects/py-bugger
 (.venv) /pb-pillow$ py-bugger -e AttributeError
-Added bug to: src/PIL/TiffImagePlugin.py
+Added bug.
 All requested bugs inserted.
 (.venv) /pb-pillow$ pytest -qx
 ...
@@ -109,6 +109,10 @@ ERROR Tests/test_file_libtiff.py - AttributeError: module 'PIL.TiffTags' has no 
 !!! note
 
     When you install the project you want to test against, make sure you install it in editable mode. I've made the mistake of installing Pillow without the `-e` flag, and the tests keep passing no matter how many bugs I add.
+
+!!! note
+
+    Passing the `--verbose` (`-v`) flag will show you which files bugs were added to. This is not good for end users, who typically don't want to be told which files were modified. But it can be really helpful in development and testing work.
 
 ## Overall logic
 
