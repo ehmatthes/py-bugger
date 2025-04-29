@@ -35,7 +35,7 @@ Currently, you can create multiple bugs that target any of the supported excepti
 $ py-bugger -e IndentationError --n 3
 ```
 
-## Introducing mulitple bugs of different types
+## Introducing multiple bugs of different types
 
 Currently, it's not possible to specify more than one exception type in a single `py-bugger` call. You may have luck running `py-bugger` multiple times, with different exception types:
 
