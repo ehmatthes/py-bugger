@@ -25,7 +25,7 @@ def main():
     # to introduce, and tracking bugs. Also consider a more appropriate dispatch approach
     # as the project evolves.
     if pb_config.exception_type == "ModuleNotFoundError":
-        new_bugs_made = buggers.module_not_found_bugger(py_files, pb_config.num_bugs)
+        new_bugs_made = buggers.module_not_found_bugger(py_files)
         bugs_added += new_bugs_made
     elif pb_config.exception_type == "AttributeError":
         new_bugs_made = buggers.attribute_error_bugger(py_files, pb_config.num_bugs)

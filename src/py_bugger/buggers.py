@@ -7,11 +7,13 @@ from py_bugger.utils import cst_utils
 from py_bugger.utils import file_utils
 from py_bugger.utils import bug_utils
 
+from py_bugger.cli.config import pb_config
+
 
 ### --- *_bugger functions ---
 
 
-def module_not_found_bugger(py_files, num_bugs):
+def module_not_found_bugger(py_files):
     """Induce a ModuleNotFoundError.
 
     Returns:
@@ -22,7 +24,7 @@ def module_not_found_bugger(py_files, num_bugs):
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), num_bugs)
+    num_changes = min(len(paths_nodes), pb_config.num_bugs)
     paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
 
     # Modify each relevant path.
