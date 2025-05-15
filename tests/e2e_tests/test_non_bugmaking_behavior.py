@@ -8,8 +8,11 @@ import filecmp
 import os
 import sys
 
+import pytest
 
-def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config):
+
+@pytest.mark.parametrize("exception_type", ["IndentationError"])
+def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exception_type):
     """Test that trailing newlines are preserved when present."""
 
     # Copy sample code to tmp dir.
@@ -20,7 +23,7 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_dog, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type IndentationError --target-file {path_dst.as_posix()}"
+    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -33,7 +36,8 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config):
     assert lines[-1] == ""
 
 
-def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config):
+@pytest.mark.parametrize("exception_type", ["IndentationError"])
+def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config, exception_type):
     """Test that trailing newlines are not introduced when not originally present."""
 
     # Copy sample code to tmp dir.
@@ -45,7 +49,7 @@ def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config):
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type IndentationError --target-file {path_dst.as_posix()}"
+    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
