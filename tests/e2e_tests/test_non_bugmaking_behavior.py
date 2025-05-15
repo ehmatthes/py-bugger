@@ -11,7 +11,7 @@ import sys
 import pytest
 
 
-@pytest.mark.parametrize("exception_type", ["IndentationError"])
+@pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError"])
 def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exception_type):
     """Test that trailing newlines are preserved when present."""
 
@@ -36,7 +36,7 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exc
     assert lines[-1] == ""
 
 
-@pytest.mark.parametrize("exception_type", ["IndentationError"])
+@pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError"])
 def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config, exception_type):
     """Test that trailing newlines are not introduced when not originally present."""
 
