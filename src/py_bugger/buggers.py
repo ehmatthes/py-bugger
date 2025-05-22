@@ -129,7 +129,17 @@ def indentation_error_bugger(py_files):
     # Modify each relevant path.
     bugs_added = 0
     for path, target_line in paths_lines_modify:
-        if bug_utils.add_indentation(path, target_line):
+    # Randomly choose which type of indentation error to introduce. 
+    # I tried to follow your function's logic, and eventually we could just combine them.
+    # I didn't want to suggest too many fundamental changes to existing codebase, hence implementing random choice.
+        strategy = random.choice(["add", "mess"])
+
+        if strategy == "add":
+            modified = bug_utils.add_indentation(path, target_line)
+        else:
+            modified = bug_utils.mess_up_indentation(path, target_line)
+
+        if modified:
             _report_bug_added(path)
             bugs_added += 1
 

@@ -75,3 +75,36 @@ def add_indentation(path, target_line):
     path.write_text(modified_source)
 
     return indentation_added
+
+
+def mess_up_indentation(path, target_line):
+    """
+    Randomly mess with indentation of the target line.
+    Options: indent, dedent, or bad-indent.
+    """
+    lines = path.read_text().splitlines()
+    modified_lines = []
+    modified = False
+
+    for line in lines:
+        if line == target_line and not modified:
+            leading_spaces = len(line) - len(line.lstrip(" "))
+            indent_unit = 4 if leading_spaces % 4 == 0 else 2
+            action = random.choice(["indent", "dedent", "bad-indent"])
+
+            if action == "indent":
+                line = " " * indent_unit + line
+            elif action == "dedent" and leading_spaces >= indent_unit:
+                line = line[indent_unit:]
+            elif action == "bad-indent":
+                line = " " * (indent_unit + 1) + line.lstrip(" ")
+
+            modified = True
+
+        modified_lines.append(line)
+
+    if modified:
+        path.write_text("\n".join(modified_lines))
+        return True
+        
+    return False
