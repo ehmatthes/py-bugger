@@ -3,6 +3,7 @@ import random
 
 from py_bugger import buggers
 from py_bugger.utils import file_utils
+from py_bugger.utils.git_utils import clean_git_status
 
 from py_bugger.cli.config import pb_config
 from py_bugger.cli import cli_messages
@@ -14,6 +15,9 @@ if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
 
 
 def main():
+    # Ensure safe working state
+    clean_git_status(force=pb_config.force)
+
     # Get a list of .py files we can consider modifying.
     py_files = file_utils.get_py_files(pb_config.target_dir, pb_config.target_file)
 
