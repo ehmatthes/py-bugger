@@ -35,6 +35,19 @@ def get_paths_lines(py_files, targets):
 
     return paths_lines
 
+def write_file_from_lines(path, lines):
+    """Rebuild a file from a sequence of lines.
+
+    This is required to preserve the final trailing newline.
+    See issue #39.
+    """
+    lines_joined = "\n".join(lines)
+    if not lines[-1]:
+        # The last line is an empty string, so we need to add a trailing newline.
+        lines_joined = "\n".join(lines) + "\n"
+
+    path.write_text(lines_joined)
+
 
 # --- Helper functions ---
 

@@ -3,6 +3,8 @@
 import random
 import builtins
 
+from py_bugger.utils import file_utils
+
 
 def make_typo(name):
     """Add a typo to the name of an identifier.
@@ -71,7 +73,8 @@ def add_indentation(path, target_line):
         else:
             modified_lines.append(line)
 
-    modified_source = "\n".join(modified_lines)
-    path.write_text(modified_source)
+    # modified_source = "\n".join(modified_lines)
+    # path.write_text(modified_source)
+    file_utils.write_file_from_lines(path, modified_lines)
 
     return indentation_added
