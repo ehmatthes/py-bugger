@@ -66,7 +66,8 @@ def add_indentation(path, target_line):
 
     modified_lines = []
     for line in lines:
-        # if line == target_line:
+        # line contains leading whitespace and trailing newline.
+        # target_line just contains code, so use `in` rather than `==`.
         if target_line in line:
             line = f"    {line}"
             modified_lines.append(line)
