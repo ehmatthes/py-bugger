@@ -64,5 +64,9 @@ def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config, 
     assert "All requested bugs inserted." in stdout
 
     # Check that last line is not blank.
-    lines = path_dst.read_text().splitlines()
-    assert lines[-1] != ""
+    lines = path_dst.read_text().splitlines(keepends=True)
+    if exception_type == "AttributeError":
+        # Random seed causes a bug in the last line, but we're just checking the line ending.
+        assert lines[-1] == "dog.sayhi()"
+    else:
+        assert lines[-1] == "dog.say_hi()"
