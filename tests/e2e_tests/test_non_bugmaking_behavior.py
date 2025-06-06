@@ -33,9 +33,9 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exc
 
     assert "All requested bugs inserted." in stdout
 
-    # Check that last line is blank.
-    lines = path_dst.read_text().splitlines()
-    assert lines[-1] == ""
+    # Check that last line has a trailing newline.
+    lines = path_dst.read_text().splitlines(keepends=True)
+    assert lines[-1] == "dog.say_hi()\n"
 
 
 @pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError"])

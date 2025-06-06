@@ -62,11 +62,12 @@ def add_indentation(path, target_line):
     """Add one level of indentation (four spaces) to line."""
     indentation_added = False
 
-    lines = path.read_text().splitlines()
+    lines = path.read_text().splitlines(keepends=True)
 
     modified_lines = []
     for line in lines:
-        if line == target_line:
+        # if line == target_line:
+        if target_line in line:
             line = f"    {line}"
             modified_lines.append(line)
             indentation_added = True
@@ -75,6 +76,9 @@ def add_indentation(path, target_line):
 
     # modified_source = "\n".join(modified_lines)
     # path.write_text(modified_source)
-    file_utils.write_file_from_lines(path, modified_lines)
+    # file_utils.write_file_from_lines(path, modified_lines)
+
+    modified_source = "".join(modified_lines)
+    path.write_text(modified_source)
 
     return indentation_added
