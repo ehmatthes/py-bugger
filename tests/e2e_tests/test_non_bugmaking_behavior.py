@@ -35,11 +35,11 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exc
 
     # Check that last line has a trailing newline.
     lines = path_dst.read_text().splitlines(keepends=True)
-    if exception_type == "IndentationError":
-        assert lines[-1] == "dog.say_hi()\n"
-    elif exception_type == "AttributeError":
+    if exception_type == "AttributeError":
         # Random seed causes a bug in the last line, but we're just checking the line ending.
         assert lines[-1] == "dog.sayhi()\n"
+    else:
+        assert lines[-1] == "dog.say_hi()\n"
 
 
 @pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError"])
