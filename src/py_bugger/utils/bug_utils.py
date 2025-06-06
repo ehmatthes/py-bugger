@@ -74,10 +74,6 @@ def add_indentation(path, target_line):
         else:
             modified_lines.append(line)
 
-    # modified_source = "\n".join(modified_lines)
-    # path.write_text(modified_source)
-    # file_utils.write_file_from_lines(path, modified_lines)
-
     modified_source = "".join(modified_lines)
     path.write_text(modified_source)
 
