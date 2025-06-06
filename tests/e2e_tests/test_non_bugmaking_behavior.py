@@ -21,7 +21,7 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exc
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_simple_indent.name
+    path_dst = tmp_path / e2e_config.path_dog.name
     shutil.copyfile(e2e_config.path_dog, path_dst)
 
     # Run py-bugger against file.
