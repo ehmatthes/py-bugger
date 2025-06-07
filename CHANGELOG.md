@@ -5,6 +5,16 @@ Changelog: python-bugger
 
 Can request more than one type of exception to be induced.
 
+### 0.3.4
+
+#### External changes
+
+- Fixes a bug where the last trailing newline was not written back to the file after introducing bugs that cause an `IndentationError`.
+
+#### Internal changes
+
+- Adds thorough tests for handling trailing newlines when modifying files.
+
 ### 0.3.3
 
 #### External changes
