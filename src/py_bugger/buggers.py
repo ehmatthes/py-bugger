@@ -111,7 +111,6 @@ def indentation_error_bugger(py_files):
         "class",
         "if",
         "elif",
-        "else",
         "with",
         "match",
         "case",
