@@ -1,5 +1,5 @@
 
-![py-bugger logo](assets/logo_raw_bordered.png)
+![py-bugger logo](https://raw.githubusercontent.com/ehmatthes/py-bugger/main/assets/logo_raw_bordered.png)
 
 py-bugger
 ===
