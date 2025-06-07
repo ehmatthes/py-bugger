@@ -3,6 +3,8 @@
 import random
 import builtins
 
+from py_bugger.utils import file_utils
+
 
 def make_typo(name):
     """Add a typo to the name of an identifier.
@@ -60,18 +62,20 @@ def add_indentation(path, target_line):
     """Add one level of indentation (four spaces) to line."""
     indentation_added = False
 
-    lines = path.read_text().splitlines()
+    lines = path.read_text().splitlines(keepends=True)
 
     modified_lines = []
     for line in lines:
-        if line == target_line:
+        # `line` contains leading whitespace and trailing newline.
+        # `target_line` just contains code, so use `in` rather than `==`.
+        if target_line in line:
             line = f"    {line}"
             modified_lines.append(line)
             indentation_added = True
         else:
             modified_lines.append(line)
 
-    modified_source = "\n".join(modified_lines)
+    modified_source = "".join(modified_lines)
     path.write_text(modified_source)
 
     return indentation_added

@@ -35,6 +35,7 @@ def e2e_config():
         path_ten_imports = path_sample_scripts / "ten_imports.py"
         path_zero_imports = path_sample_scripts / "zero_imports.py"
         path_dog = path_sample_scripts / "dog.py"
+        path_dog_bark = path_sample_scripts / "dog_bark.py"
         path_many_dogs = path_sample_scripts / "many_dogs.py"
         path_identical_attributes = path_sample_scripts / "identical_attributes.py"
         path_simple_indent = path_sample_scripts / "simple_indent.py"
