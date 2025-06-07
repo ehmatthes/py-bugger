@@ -483,7 +483,7 @@ def test_all_indentation_blocks(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_all_indentation_blocks, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --num-bugs 12 --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --num-bugs 11 --target-dir {tmp_path.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
