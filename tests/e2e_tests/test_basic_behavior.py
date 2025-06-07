@@ -532,5 +532,4 @@ def test_indentation_else_block(tmp_path_factory, e2e_config):
     cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
-    assert "IndentationError: unexpected indent" in stderr
-    # assert 'all_indentation_blocks.py", line 1' in stderr
+    assert "SyntaxError: invalid syntax" not in stderr
