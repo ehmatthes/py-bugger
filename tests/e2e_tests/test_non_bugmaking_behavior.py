@@ -144,7 +144,7 @@ def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
     assert msg_expected in stdout
 
 
-def test_nonexistent_dir_passed_to_targetdir():#tmp_path_factory, e2e_config):
+def test_nonexistent_dir_passed_to_targetdir():
     """Make sure passing a nonexistent dir to --target-dir fails appropriately."""
 
     # Make a dir path that doesn't exist. If this assertion fails, something weird happened.
