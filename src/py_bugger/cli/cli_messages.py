@@ -52,3 +52,8 @@ def msg_dir_not_file(target_dir):
     """Specified --target-file, but passed a dir."""
     msg = f"You specified --target-file, but {target_dir.name} is a directory.\nDid you mean to use --target-dir, or did you intend to pass a specific file from that directory?"
     return msg
+
+def msg_nonexistent_file(target_file):
+    """Passed a nonexistent file to --target-file."""
+    msg = f"The file {target_file.as_posix()} does not exist. Did you make a typo?"
+    return msg

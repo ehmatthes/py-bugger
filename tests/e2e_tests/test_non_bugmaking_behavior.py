@@ -205,3 +205,20 @@ def test_dir_passed_to_targetfile(tmp_path_factory):
 
     msg_expected = f"You specified --target-file, but {path_dst.name} is a directory.\nDid you mean to use --target-dir, or did you intend to pass a specific file from that directory?"
     assert msg_expected in stdout
+
+def test_nonexistent_file_passed_to_targetfile():
+    """Make sure passing a nonexistent file to --target-file fails appropriately."""
+
+    # Make a file path that doesn't exist. If this assertion fails, something weird happened.
+    path_dst = Path("nonsense_python_file.py")
+    assert not path_dst.exists()
+
+    # Run py-bugger.
+    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    msg_expected = f"The file {path_dst.name} does not exist. Did you make a typo?"
+    assert msg_expected in stdout
