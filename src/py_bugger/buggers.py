@@ -110,14 +110,9 @@ def indentation_error_bugger(py_files):
         "def",
         "class",
         "if",
-        "elif",
-        "else",
         "with",
         "match",
-        "case",
         "try",
-        "except",
-        "finally",
     ]
     paths_lines = file_utils.get_paths_lines(py_files, targets=targets)
 

@@ -12,6 +12,8 @@ import filecmp
 import os
 import sys
 
+import pytest
+
 
 # --- Test functions ---
 
@@ -440,6 +442,41 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     assert 'simple_indent.py", line 1' in stderr
 
 
+# This test passes, but it mixes tabs and spaces. It would fail if the 
+# for loop was inside a function. Make a test file with the for loop
+# in the function, induce an error that indents the for line, not the 
+# def line, and assert not TabError.
+@pytest.mark.skip()
+def test_indentation_error_simple_tab(tmp_path_factory, e2e_config):
+    """py-bugger --exception-type IndentationError
+
+    Run against a file with a single indented block, using a tab delimiter.
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "simple_indent_tab.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "IndentationError: unexpected indent" in stderr
+    assert 'simple_indent_tab.py", line 1' in stderr
+
+
 def test_indentation_error_complex(tmp_path_factory, e2e_config):
     """py-bugger --exception-type IndentationError
 
@@ -483,7 +520,7 @@ def test_all_indentation_blocks(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_all_indentation_blocks, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --num-bugs 12 --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --num-bugs 8 --target-dir {tmp_path.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -497,3 +534,39 @@ def test_all_indentation_blocks(tmp_path_factory, e2e_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "IndentationError: unexpected indent" in stderr
     assert 'all_indentation_blocks.py", line 1' in stderr
+
+
+def test_indentation_else_block(tmp_path_factory, e2e_config):
+    """Test that an indendented else block does not result in a SyntaxError.
+
+    If the else block is moved to its own indentation level, -> IndentationError.
+    If it matches the indentation level of the parent's block, ie the if's block,
+    it will result in a Syntax Error:
+
+    if True:
+        print("Hi.")
+        else:
+        print("Bye.")
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "else_block.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "SyntaxError: invalid syntax" not in stderr
