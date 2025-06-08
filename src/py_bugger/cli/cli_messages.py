@@ -62,3 +62,8 @@ def msg_not_file(target_file):
     """Passed something that exists to --target-file, but it's not a file."""
     msg = f"{target_file.name} does not seem to be a file."
     return msg
+
+def msg_file_not_py(target_file):
+    """Passed a non-.py file to --target-file."""
+    msg = f"{target_file.name} does not appear to be a Python file."
+    return msg

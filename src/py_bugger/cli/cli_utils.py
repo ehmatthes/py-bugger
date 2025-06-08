@@ -85,3 +85,7 @@ def _validate_target_file():
         msg = cli_messages.msg_not_file(path_target_file)
         click.echo(msg)
         sys.exit()
+    elif path_target_file.suffix != ".py":
+        msg = cli_messages.msg_file_not_py(path_target_file)
+        click.echo(msg)
+        sys.exit()
