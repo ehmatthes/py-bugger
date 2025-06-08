@@ -57,6 +57,10 @@ def validate_config():
             msg = cli_messages.msg_nonexistent_file(path_target_file)
             click.echo(msg)
             sys.exit()
+        elif not path_target_file.is_file():
+            msg = cli_messages.msg_not_file(path_target_file)
+            click.echo(msg)
+            sys.exit()
 
     _update_options()
 

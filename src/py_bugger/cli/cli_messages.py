@@ -57,3 +57,8 @@ def msg_nonexistent_file(target_file):
     """Passed a nonexistent file to --target-file."""
     msg = f"The file {target_file.as_posix()} does not exist. Did you make a typo?"
     return msg
+
+def msg_not_file(target_file):
+    """Passed something that exists to --target-file, but it's not a file."""
+    msg = f"{target_file.name} does not seem to be a file."
+    return msg
