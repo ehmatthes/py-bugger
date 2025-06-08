@@ -5,15 +5,16 @@ Changelog: python-bugger
 
 Can request more than one type of exception to be induced.
 
-### Unreleased
+### 0.3.5
 
 #### External changes
 
-- 
+- Removes else, elif, case, except and finally from targets for IndentationError for now.
 
 #### Internal changes
 
 - Added a release script.
+- Partial implementation of a test for handling tabs correctly.
 
 ### 0.3.4
 
