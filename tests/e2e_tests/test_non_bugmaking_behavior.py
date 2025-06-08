@@ -10,11 +10,20 @@ import subprocess
 import filecmp
 import os
 import sys
+import platform
 from pathlib import Path
 
 import pytest
 
 from py_bugger.cli import cli_messages
+
+
+def on_windows():
+    """Return True if on Windows, False otherwise."""
+    if platform.system() == "Windows":
+        return True
+    else:
+        return False
 
 
 # --- Tests for handling of line endings. ---
@@ -171,11 +180,11 @@ def test_nonexistent_dir_passed_to_targetdir():
     assert msg_expected in stdout
 
 
+@pytest.mark.skipif(on_windows(), reason="Can't use /dev/null on Windows.")
 def test_targetdir_exists_not_dir():
     """Passed something that exists, but is not a file or dir.."""
 
     # /dev/null is neither a file or a dir, but exists.
-    # DEV: This test may not work on Windows.
     path_dst = Path("/dev/null")
     assert path_dst.exists()
     assert not path_dst.is_file()
@@ -225,11 +234,11 @@ def test_nonexistent_file_passed_to_targetfile():
     msg_expected = cli_messages.msg_nonexistent_file(path_dst)
     assert msg_expected in stdout
 
+@pytest.mark.skipif(on_windows(), reason="Can't use /dev/null on Windows.")
 def test_targetfile_exists_not_file():
     """Passed something that exists, but is not a file or dir.."""
 
     # /dev/null is neither a file or a dir, but exists.
-    # DEV: This test may not work on Windows.
     path_dst = Path("/dev/null")
     assert path_dst.exists()
     assert not path_dst.is_file()
