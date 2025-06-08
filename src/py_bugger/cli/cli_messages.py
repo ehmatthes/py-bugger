@@ -26,3 +26,8 @@ def success_msg(num_added, num_requested):
         msg = f"Inserted {num_added} bugs."
         msg += "\nUnable to introduce additional bugs of the requested type."
         return msg
+
+def msg_not_dir(target_file):
+    """Specified --target-dir, but passed a file."""
+    msg = f"You specified --target-dir, but {target_file.as_posix()} is a file.\nDid you mean to use --target-file?"
+    return msg
