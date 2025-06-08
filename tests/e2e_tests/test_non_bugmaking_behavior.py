@@ -139,5 +139,5 @@ def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"You specified --target-dir, but {path_dst.as_posix()} is a file.\nDid you mean to use --target-file?"
+    msg_expected = f"You specified --target-dir, but {path_dst.name} is a file. Did you mean to use --target-file?"
     assert msg_expected in stdout

@@ -29,5 +29,5 @@ def success_msg(num_added, num_requested):
 
 def msg_not_dir(target_file):
     """Specified --target-dir, but passed a file."""
-    msg = f"You specified --target-dir, but {target_file.as_posix()} is a file.\nDid you mean to use --target-file?"
+    msg = f"You specified --target-dir, but {target_file.name} is a file. Did you mean to use --target-file?"
     return msg
