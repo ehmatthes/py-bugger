@@ -28,7 +28,11 @@ def validate_config():
         """Make sure a directory was passed."""
         path_target_dir = Path(pb_config.target_dir)
         if path_target_dir.is_file():
-            msg = cli_messages.msg_not_dir(path_target_dir)
+            msg = cli_messages.msg_file_not_dir(path_target_dir)
+            click.echo(msg)
+            sys.exit()
+        elif not path_target_dir.exists():
+            msg = cli_messages.msg_nonexistent_dir(path_target_dir)
             click.echo(msg)
             sys.exit()
 

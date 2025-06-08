@@ -10,6 +10,7 @@ import subprocess
 import filecmp
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -140,4 +141,22 @@ def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     msg_expected = f"You specified --target-dir, but {path_dst.name} is a file. Did you mean to use --target-file?"
+    assert msg_expected in stdout
+
+
+def test_nonexistent_dir_passed_to_targetdir():#tmp_path_factory, e2e_config):
+    """Make sure passing a nonexistent dir to --target-dir fails appropriately."""
+
+    # Make a dir path that doesn't exist. If this assertion fails, something weird happened.
+    path_dst = Path("nonsense_name")
+    assert not path_dst.exists()
+
+    # Run py-bugger against nonexistent dir.
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    msg_expected = f"The directory {path_dst.as_posix()} does not exist. Did you make a typo?"
     assert msg_expected in stdout
