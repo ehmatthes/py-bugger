@@ -1,4 +1,7 @@
 """Tests for behavior not specifically related to making bugs.
+
+- How trailing newlines are handled.
+- How incorret target types are handled.
 """
 
 import shutil
@@ -117,3 +120,24 @@ def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
     # Check that file is still blank.
     contents = path_dst.read_text()
     assert contents == ""
+
+
+def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
+    """Make sure passing a file to --target-dir fails appropriately."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against file.
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    msg_expected = f"You specified --target-dir, but {path_dst.as_posix()} is a file.\nDid you mean to use --target-file?"
+    assert msg_expected in stdout
