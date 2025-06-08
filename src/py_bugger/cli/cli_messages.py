@@ -27,6 +27,9 @@ def success_msg(num_added, num_requested):
         msg += "\nUnable to introduce additional bugs of the requested type."
         return msg
 
+
+# Messagess for invalid --target-dir calls.
+
 def msg_file_not_dir(target_file):
     """Specified --target-dir, but passed a file."""
     msg = f"You specified --target-dir, but {target_file.name} is a file. Did you mean to use --target-file?"
@@ -40,4 +43,12 @@ def msg_nonexistent_dir(target_dir):
 def msg_not_dir(target_dir):
     """Passed something that exists to --target-dir, but it's not a dir."""
     msg = f"{target_dir.as_posix()} does not seem to be a directory."
+    return msg
+
+
+# Messages for invalid --target-file calls.
+
+def msg_dir_not_file(target_dir):
+    """Specified --target-file, but passed a dir."""
+    msg = f"You specified --target-file, but {target_dir.as_posix()} is a directory.\nDid you mean to use --target-dir, or did you mean to pass a specific file from that directory?"
     return msg

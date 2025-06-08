@@ -48,7 +48,11 @@ def validate_config():
 
         Check for common mistakes, then verify it is a file.
         """
-        pass
+        path_target_file = Path(pb_config.target_file)
+        if path_target_file.is_dir():
+            msg = cli_messages.msg_dir_not_file(path_target_file)
+            click.echo(msg)
+            sys.exit()
 
     _update_options()
 
