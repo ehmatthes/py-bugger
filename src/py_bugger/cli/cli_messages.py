@@ -36,3 +36,8 @@ def msg_nonexistent_dir(target_dir):
     """Passed a nonexistent dir to --target-dir."""
     msg = f"The directory {target_dir.as_posix()} does not exist. Did you make a typo?"
     return msg
+
+def msg_not_dir(target_dir):
+    """Passed something that exists to --target-dir, but it's not a dir."""
+    msg = f"{target_dir.as_posix()} does not seem to be a directory."
+    return msg

@@ -35,6 +35,10 @@ def validate_config():
             msg = cli_messages.msg_nonexistent_dir(path_target_dir)
             click.echo(msg)
             sys.exit()
+        elif not path_target_dir.is_dir():
+            msg = cli_messages.msg_not_dir(path_target_dir)
+            click.echo(msg)
+            sys.exit()
 
     _update_options()
 

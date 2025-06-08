@@ -160,3 +160,24 @@ def test_nonexistent_dir_passed_to_targetdir():
 
     msg_expected = f"The directory {path_dst.as_posix()} does not exist. Did you make a typo?"
     assert msg_expected in stdout
+
+
+def test_targetdir_exists_not_dir():
+    """Passed something that exists, but is not a file or dir.."""
+
+    # /dev/null is neither a file or a dir, but exists.
+    # DEV: This test may not work on Windows.
+    path_dst = Path("/dev/null")
+    assert path_dst.exists()
+    assert not path_dst.is_file()
+    assert not path_dst.is_dir()
+
+    # Run py-bugger.
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    msg_expected = f"{path_dst.as_posix()} does not seem to be a directory."
+    assert msg_expected in stdout
