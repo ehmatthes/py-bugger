@@ -273,3 +273,26 @@ def test_targetfile_py_file(tmp_path_factory, e2e_config):
 
     msg_expected = cli_messages.msg_file_not_py(path_dst)
     assert msg_expected in stdout
+
+
+# --- Git status checks ---
+
+def test_git_not_available(tmp_path_factory, e2e_config):
+    """Check appropriate message shown when Git not available."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against file.
+    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    msg_expected = cli_messages.msg_git_not_available
+    assert msg_expected in stdout

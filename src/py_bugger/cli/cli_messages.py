@@ -10,6 +10,10 @@ msg_target_file_dir = (
     "Target file overrides target dir. Please only pass one of these args."
 )
 
+msg_git_not_available = (
+    "Git does not seem to be available. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
+)
+
 
 # --- Dynamic messages ---
 
@@ -67,3 +71,4 @@ def msg_file_not_py(target_file):
     """Passed a non-.py file to --target-file."""
     msg = f"{target_file.name} does not appear to be a Python file."
     return msg
+
