@@ -25,7 +25,10 @@ def validate_config():
         sys.exit()
 
     if pb_config.target_dir:
-        """Make sure a directory was passed."""
+        """Make sure a directory was passed.
+
+        Check for common mistakes, then verify it is a dir.
+        """
         path_target_dir = Path(pb_config.target_dir)
         if path_target_dir.is_file():
             msg = cli_messages.msg_file_not_dir(path_target_dir)
@@ -39,6 +42,13 @@ def validate_config():
             msg = cli_messages.msg_not_dir(path_target_dir)
             click.echo(msg)
             sys.exit()
+
+    if pb_config.target_file:
+        """Make sure an appropriate file was passed.
+
+        Check for common mistakes, then verify it is a file.
+        """
+        pass
 
     _update_options()
 

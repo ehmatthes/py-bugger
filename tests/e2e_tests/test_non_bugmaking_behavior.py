@@ -15,6 +15,8 @@ from pathlib import Path
 import pytest
 
 
+# --- Tests for handling of line endings. ---
+
 @pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"])
 def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exception_type):
     """Test that trailing newlines are preserved when present."""
@@ -98,6 +100,9 @@ def test_preserve_file_ending_two_trailing_newline(tmp_path_factory, e2e_config,
     lines = path_dst.read_text().splitlines(keepends=True)
     assert lines[-1] == "\n"
 
+
+### --- Test for handling of blank files ---
+
 @pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"])
 def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
     """Make sure py-bugger handles a blank file correctly."""
@@ -122,6 +127,8 @@ def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
     contents = path_dst.read_text()
     assert contents == ""
 
+
+### --- Tests for invalid --target-dir calls ---
 
 def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
     """Make sure passing a file to --target-dir fails appropriately."""
@@ -180,4 +187,21 @@ def test_targetdir_exists_not_dir():
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     msg_expected = f"{path_dst.as_posix()} does not seem to be a directory."
+    assert msg_expected in stdout
+
+
+### --- Tests for invalid --target-file calls ---
+
+def test_dir_passed_to_targetfile(tmp_path_factory):
+    """Make sure passing a dir to --target-file fails appropriately."""
+    path_dst = tmp_path_factory.mktemp("sample_code")
+
+    # Run py-bugger.
+    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    msg_expected = f"You specified --target-file, but {path_dst.as_posix()} is a directory.\nDid you mean to use --target-dir, or did you mean to pass a specific file from that directory?"
     assert msg_expected in stdout
