@@ -5,15 +5,11 @@ Changelog: python-bugger
 
 Can request more than one type of exception to be induced.
 
-### Unreleased
+### 0.3.6
 
 #### External changes
 
-- NA
-
-#### Internal changes
-
-- NA
+- Includes validation for --target-dir and --target-file args.
 
 ### 0.3.5
 
