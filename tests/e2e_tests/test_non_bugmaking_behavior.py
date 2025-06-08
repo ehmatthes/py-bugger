@@ -14,6 +14,8 @@ from pathlib import Path
 
 import pytest
 
+from py_bugger.cli import cli_messages
+
 
 # --- Tests for handling of line endings. ---
 
@@ -147,7 +149,7 @@ def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"You specified --target-dir, but {path_dst.name} is a file. Did you mean to use --target-file?"
+    msg_expected = cli_messages.msg_file_not_dir(path_dst)
     assert msg_expected in stdout
 
 
@@ -165,7 +167,7 @@ def test_nonexistent_dir_passed_to_targetdir():
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"The directory {path_dst.name} does not exist. Did you make a typo?"
+    msg_expected = cli_messages.msg_nonexistent_dir(path_dst)
     assert msg_expected in stdout
 
 
@@ -186,7 +188,7 @@ def test_targetdir_exists_not_dir():
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"{path_dst.name} does not seem to be a directory."
+    msg_expected = cli_messages.msg_not_dir(path_dst)
     assert msg_expected in stdout
 
 
@@ -203,7 +205,7 @@ def test_dir_passed_to_targetfile(tmp_path_factory):
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"You specified --target-file, but {path_dst.name} is a directory.\nDid you mean to use --target-dir, or did you intend to pass a specific file from that directory?"
+    msg_expected = cli_messages.msg_dir_not_file(path_dst)
     assert msg_expected in stdout
 
 def test_nonexistent_file_passed_to_targetfile():
@@ -220,7 +222,7 @@ def test_nonexistent_file_passed_to_targetfile():
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"The file {path_dst.name} does not exist. Did you make a typo?"
+    msg_expected = cli_messages.msg_nonexistent_file(path_dst)
     assert msg_expected in stdout
 
 def test_targetfile_exists_not_file():
@@ -240,5 +242,5 @@ def test_targetfile_exists_not_file():
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"{path_dst.name} does not seem to be a file."
+    msg_expected = cli_messages.msg_not_file(path_dst)
     assert msg_expected in stdout
