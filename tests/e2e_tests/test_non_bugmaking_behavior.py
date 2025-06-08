@@ -203,5 +203,5 @@ def test_dir_passed_to_targetfile(tmp_path_factory):
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    msg_expected = f"You specified --target-file, but {path_dst.as_posix()} is a directory.\nDid you mean to use --target-dir, or did you mean to pass a specific file from that directory?"
+    msg_expected = f"You specified --target-file, but {path_dst.name} is a directory.\nDid you mean to use --target-dir, or did you intend to pass a specific file from that directory?"
     assert msg_expected in stdout
