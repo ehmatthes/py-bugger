@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 import subprocess
 import shlex
+import shutil
 
 import click
 
@@ -96,11 +97,17 @@ def _validate_target_file():
 
 def _validate_git_status():
     """Look for a clean Git status before introducing bugs."""
-    cmd = "git --version"
-    cmd_parts = shlex.split(cmd)
-    try:
-        output = subprocess.run(cmd_parts, capture_output=True)
-    except FileNotFoundError:
+    # Make sure Git is available.
+    if not shutil.which("git"):
         click.echo(cli_messages.msg_git_not_available)
         sys.exit()
+
+
+    # cmd = "git --version"
+    # cmd_parts = shlex.split(cmd)
+    # try:
+    #     output = subprocess.run(cmd_parts, capture_output=True)
+    # except FileNotFoundError:
+    #     click.echo(cli_messages.msg_git_not_available)
+    #     sys.exit()
     breakpoint()
