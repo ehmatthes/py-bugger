@@ -98,16 +98,12 @@ def _validate_target_file():
 def _validate_git_status():
     """Look for a clean Git status before introducing bugs."""
     # Make sure Git is available.
-    if not shutil.which("git"):
+    if not _check_git_available():
         click.echo(cli_messages.msg_git_not_available)
         sys.exit()
 
-
-    # cmd = "git --version"
-    # cmd_parts = shlex.split(cmd)
-    # try:
-    #     output = subprocess.run(cmd_parts, capture_output=True)
-    # except FileNotFoundError:
-    #     click.echo(cli_messages.msg_git_not_available)
-    #     sys.exit()
-    breakpoint()
+def _check_git_available():
+    """See if Git is available on this system."""
+    if shutil.which("git"):
+        return True
+    return False

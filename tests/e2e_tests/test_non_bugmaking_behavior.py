@@ -277,7 +277,7 @@ def test_targetfile_py_file(tmp_path_factory, e2e_config):
 
 # --- Git status checks ---
 
-def test_git_not_available(tmp_path_factory, e2e_config):
+def test_git_not_available(tmp_path_factory, e2e_config, monkeypatch):
     """Check appropriate message shown when Git not available."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
@@ -287,12 +287,20 @@ def test_git_not_available(tmp_path_factory, e2e_config):
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
-    # Run py-bugger against file.
     cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
-    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    # Run py-bugger against file. We're emptying PATH in order to make sure Git is not
+    # available for this run, so we need the direct path to the py-bugger command.
+    py_bugger_exe = Path(sys.executable).parent / "py-bugger"
+    cmd = f"{py_bugger_exe} --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    env = os.environ.copy()
+    env["PATH"] = ""
+    stdout = subprocess.run(cmd_parts, capture_output=True, env= env).stdout.decode()
 
     msg_expected = cli_messages.msg_git_not_available
     assert msg_expected in stdout
