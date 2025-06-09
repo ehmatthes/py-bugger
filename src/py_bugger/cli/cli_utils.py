@@ -7,6 +7,8 @@ filenames.
 import os
 import sys
 from pathlib import Path
+import subprocess
+import shlex
 
 import click
 
@@ -29,6 +31,8 @@ def validate_config():
 
     if pb_config.target_file:
         _validate_target_file()
+
+    _validate_git_status()
         
     _update_options()
 
@@ -89,3 +93,14 @@ def _validate_target_file():
         msg = cli_messages.msg_file_not_py(path_target_file)
         click.echo(msg)
         sys.exit()
+
+def _validate_git_status():
+    """Look for a clean Git status before introducing bugs."""
+    cmd = "git --version"
+    cmd_parts = shlex.split(cmd)
+    try:
+        output = subprocess.run(cmd_parts, capture_output=True)
+    except FileNotFoundError:
+        click.echo(cli_messages.msg_git_not_available)
+        sys.exit()
+    breakpoint()
