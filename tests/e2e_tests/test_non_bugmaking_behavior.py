@@ -287,10 +287,6 @@ def test_git_not_available(tmp_path_factory, e2e_config, monkeypatch):
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
-    print("cmd:", cmd)
-    cmd_parts = shlex.split(cmd)
-
     # Run py-bugger against file. We're emptying PATH in order to make sure Git is not
     # available for this run, so we need the direct path to the py-bugger command.
     py_bugger_exe = Path(sys.executable).parent / "py-bugger"
