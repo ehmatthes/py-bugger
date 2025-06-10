@@ -394,3 +394,34 @@ def test_clean_git_status(tmp_path_factory, e2e_config):
     assert 'dog.py", line ' in stderr
     assert "AttributeError: " in stderr
     assert "Did you mean: " in stderr
+
+def test_ignore_git_status(tmp_path_factory, e2e_config):
+    """Test that py-bugger runs when --ignore-git-status is passed.
+
+    This is the test for Git not being used, with a different assertion.
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against file, passing --ignore-git-status.
+    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()} --ignore-git-status"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise AttributeError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'dog.py", line ' in stderr
+    assert "AttributeError: " in stderr
+    assert "Did you mean: " in stderr
