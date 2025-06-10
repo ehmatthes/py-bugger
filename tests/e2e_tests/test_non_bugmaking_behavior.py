@@ -351,9 +351,46 @@ def test_unclean_git_status(tmp_path_factory, e2e_config):
     msg_expected = cli_messages.msg_unclean_git_status
     assert msg_expected in stdout
 
-@pytest.mark.skip()
-def test_clean_git_status():
+def test_clean_git_status(tmp_path_factory, e2e_config):
     """Run py-bugger against a tiny repo with a clean status, without passing
     --ignore-git-status.
     """
-    ...
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make an initial commit with a clean status.
+    cmd = "git init"
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts, cwd=tmp_path)
+
+    cmd = "git add ."
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts, cwd=tmp_path)
+
+    cmd = 'git commit -m "Initial state."'
+    cmd_parts = shlex.split(cmd)
+    subprocess.run(cmd_parts, cwd=tmp_path)
+
+    # Run py-bugger against file. This is one of the few e2e tests where --ignore-git-status
+    # is not passed, because we want to verify appropriate behavior with a clean Git status.
+    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True, text=True).stdout
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise AttributeError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert "Traceback (most recent call last)" in stderr
+    assert 'dog.py", line ' in stderr
+    assert "AttributeError: " in stderr
+    assert "Did you mean: " in stderr
