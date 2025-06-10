@@ -119,4 +119,8 @@ def _check_git_status():
     cmd = "git status --porcelain"
     cmd_parts = shlex.split(cmd)
     output = subprocess.run(cmd_parts, cwd=git_dir, capture_output=True, text=True)
-    breakpoint()
+    
+    if "fatal: not a git repository" in output.stderr:
+        msg = cli_messages.msg_git_not_used(pb_config)
+        click.echo(msg)
+        sys.exit()
