@@ -41,7 +41,7 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exc
     shutil.copyfile(e2e_config.path_dog_bark, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()}"
+    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -71,7 +71,7 @@ def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config, 
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()}"
+    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -100,7 +100,7 @@ def test_preserve_file_ending_two_trailing_newline(tmp_path_factory, e2e_config,
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()}"
+    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -127,7 +127,7 @@ def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()}"
+    cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
