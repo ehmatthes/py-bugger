@@ -346,7 +346,7 @@ def test_unclean_git_status(tmp_path_factory, e2e_config):
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
-    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    stdout = subprocess.run(cmd_parts, capture_output=True, text=True).stdout
 
     msg_expected = cli_messages.msg_unclean_git_status
     assert msg_expected in stdout
