@@ -124,3 +124,6 @@ def _check_git_status():
         msg = cli_messages.msg_git_not_used(pb_config)
         click.echo(msg)
         sys.exit()
+
+    if "nothing to commit, working tree clean" not in output.stdout:
+        ...
