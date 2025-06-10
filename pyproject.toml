@@ -33,4 +33,5 @@ py-bugger = "py_bugger.cli.cli:cli"
 "Changelog" = "https://github.com/ehmatthes/py-bugger/blob/main/CHANGELOG.md"
 
 [tool.black]
+# Sample code for tests sometimes require nonstandard formatting.
 extend-exclude = "tests/sample_code"
