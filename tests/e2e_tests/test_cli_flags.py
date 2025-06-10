@@ -23,7 +23,7 @@ def test_verbose_flag_true(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_name_picker, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --verbose"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --verbose --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -42,7 +42,7 @@ def test_verbose_flag_false(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_name_picker, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
