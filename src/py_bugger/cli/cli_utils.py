@@ -100,6 +100,9 @@ def _validate_target_file():
 
 def _validate_git_status():
     """Look for a clean Git status before introducing bugs."""
+    if pb_config.ignore_git_status:
+        return
+    
     _check_git_available()
     _check_git_status()
 

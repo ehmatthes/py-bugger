@@ -10,6 +10,7 @@ class PBConfig:
     target_dir: Path = ""
     target_file: Path = ""
     num_bugs: int = 1
+    ignore_git_status: bool = False
     verbose: bool = True
 
 

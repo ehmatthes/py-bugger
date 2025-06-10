@@ -32,6 +32,11 @@ from py_bugger.cli.config import pb_config
     help="How many bugs to introduce.",
 )
 @click.option(
+    "--ignore-git-status",
+    is_flag=True,
+    help="Don't check Git status before inserting bugs.",
+)
+@click.option(
     "--verbose",
     "-v",
     is_flag=True,
