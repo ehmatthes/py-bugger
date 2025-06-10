@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 from py_bugger.cli import cli_messages
+from py_bugger.cli.config import PBConfig
 
 
 def on_windows():
@@ -277,7 +278,7 @@ def test_targetfile_py_file(tmp_path_factory, e2e_config):
 
 # --- Git status checks ---
 
-def test_git_not_available(tmp_path_factory, e2e_config, monkeypatch):
+def test_git_not_available(tmp_path_factory, e2e_config):
     """Check appropriate message shown when Git not available."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
@@ -299,4 +300,28 @@ def test_git_not_available(tmp_path_factory, e2e_config, monkeypatch):
     stdout = subprocess.run(cmd_parts, capture_output=True, env= env).stdout.decode()
 
     msg_expected = cli_messages.msg_git_not_available
+    assert msg_expected in stdout
+
+def test_git_not_used(tmp_path_factory, e2e_config):
+    """Check appropriate message shown when Git not being used."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against file. This is one of the few e2e tests where --ignore-git-status
+    # is not passed, because we want to verify appropriate behavior without a clean Git status.
+    # Run py-bugger against file.
+    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
+
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    pb_config = PBConfig()
+    pb_config.target_file = path_dst
+    msg_expected = cli_messages.msg_git_not_used(pb_config)
     assert msg_expected in stdout

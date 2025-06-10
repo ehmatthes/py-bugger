@@ -98,9 +98,15 @@ def _validate_target_file():
 def _validate_git_status():
     """Look for a clean Git status before introducing bugs."""
     _check_git_available()
+    _check_git_status()
 
 def _check_git_available():
     """Quit with appropriate message if Git not available."""
     if not shutil.which("git"):
         click.echo(cli_messages.msg_git_not_available)
         sys.exit()
+
+def _check_git_status():
+    """Make sure we're starting with a clean git status."""
+    cmd = "git status --porcelain"
+    ...

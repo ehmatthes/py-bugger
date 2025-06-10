@@ -14,6 +14,10 @@ msg_git_not_available = (
     "Git does not seem to be available. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
 )
 
+msg_unclean_git_status = (
+    "You have uncommitted changes in your project. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
+)
+
 
 # --- Dynamic messages ---
 
@@ -72,3 +76,13 @@ def msg_file_not_py(target_file):
     msg = f"{target_file.name} does not appear to be a Python file."
     return msg
 
+# Messages for Git status-related issues.
+def msg_git_not_used(pb_config):
+    """Git is not being used to manage target file or directory."""
+    if pb_config.target_file:
+        target = "file"
+    else:
+        target = "directory"
+
+    msg = f"The {target} you're running py-bugger against does not seem to be under version control. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
+    return msg
