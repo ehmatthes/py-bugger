@@ -33,9 +33,12 @@ def validate_config():
     if pb_config.target_file:
         _validate_target_file()
 
+    # Update all options before running Git status checks. Info like target_dir
+    # is used for those checks.
+    _update_options()
+
     _validate_git_status()
         
-    _update_options()
 
 
 # --- Helper functions ___
@@ -108,5 +111,12 @@ def _check_git_available():
 
 def _check_git_status():
     """Make sure we're starting with a clean git status."""
+    if pb_config.target_file:
+        git_dir = pb_config.target_file.parent
+    else:
+        git_dir = pb_config.target_dir
+
     cmd = "git status --porcelain"
-    ...
+    cmd_parts = shlex.split(cmd)
+    output = subprocess.run(cmd_parts, cwd=git_dir, capture_output=True, text=True)
+    breakpoint()
