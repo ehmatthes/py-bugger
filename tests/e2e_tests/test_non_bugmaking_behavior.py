@@ -29,8 +29,13 @@ def on_windows():
 
 # --- Tests for handling of line endings. ---
 
-@pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"])
-def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exception_type):
+
+@pytest.mark.parametrize(
+    "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
+)
+def test_preserve_file_ending_trailing_newline(
+    tmp_path_factory, e2e_config, exception_type
+):
     """Test that trailing newlines are preserved when present."""
 
     # Copy sample code to tmp dir.
@@ -58,8 +63,12 @@ def test_preserve_file_ending_trailing_newline(tmp_path_factory, e2e_config, exc
         assert lines[-1] == "dog.say_hi()\n"
 
 
-@pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"])
-def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config, exception_type):
+@pytest.mark.parametrize(
+    "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
+)
+def test_preserve_file_ending_no_trailing_newline(
+    tmp_path_factory, e2e_config, exception_type
+):
     """Test that trailing newlines are not introduced when not originally present."""
 
     # Copy sample code to tmp dir.
@@ -87,8 +96,13 @@ def test_preserve_file_ending_no_trailing_newline(tmp_path_factory, e2e_config, 
     else:
         assert lines[-1] == "dog.say_hi()"
 
-@pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"])
-def test_preserve_file_ending_two_trailing_newline(tmp_path_factory, e2e_config, exception_type):
+
+@pytest.mark.parametrize(
+    "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
+)
+def test_preserve_file_ending_two_trailing_newline(
+    tmp_path_factory, e2e_config, exception_type
+):
     """Test that two trailing newlines are preserved when present."""
 
     # Copy sample code to tmp dir.
@@ -115,7 +129,10 @@ def test_preserve_file_ending_two_trailing_newline(tmp_path_factory, e2e_config,
 
 ### --- Test for handling of blank files ---
 
-@pytest.mark.parametrize("exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"])
+
+@pytest.mark.parametrize(
+    "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
+)
 def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
     """Make sure py-bugger handles a blank file correctly."""
     # Copy sample code to tmp dir.
@@ -142,6 +159,7 @@ def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
 
 ### --- Tests for invalid --target-dir calls ---
 
+
 def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
     """Make sure passing a file to --target-dir fails appropriately."""
     # Copy sample code to tmp dir.
@@ -153,7 +171,9 @@ def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -171,7 +191,9 @@ def test_nonexistent_dir_passed_to_targetdir():
     assert not path_dst.exists()
 
     # Run py-bugger against nonexistent dir.
-    cmd = f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -192,7 +214,9 @@ def test_targetdir_exists_not_dir():
     assert not path_dst.is_dir()
 
     # Run py-bugger.
-    cmd = f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-dir {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -204,12 +228,15 @@ def test_targetdir_exists_not_dir():
 
 ### --- Tests for invalid --target-file calls ---
 
+
 def test_dir_passed_to_targetfile(tmp_path_factory):
     """Make sure passing a dir to --target-file fails appropriately."""
     path_dst = tmp_path_factory.mktemp("sample_code")
 
     # Run py-bugger.
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -217,6 +244,7 @@ def test_dir_passed_to_targetfile(tmp_path_factory):
 
     msg_expected = cli_messages.msg_dir_not_file(path_dst)
     assert msg_expected in stdout
+
 
 def test_nonexistent_file_passed_to_targetfile():
     """Make sure passing a nonexistent file to --target-file fails appropriately."""
@@ -226,7 +254,9 @@ def test_nonexistent_file_passed_to_targetfile():
     assert not path_dst.exists()
 
     # Run py-bugger.
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -234,6 +264,7 @@ def test_nonexistent_file_passed_to_targetfile():
 
     msg_expected = cli_messages.msg_nonexistent_file(path_dst)
     assert msg_expected in stdout
+
 
 @pytest.mark.skipif(on_windows(), reason="Can't use /dev/null on Windows.")
 def test_targetfile_exists_not_file():
@@ -246,7 +277,9 @@ def test_targetfile_exists_not_file():
     assert not path_dst.is_dir()
 
     # Run py-bugger.
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -254,6 +287,7 @@ def test_targetfile_exists_not_file():
 
     msg_expected = cli_messages.msg_not_file(path_dst)
     assert msg_expected in stdout
+
 
 def test_targetfile_py_file(tmp_path_factory, e2e_config):
     """Test for appropriate message when passed a non-.py file."""
@@ -266,7 +300,9 @@ def test_targetfile_py_file(tmp_path_factory, e2e_config):
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against file.
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -277,6 +313,7 @@ def test_targetfile_py_file(tmp_path_factory, e2e_config):
 
 
 # --- Git status checks ---
+
 
 def test_git_not_available(tmp_path_factory, e2e_config):
     """Check appropriate message shown when Git not available."""
@@ -297,10 +334,11 @@ def test_git_not_available(tmp_path_factory, e2e_config):
 
     env = os.environ.copy()
     env["PATH"] = ""
-    stdout = subprocess.run(cmd_parts, capture_output=True, env= env).stdout.decode()
+    stdout = subprocess.run(cmd_parts, capture_output=True, env=env).stdout.decode()
 
     msg_expected = cli_messages.msg_git_not_available
     assert msg_expected in stdout
+
 
 def test_git_not_used(tmp_path_factory, e2e_config):
     """Check appropriate message shown when Git not being used."""
@@ -314,7 +352,9 @@ def test_git_not_used(tmp_path_factory, e2e_config):
 
     # Run py-bugger against file. This is one of the few e2e tests where --ignore-git-status
     # is not passed, because we want to verify appropriate behavior without a clean Git status.
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -324,6 +364,7 @@ def test_git_not_used(tmp_path_factory, e2e_config):
     pb_config.target_file = path_dst
     msg_expected = cli_messages.msg_git_not_used(pb_config)
     assert msg_expected in stdout
+
 
 def test_unclean_git_status(tmp_path_factory, e2e_config):
     """Check appropriate message shown when Git status is not clean."""
@@ -342,7 +383,9 @@ def test_unclean_git_status(tmp_path_factory, e2e_config):
 
     # Run py-bugger against file. This is one of the few e2e tests where --ignore-git-status
     # is not passed, because we want to verify appropriate behavior without a clean Git status.
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -350,6 +393,7 @@ def test_unclean_git_status(tmp_path_factory, e2e_config):
 
     msg_expected = cli_messages.msg_unclean_git_status
     assert msg_expected in stdout
+
 
 def test_clean_git_status(tmp_path_factory, e2e_config):
     """Run py-bugger against a tiny repo with a clean status, without passing
@@ -378,7 +422,9 @@ def test_clean_git_status(tmp_path_factory, e2e_config):
 
     # Run py-bugger against file. This is one of the few e2e tests where --ignore-git-status
     # is not passed, because we want to verify appropriate behavior with a clean Git status.
-    cmd = f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    cmd = (
+        f"py-bugger --exception-type AttributeError --target-file {path_dst.as_posix()}"
+    )
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -394,6 +440,7 @@ def test_clean_git_status(tmp_path_factory, e2e_config):
     assert 'dog.py", line ' in stderr
     assert "AttributeError: " in stderr
     assert "Did you mean: " in stderr
+
 
 def test_ignore_git_status(tmp_path_factory, e2e_config):
     """Test that py-bugger runs when --ignore-git-status is passed.

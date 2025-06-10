@@ -325,9 +325,7 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_name_picker, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
-    )
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -355,9 +353,7 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_dog, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
-    )
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -389,9 +385,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_identical_attributes, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
-    )
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -442,9 +436,9 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     assert 'simple_indent.py", line 1' in stderr
 
 
-# This test passes, but it mixes tabs and spaces. It would fail if the 
+# This test passes, but it mixes tabs and spaces. It would fail if the
 # for loop was inside a function. Make a test file with the for loop
-# in the function, induce an error that indents the for line, not the 
+# in the function, induce an error that indents the for line, not the
 # def line, and assert not TabError.
 @pytest.mark.skip()
 def test_indentation_error_simple_tab(tmp_path_factory, e2e_config):

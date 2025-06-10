@@ -38,7 +38,6 @@ def validate_config():
     _update_options()
 
     _validate_git_status()
-        
 
 
 # --- Helper functions ___
@@ -55,6 +54,7 @@ def _update_options():
     # Make sure target_file is a Path.
     if pb_config.target_file:
         pb_config.target_file = Path(pb_config.target_file)
+
 
 def _validate_target_dir():
     """Make sure a valid directory was passed.
@@ -74,6 +74,7 @@ def _validate_target_dir():
         msg = cli_messages.msg_not_dir(path_target_dir)
         click.echo(msg)
         sys.exit()
+
 
 def _validate_target_file():
     """Make sure an appropriate file was passed.
@@ -98,19 +99,22 @@ def _validate_target_file():
         click.echo(msg)
         sys.exit()
 
+
 def _validate_git_status():
     """Look for a clean Git status before introducing bugs."""
     if pb_config.ignore_git_status:
         return
-    
+
     _check_git_available()
     _check_git_status()
+
 
 def _check_git_available():
     """Quit with appropriate message if Git not available."""
     if not shutil.which("git"):
         click.echo(cli_messages.msg_git_not_available)
         sys.exit()
+
 
 def _check_git_status():
     """Make sure we're starting with a clean git status."""
@@ -122,7 +126,7 @@ def _check_git_status():
     cmd = "git status --porcelain"
     cmd_parts = shlex.split(cmd)
     output = subprocess.run(cmd_parts, cwd=git_dir, capture_output=True, text=True)
-    
+
     if "fatal: not a git repository" in output.stderr:
         msg = cli_messages.msg_git_not_used(pb_config)
         click.echo(msg)
