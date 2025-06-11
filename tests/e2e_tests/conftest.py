@@ -52,8 +52,5 @@ def e2e_config():
 
 @pytest.fixture(scope="session")
 def on_windows():
-    """Return True if on Windows, False otherwise."""
-    if platform.system() == "Windows":
-        return True
-    else:
-        return False
+    """Some tests need to run differently on Windows."""
+    return platform.system() == "Windows"
