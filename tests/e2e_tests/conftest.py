@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
 import os
+import platform
 
 import pytest
 
@@ -48,3 +49,9 @@ def e2e_config():
             python_cmd = path_root / ".venv" / "bin" / "python"
 
     return Config()
+
+
+@pytest.fixture(scope="session")
+def on_windows():
+    """Some tests need to run differently on Windows."""
+    return platform.system() == "Windows"

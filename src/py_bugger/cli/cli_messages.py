@@ -10,6 +10,10 @@ msg_target_file_dir = (
     "Target file overrides target dir. Please only pass one of these args."
 )
 
+msg_git_not_available = "Git does not seem to be available. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
+
+msg_unclean_git_status = "You have uncommitted changes in your project. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
+
 
 # --- Dynamic messages ---
 
@@ -30,15 +34,18 @@ def success_msg(num_added, num_requested):
 
 # Messagess for invalid --target-dir calls.
 
+
 def msg_file_not_dir(target_file):
     """Specified --target-dir, but passed a file."""
     msg = f"You specified --target-dir, but {target_file.name} is a file. Did you mean to use --target-file?"
     return msg
 
+
 def msg_nonexistent_dir(target_dir):
     """Passed a nonexistent dir to --target-dir."""
     msg = f"The directory {target_dir.name} does not exist. Did you make a typo?"
     return msg
+
 
 def msg_not_dir(target_dir):
     """Passed something that exists to --target-dir, but it's not a dir."""
@@ -48,22 +55,38 @@ def msg_not_dir(target_dir):
 
 # Messages for invalid --target-file calls.
 
+
 def msg_dir_not_file(target_dir):
     """Specified --target-file, but passed a dir."""
     msg = f"You specified --target-file, but {target_dir.name} is a directory. Did you mean to use --target-dir, or did you intend to pass a specific file from that directory?"
     return msg
+
 
 def msg_nonexistent_file(target_file):
     """Passed a nonexistent file to --target-file."""
     msg = f"The file {target_file.name} does not exist. Did you make a typo?"
     return msg
 
+
 def msg_not_file(target_file):
     """Passed something that exists to --target-file, but it's not a file."""
     msg = f"{target_file.name} does not seem to be a file."
     return msg
 
+
 def msg_file_not_py(target_file):
     """Passed a non-.py file to --target-file."""
     msg = f"{target_file.name} does not appear to be a Python file."
+    return msg
+
+
+# Messages for Git status-related issues.
+def msg_git_not_used(pb_config):
+    """Git is not being used to manage target file or directory."""
+    if pb_config.target_file:
+        target = "file"
+    else:
+        target = "directory"
+
+    msg = f"The {target} you're running py-bugger against does not seem to be under version control. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
     return msg

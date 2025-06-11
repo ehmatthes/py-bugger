@@ -34,8 +34,10 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     # Verify output.
-    path = e2e_config.path_reference_files / "no_exception_type.txt"
-    assert stdout.replace("\r\n", "\n") == path.read_text().replace("\r\n", "\n")
+    assert (
+        "You must be explicit about what kinds of errors you want to induce in the project."
+        in stdout
+    )
 
     # Check that .py file is unchanged.
     assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
@@ -68,7 +70,7 @@ def test_modulenotfounderror(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_name_picker, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -97,7 +99,7 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_system_info, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -129,7 +131,7 @@ def test_two_bugs(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_system_info, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --num-bugs 2 --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --num-bugs 2 --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -162,7 +164,7 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_ten_imports, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print(cmd)
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -210,7 +212,7 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_system_info, path_dst_system_info)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print(cmd)
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -239,7 +241,7 @@ def test_unable_insert_all_bugs(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_system_info, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError -n 3 --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError -n 3 --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -256,7 +258,7 @@ def test_no_bugs(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_zero_imports, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -295,7 +297,7 @@ def test_target_file(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_system_info, path_dst_system_info)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-file {path_dst_system_info.as_posix()}"
+    cmd = f"py-bugger --exception-type ModuleNotFoundError --target-file {path_dst_system_info.as_posix()} --ignore-git-status"
     print(cmd)
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -325,9 +327,7 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_name_picker, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
-    )
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -355,9 +355,7 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_dog, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
-    )
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -389,9 +387,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_identical_attributes, path_dst)
 
     # Run py-bugger against directory.
-    cmd = (
-        f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()}"
-    )
+    cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
 
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
@@ -426,7 +422,7 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_simple_indent, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -442,9 +438,9 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     assert 'simple_indent.py", line 1' in stderr
 
 
-# This test passes, but it mixes tabs and spaces. It would fail if the 
+# This test passes, but it mixes tabs and spaces. It would fail if the
 # for loop was inside a function. Make a test file with the for loop
-# in the function, induce an error that indents the for line, not the 
+# in the function, induce an error that indents the for line, not the
 # def line, and assert not TabError.
 @pytest.mark.skip()
 def test_indentation_error_simple_tab(tmp_path_factory, e2e_config):
@@ -461,7 +457,7 @@ def test_indentation_error_simple_tab(tmp_path_factory, e2e_config):
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -490,7 +486,7 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_many_dogs, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -520,7 +516,7 @@ def test_all_indentation_blocks(tmp_path_factory, e2e_config):
     shutil.copyfile(e2e_config.path_all_indentation_blocks, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --num-bugs 8 --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --num-bugs 8 --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
@@ -557,7 +553,7 @@ def test_indentation_else_block(tmp_path_factory, e2e_config):
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()}"
+    cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 

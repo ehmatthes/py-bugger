@@ -2,7 +2,7 @@
 name = "python-bugger"
 description = "Practice debugging, by intentionally introducing bugs into an existing codebase."
 readme = "README.md"
-version = "0.3.6"
+version = "0.4.0"
 requires-python = ">=3.9"
 
 dependencies = ["libcst", "click"]
@@ -31,3 +31,7 @@ py-bugger = "py_bugger.cli.cli:cli"
 "Documentation" = "https://py-bugger.readthedocs.io/en/latest/"
 "GitHub" = "https://github.com/ehmatthes/py-bugger"
 "Changelog" = "https://github.com/ehmatthes/py-bugger/blob/main/CHANGELOG.md"
+
+[tool.black]
+# Sample code for tests sometimes require nonstandard formatting.
+extend-exclude = "tests/sample_code"

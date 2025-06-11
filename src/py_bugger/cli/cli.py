@@ -1,8 +1,5 @@
-from pathlib import Path
-
 import click
 
-from py_bugger import py_bugger
 from py_bugger.cli import cli_utils
 from py_bugger.cli.config import pb_config
 
@@ -32,6 +29,11 @@ from py_bugger.cli.config import pb_config
     help="How many bugs to introduce.",
 )
 @click.option(
+    "--ignore-git-status",
+    is_flag=True,
+    help="Don't check Git status before inserting bugs.",
+)
+@click.option(
     "--verbose",
     "-v",
     is_flag=True,
@@ -43,4 +45,7 @@ def cli(**kwargs):
     pb_config.__dict__.update(kwargs)
     cli_utils.validate_config()
 
+    # Importing py_bugger here cuts test time significantly, as these resources are not
+    # loaded for many calls. (6.7s -> 5.4s, for 20% speedup, 6/10/25.)
+    from py_bugger import py_bugger
     py_bugger.main()

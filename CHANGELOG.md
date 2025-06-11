@@ -1,7 +1,25 @@
 Changelog: python-bugger
 ===
 
+0.4 - Git status checks
+---
+
+Looks for a clean Git status before introducing bugs.
+
+### 0.4.0
+
+#### External changes
+
+- Checks Git status before introducing bugs.
+- Allows overriding Git checks with `--ignore-git-status`.
+
+#### Internal changes
+
+- Moving `py_bugger` import closer to where it's needed speeds up tests.
+
+
 0.3 - Multiple exception types targeted
+---
 
 Can request more than one type of exception to be induced.
 
