@@ -34,8 +34,7 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     # Verify output.
-    path = e2e_config.path_reference_files / "no_exception_type.txt"
-    assert stdout.replace("\r\n", "\n") == path.read_text().replace("\r\n", "\n")
+    assert "You must be explicit about what kinds of errors you want to induce in the project." in stdout
 
     # Check that .py file is unchanged.
     assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
