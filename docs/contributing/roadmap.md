@@ -8,7 +8,7 @@ hide:
 
 Here's a brief roadmap of where I'm planning to take this project:
 
-- Check for a clean Git state before introducing any bugs.
+- **(implemented)** Check for a clean Git state before introducing any bugs.
 - Make a new commit after introducing bugs.
 - Expand the variety of exception types that can be introduced.
 - Expand the variety of possible causes for inducing specific exceptions.
