@@ -18,16 +18,7 @@ import pytest
 from py_bugger.cli import cli_messages
 
 
-def on_windows():
-    """Return True if on Windows, False otherwise."""
-    if platform.system() == "Windows":
-        return True
-    else:
-        return False
-
-
 # --- Tests for handling of line endings. ---
-
 
 @pytest.mark.parametrize(
     "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
@@ -202,7 +193,7 @@ def test_nonexistent_dir_passed_to_targetdir():
     assert msg_expected in stdout
 
 
-@pytest.mark.skipif(on_windows(), reason="Can't use /dev/null on Windows.")
+@pytest.mark.skipif(platform.system() == "Windows", reason="Can't use /dev/null on Windows.")
 def test_targetdir_exists_not_dir():
     """Passed something that exists, but is not a file or dir.."""
 
@@ -265,7 +256,7 @@ def test_nonexistent_file_passed_to_targetfile():
     assert msg_expected in stdout
 
 
-@pytest.mark.skipif(on_windows(), reason="Can't use /dev/null on Windows.")
+@pytest.mark.skipif(platform.system() == "Windows", reason="Can't use /dev/null on Windows.")
 def test_targetfile_exists_not_file():
     """Passed something that exists, but is not a file or dir.."""
 
