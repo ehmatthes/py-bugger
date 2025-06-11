@@ -34,7 +34,10 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     # Verify output.
-    assert "You must be explicit about what kinds of errors you want to induce in the project." in stdout
+    assert (
+        "You must be explicit about what kinds of errors you want to induce in the project."
+        in stdout
+    )
 
     # Check that .py file is unchanged.
     assert filecmp.cmp(e2e_config.path_name_picker, path_dst)

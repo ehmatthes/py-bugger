@@ -37,10 +37,13 @@ def test_git_not_available(tmp_path_factory, e2e_config, on_windows):
 
     env = os.environ.copy()
     env["PATH"] = ""
-    stdout = subprocess.run(cmd_parts, capture_output=True, env=env, text=True, shell=on_windows).stdout
+    stdout = subprocess.run(
+        cmd_parts, capture_output=True, env=env, text=True, shell=on_windows
+    ).stdout
     return
     msg_expected = cli_messages.msg_git_not_available
     assert msg_expected in stdout
+
 
 def test_git_not_used(tmp_path_factory, e2e_config):
     """Check appropriate message shown when Git not being used."""

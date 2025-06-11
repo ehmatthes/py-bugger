@@ -50,6 +50,7 @@ def e2e_config():
 
     return Config()
 
+
 @pytest.fixture(scope="session")
 def on_windows():
     """Some tests need to run differently on Windows."""
