@@ -37,7 +37,6 @@ def test_git_not_available(tmp_path_factory, e2e_config, on_windows):
 
     env = os.environ.copy()
     env["PATH"] = ""
-    # stdout = subprocess.run(cmd_parts, capture_output=True, env=env).stdout.decode()
     stdout = subprocess.run(cmd_parts, capture_output=True, env=env, text=True, shell=on_windows).stdout
     return
     msg_expected = cli_messages.msg_git_not_available
