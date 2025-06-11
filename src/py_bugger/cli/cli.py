@@ -1,6 +1,5 @@
 import click
 
-from py_bugger import py_bugger
 from py_bugger.cli import cli_utils
 from py_bugger.cli.config import pb_config
 
@@ -46,4 +45,7 @@ def cli(**kwargs):
     pb_config.__dict__.update(kwargs)
     cli_utils.validate_config()
 
+    # Importing py_bugger here cuts test time significantly, as these resources are not
+    # loaded for many calls.
+    from py_bugger import py_bugger
     py_bugger.main()
