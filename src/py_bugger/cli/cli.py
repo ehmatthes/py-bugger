@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import click
 
 from py_bugger import py_bugger
