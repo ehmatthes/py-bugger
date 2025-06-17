@@ -20,6 +20,11 @@ def main():
     # Track how many bugs have been added.
     bugs_added = 0
 
+    # If --exception-type not specified, choose one.
+    supported_exceptions = ["ModuleNotFoundError", "AttributeError", "IndentationError"]
+    if not pb_config.exception_type:
+        pb_config.exception_type = random.choice(supported_exceptions)
+
     # Currently, handles just one exception type per call.
     # When multiple are supported, implement more complex logic for choosing which ones
     # to introduce, and tracking bugs. Also consider a more appropriate dispatch approach
