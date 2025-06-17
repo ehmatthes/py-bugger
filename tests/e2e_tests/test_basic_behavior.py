@@ -17,32 +17,6 @@ import pytest
 
 # --- Test functions ---
 
-
-def test_no_exception_type(tmp_path_factory, e2e_config):
-    """Test output for not passing --exception-type."""
-
-    # Copy sample code to tmp dir.
-    tmp_path = tmp_path_factory.mktemp("sample_code")
-    print(f"\nCopying code to: {tmp_path.as_posix()}")
-
-    path_dst = tmp_path / e2e_config.path_name_picker.name
-    shutil.copyfile(e2e_config.path_name_picker, path_dst)
-
-    # Make bare py-bugger call.
-    cmd = f"py-bugger"
-    cmd_parts = shlex.split(cmd)
-    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
-
-    # Verify output.
-    assert (
-        "You must be explicit about what kinds of errors you want to induce in the project."
-        in stdout
-    )
-
-    # Check that .py file is unchanged.
-    assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
-
-
 def test_help(e2e_config):
     """Test output of `py-bugger --help`."""
     # Set an explicit column width, so output is consistent across systems.
@@ -59,9 +33,8 @@ def test_help(e2e_config):
     )
 
 
-def test_no_exception_type_new(tmp_path_factory, e2e_config):
+def test_no_exception_type(tmp_path_factory, e2e_config):
     """Test that passing no -e arg chooses a random exception type to induce."""
-    # DEV: Remove old test, rename this test.
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
@@ -78,13 +51,12 @@ def test_no_exception_type_new(tmp_path_factory, e2e_config):
 
     assert "All requested bugs inserted." in stdout
 
-    # Run file, should raise ModuleNotFoundError.
-    # cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
-    # cmd_parts = shlex.split(cmd)
-    # stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
-    # assert "Traceback (most recent call last)" in stderr
-    # assert 'name_picker.py", line 1, in <module>' in stderr
-    # assert "ModuleNotFoundError: No module named" in stderr
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert 'dog_bark.py", line 12' in stderr
+    assert "IndentationError: unexpected indent" in stderr
 
 
 
