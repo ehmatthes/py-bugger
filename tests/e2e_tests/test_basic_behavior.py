@@ -59,6 +59,35 @@ def test_help(e2e_config):
     )
 
 
+def test_no_exception_type_new(tmp_path_factory, e2e_config):
+    """Test that passing no -e arg chooses a random exception type to induce."""
+    # DEV: Remove old test, rename this test.
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise ModuleNotFoundError.
+    # cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    # cmd_parts = shlex.split(cmd)
+    # stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    # assert "Traceback (most recent call last)" in stderr
+    # assert 'name_picker.py", line 1, in <module>' in stderr
+    # assert "ModuleNotFoundError: No module named" in stderr
+
+
+
 def test_modulenotfounderror(tmp_path_factory, e2e_config):
     """py-bugger --exception-type ModuleNotFoundError"""
 
