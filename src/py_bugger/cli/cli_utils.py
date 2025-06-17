@@ -19,9 +19,6 @@ from py_bugger.cli.config import pb_config
 
 def validate_config():
     """Make sure the CLI options are valid."""
-    # if not pb_config.exception_type:
-    #     click.echo(cli_messages.msg_exception_type_required)
-    #     sys.exit()
 
     if pb_config.target_dir and pb_config.target_file:
         click.echo(cli_messages.msg_target_file_dir)
