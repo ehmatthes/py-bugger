@@ -5,6 +5,7 @@ from py_bugger import buggers
 from py_bugger.utils import file_utils
 
 from py_bugger.cli.config import pb_config
+from py_bugger.cli.config import SUPPORTED_EXCEPTION_TYPES
 from py_bugger.cli import cli_messages
 
 
@@ -21,9 +22,8 @@ def main():
     bugs_added = 0
 
     # If --exception-type not specified, choose one.
-    supported_exceptions = ["ModuleNotFoundError", "AttributeError", "IndentationError"]
     if not pb_config.exception_type:
-        pb_config.exception_type = random.choice(supported_exceptions)
+        pb_config.exception_type = random.choice(SUPPORTED_EXCEPTION_TYPES)
 
     # Currently, handles just one exception type per call.
     # When multiple are supported, implement more complex logic for choosing which ones
