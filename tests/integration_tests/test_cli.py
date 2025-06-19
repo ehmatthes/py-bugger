@@ -15,18 +15,20 @@ from py_bugger.cli import cli_messages
 
 
 @pytest.mark.parametrize(
-    "exception_type", ["IndentationErrorr", "AttributeErrorr", "ModuleNotFoundErrorr"]
+    "actual_expected", [("IndentationErrorr", "IndentationError"), ("AttributeErrorr", "AttributeError"), ("ModuleNotFoundErrorr", "ModuleNotFoundError")]
 )
-def test_exception_type_typo(exception_type):
+def test_exception_type_typo(actual_expected):
     """Test appropriate handling of a typo in the exception type."""
     # Run py-bugger against file.
+    exception_type, correction = actual_expected
     cmd = f"py-bugger --exception-type {exception_type} --target-file nonexistent_python_file.py --ignore-git-status"
     print("cmd:", cmd)
     cmd_parts = shlex.split(cmd)
 
     stdout = subprocess.run(cmd_parts, capture_output=True, text=True).stdout
 
-    assert f"You specified {exception_type} for --exception-type. Did you mean" in stdout
+    msg_expected = cli_messages.msg_apparent_typo(exception_type, correction)
+    assert msg_expected in stdout
 
 # def test_exception_type_unsupported():
 #     """Test appropriate handling of an unsupported exception type."""
