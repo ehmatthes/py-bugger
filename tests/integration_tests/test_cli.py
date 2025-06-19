@@ -26,4 +26,15 @@ def test_exception_type_typo(exception_type):
 
     stdout = subprocess.run(cmd_parts, capture_output=True, text=True).stdout
 
-    assert "Did you mean" in stdout
+    assert f"You specified {exception_type} for --exception-type. Did you mean" in stdout
+
+# def test_exception_type_unsupported():
+#     """Test appropriate handling of an unsupported exception type."""
+#     # Run py-bugger against file.
+#     cmd = f"py-bugger --exception-type CompletelyUnsupportedExceptionType --target-file nonexistent_python_file.py --ignore-git-status"
+#     print("cmd:", cmd)
+#     cmd_parts = shlex.split(cmd)
+
+#     stdout = subprocess.run(cmd_parts, capture_output=True, text=True).stdout
+
+#     assert "Did you mean" in stdout
