@@ -10,11 +10,13 @@ from pathlib import Path
 import subprocess
 import shlex
 import shutil
+import difflib
 
 import click
 
 from py_bugger.cli import cli_messages
 from py_bugger.cli.config import pb_config
+from py_bugger.cli.config import SUPPORTED_EXCEPTION_TYPES
 
 
 def validate_config():
@@ -23,6 +25,8 @@ def validate_config():
     if pb_config.target_dir and pb_config.target_file:
         click.echo(cli_messages.msg_target_file_dir)
         sys.exit()
+
+    _validate_exception_type()
 
     if pb_config.target_dir:
         _validate_target_dir()
@@ -51,6 +55,28 @@ def _update_options():
     # Make sure target_file is a Path.
     if pb_config.target_file:
         pb_config.target_file = Path(pb_config.target_file)
+
+
+def _validate_exception_type():
+    """Make sure the -e arg provided is supported."""
+    if not pb_config.exception_type:
+        return
+
+    if pb_config.exception_type in SUPPORTED_EXCEPTION_TYPES:
+        return
+
+    # Check for typos.
+    match = difflib.get_close_matches(pb_config.exception_type, SUPPORTED_EXCEPTION_TYPES, n=1)
+    if match:
+        msg = cli_messages.msg_apparent_typo(pb_config.exception_type, match)
+        click.echo(msg)
+        sys.exit()
+
+    # Invalid or unsupported exception type.
+    msg = cli_messages.msg_unsupported_exception_type(pb_config.exception_type)
+    click.echo(msg)
+    sys.exit()
+
 
 
 def _validate_target_dir():
