@@ -30,13 +30,15 @@ def test_exception_type_typo(actual_expected):
     msg_expected = cli_messages.msg_apparent_typo(exception_type, correction)
     assert msg_expected in stdout
 
-# def test_exception_type_unsupported():
-#     """Test appropriate handling of an unsupported exception type."""
-#     # Run py-bugger against file.
-#     cmd = f"py-bugger --exception-type CompletelyUnsupportedExceptionType --target-file nonexistent_python_file.py --ignore-git-status"
-#     print("cmd:", cmd)
-#     cmd_parts = shlex.split(cmd)
+def test_exception_type_unsupported():
+    """Test appropriate handling of an unsupported exception type."""
+    # Run py-bugger against file.
+    exception_type = "CompletelyUnsupportedExceptionType"
+    cmd = f"py-bugger --exception-type {exception_type} --target-file nonexistent_python_file.py --ignore-git-status"
+    print("cmd:", cmd)
+    cmd_parts = shlex.split(cmd)
 
-#     stdout = subprocess.run(cmd_parts, capture_output=True, text=True).stdout
+    stdout = subprocess.run(cmd_parts, capture_output=True, text=True).stdout
 
-#     assert "Did you mean" in stdout
+    msg_expected = cli_messages.msg_unsupported_exception_type(exception_type)
+    assert msg_expected in stdout
