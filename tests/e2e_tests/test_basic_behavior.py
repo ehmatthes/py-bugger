@@ -48,6 +48,39 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     cmd = f"py-bugger --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    print(stdout)
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert 'dog_bark.py", line 12' in stderr
+    assert "IndentationError: unexpected indent" in stderr
+
+
+def test_no_exception_type_first_not_possible(tmp_path_factory, e2e_config):
+    """Test that passing no -e arg induces an exception, even when the first 
+    exception type randomly selected is not possible.
+    """
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    # The first exception type chosen it will attempt is IndentationError.
+    # This sample script has no indented blocks, so py-bugger will have to 
+    # find another exception to induce.
+    path_src = e2e_config.path_sample_scripts / "system_info_script.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    print(stdout)
 
     assert "All requested bugs inserted." in stdout
 
