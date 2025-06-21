@@ -17,16 +17,17 @@ def module_not_found_bugger(py_files):
     """Induce a ModuleNotFoundError.
 
     Returns:
-        Int: Number of bugs made.
+        Bool: Whether a bug was introduced or not.
     """
-    # Find all relevant nodes, choose a random one to modify.
+    # Find all relevant nodes.
     paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Import)
 
+    # Bail if there are no relevant nodes.
     if not paths_nodes:
         return False
 
+    # Randomly select a node to focus on.
     path, node = random.choice(paths_nodes)
-
     source = path.read_text()
     tree = cst.parse_module(source)
 
@@ -42,8 +43,7 @@ def module_not_found_bugger(py_files):
     else:
         path.write_text(modified_tree.code)
         _report_bug_added(path)
-
-    return True
+        return True
 
 
 def attribute_error_bugger(py_files):
