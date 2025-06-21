@@ -19,13 +19,40 @@ def module_not_found_bugger(py_files):
     Returns:
         Int: Number of bugs made.
     """
-    # Find all relevant nodes.
+    # Find all relevant nodes, choose a random one to modify.
     paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Import)
+
+    if not paths_nodes:
+        return False
+        
+    path, node = random.choice(paths_nodes)
+
+    source = path.read_text()
+    tree = cst.parse_module(source)
+
+    # Modify user's code.
+    try:
+        modified_tree = tree.visit(cst_utils.ImportModifier(node))
+    except TypeError:
+        # DEV: Figure out which nodes are ending up here, and update
+        # modifier code to handle these nodes.
+        # For diagnostics, can run against Pillow with -n set to a
+        # really high number.
+        ...
+    else:
+        path.write_text(modified_tree.code)
+        _report_bug_added(path)
+
+    return True
+
+
+
 
     # Select the set of nodes to modify. If num_bugs is greater than the number
     # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), pb_config.num_bugs)
-    paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
+    # num_changes = min(len(paths_nodes), pb_config.num_bugs)
+    # paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
+
 
     # Modify each relevant path.
     bugs_added = 0
