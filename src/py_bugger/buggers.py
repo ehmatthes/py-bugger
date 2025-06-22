@@ -39,7 +39,7 @@ def module_not_found_bugger(py_files):
         # modifier code to handle these nodes.
         # For diagnostics, can run against Pillow with -n set to a
         # really high number.
-        ...
+        raise
     else:
         path.write_text(modified_tree.code)
         _report_bug_added(path)
