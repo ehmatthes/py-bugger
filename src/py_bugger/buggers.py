@@ -93,7 +93,7 @@ def indentation_error_bugger(py_files):
     doesn't make it easy to create invalid syntax.
 
     Returns:
-        Int: Number of bugs made.
+        Bool: Whether a bug was introduced or not.
     """
     # Find relevant files and lines.
     targets = [
@@ -112,27 +112,6 @@ def indentation_error_bugger(py_files):
     if bug_utils.add_indentation(path, target_line):
         _report_bug_added(path)
         return True
-
-
-
-
-
-
-
-    # Select the set of lines to modify. If num_bugs is greater than the number
-    # of lines, just change each line.
-    # num_changes = min(len(paths_lines), pb_config.num_bugs)
-    # paths_lines_modify = random.sample(paths_lines, k=num_changes)
-
-
-    # Modify each relevant path.
-    # bugs_added = 0
-    # for path, target_line in paths_lines_modify:
-    #     if bug_utils.add_indentation(path, target_line):
-    #         _report_bug_added(path)
-    #         bugs_added += 1
-
-    # return bugs_added
 
 
 # --- Helper functions ---

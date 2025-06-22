@@ -39,8 +39,6 @@ def main():
             if buggers.attribute_error_bugger(py_files):
                 bugs_added += 1
         elif pb_config.exception_type == "IndentationError":
-            # new_bugs_made = buggers.indentation_error_bugger(py_files)
-            # bugs_added += new_bugs_made
             if buggers.indentation_error_bugger(py_files):
                 bugs_added += 1
 
