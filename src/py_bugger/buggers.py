@@ -50,44 +50,76 @@ def attribute_error_bugger(py_files):
     """Induce an AttributeError.
 
     Returns:
-        Int: Number of bugs made.
+        Bool: Whether a bug was introduced or not.
     """
     # Find all relevant nodes.
     paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Attribute)
 
-    # Select the set of nodes to modify. If num_bugs is greater than the number
-    # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), pb_config.num_bugs)
-    paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
+    # Bail if there are no relevant nodes.
+    if not paths_nodes:
+        return False
 
-    # Modify each relevant path.
-    bugs_added = 0
-    for path, node in paths_nodes_modify:
-        source = path.read_text()
-        tree = cst.parse_module(source)
+    # Randomly select a node to focus on.
+    path, node = random.choice(paths_nodes)
+    source = path.read_text()
+    tree = cst.parse_module(source)
 
-        # Pick node to modify if more than one match in the file.
-        node_count = cst_utils.count_nodes(tree, node)
-        if node_count > 1:
-            node_index = random.randrange(0, node_count - 1)
-        else:
-            node_index = 0
+    # Pick node to modify if more than one match in the file.
+    node_count = cst_utils.count_nodes(tree, node)
+    if node_count > 1:
+        node_index = random.randrange(0, node_count - 1)
+    else:
+        node_index = 0
 
-        # Modify user's code.
-        try:
-            modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index))
-        except TypeError:
-            # DEV: Figure out which nodes are ending up here, and update
-            # modifier code to handle these nodes.
-            # For diagnostics, can run against Pillow with -n set to a
-            # really high number.
-            ...
-        else:
-            path.write_text(modified_tree.code)
-            _report_bug_added(path)
-            bugs_added += 1
+    # Modify user's code.
+    try:
+        modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index))
+    except TypeError:
+        # DEV: Figure out which nodes are ending up here, and update
+        # modifier code to handle these nodes.
+        # For diagnostics, can run against Pillow with -n set to a
+        # really high number.
+        raise
+    else:
+        path.write_text(modified_tree.code)
+        _report_bug_added(path)
+        return True
 
-    return bugs_added
+
+
+    # # Select the set of nodes to modify. If num_bugs is greater than the number
+    # # of nodes, just change each node.
+    # num_changes = min(len(paths_nodes), pb_config.num_bugs)
+    # paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
+
+    # # Modify each relevant path.
+    # bugs_added = 0
+    # for path, node in paths_nodes_modify:
+    #     source = path.read_text()
+    #     tree = cst.parse_module(source)
+
+    #     # Pick node to modify if more than one match in the file.
+    #     node_count = cst_utils.count_nodes(tree, node)
+    #     if node_count > 1:
+    #         node_index = random.randrange(0, node_count - 1)
+    #     else:
+    #         node_index = 0
+
+    #     # Modify user's code.
+    #     try:
+    #         modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index))
+    #     except TypeError:
+    #         # DEV: Figure out which nodes are ending up here, and update
+    #         # modifier code to handle these nodes.
+    #         # For diagnostics, can run against Pillow with -n set to a
+    #         # really high number.
+    #         ...
+    #     else:
+    #         path.write_text(modified_tree.code)
+    #         _report_bug_added(path)
+    #         bugs_added += 1
+
+    # return bugs_added
 
 
 def indentation_error_bugger(py_files):
