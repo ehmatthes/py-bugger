@@ -33,13 +33,9 @@ def main():
     # as the project evolves.
     for _ in range(pb_config.num_bugs):
         if pb_config.exception_type == "ModuleNotFoundError":
-            # new_bugs_made = buggers.module_not_found_bugger(py_files)
-            # bugs_added += new_bugs_made
             if buggers.module_not_found_bugger(py_files):
                 bugs_added += 1
         elif pb_config.exception_type == "AttributeError":
-            # new_bugs_made = buggers.attribute_error_bugger(py_files)
-            # bugs_added += new_bugs_made
             if buggers.attribute_error_bugger(py_files):
                 bugs_added += 1
         elif pb_config.exception_type == "IndentationError":
