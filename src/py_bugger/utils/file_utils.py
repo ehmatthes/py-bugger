@@ -3,7 +3,9 @@
 import subprocess
 import shlex
 from pathlib import Path
-import sys
+import pys
+
+from py_bugger.utils.modification import modifications
 
 
 # --- Public functions ---
@@ -34,6 +36,63 @@ def get_paths_lines(py_files, targets):
                 paths_lines.append((path, line))
 
     return paths_lines
+
+def already_used(candidate_path, candidate_node=None, candidate_line=None):
+    """Check if a node or line has already been modifed."""
+    # If this path hasn't been modified at all, return False.
+    # if candidate_path not in [m.path for m in modifications]:
+    #     return False
+
+    # # This path has been modified. Check the nodes/ lines.
+    # modified_nodes = [m.node for m in modifications if ]
+
+
+    # for modification in modifications:
+    #     if candidate_path != modification.path:
+    #         return False
+
+
+
+    # Only look at modifications in the candidate path.
+    # relevant_modifications = [m if m.path == candidate_path for m in modifications]
+    relevant_modifications = [m for m in modifications if m.path == candidate_path]
+
+    if not relevant_modifications:
+        return False
+
+    modified_nodes = [m.modified_node for m in relevant_modifications]
+    modified_lines = [m.modified_line for m in relevant_modifications]
+
+    if candidate_node in modified_nodes:
+        return True
+    if candidate_line in modified_lines:
+        return True
+
+    # The candidate node or line has not been modified during this run of py-bugger.
+    return False
+
+def node_line_unmodified(candidate_path, candidate_node=None, candidate_line=None):
+    """Check if it's safe to modify a node or line.
+
+    If the node or line has not already been modified, return True. Otherwise,
+    return False.
+    """
+    # Only look at modifications in the candidate path.
+    relevant_modifications = [m for m in modifications if m.path == candidate_path]
+
+    if not relevant_modifications:
+        return True
+
+    modified_nodes = [m.modified_node for m in relevant_modifications]
+    modified_lines = [m.modified_line for m in relevant_modifications]
+
+    if candidate_node in modified_nodes:
+        return False
+    if candidate_line in modified_lines:
+        return False
+
+    # The candidate node or line has not been modified during this run of py-bugger.
+    return True
 
 
 # --- Helper functions ---

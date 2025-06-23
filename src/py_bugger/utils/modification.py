@@ -24,3 +24,37 @@ class Modification:
 
 # Only make one instance of this list.
 modifications = []
+
+
+# def already_used(candidate_path, candidate_node=None, candidate_line=None):
+#     """Check if a node or line has already been modifed."""
+#     # If this path hasn't been modified at all, return False.
+#     # if candidate_path not in [m.path for m in modifications]:
+#     #     return False
+
+#     # # This path has been modified. Check the nodes/ lines.
+#     # modified_nodes = [m.node for m in modifications if ]
+
+
+#     # for modification in modifications:
+#     #     if candidate_path != modification.path:
+#     #         return False
+
+
+
+#     # Only look at modifications in the candidate path.
+#     relevant_modifications = [m if m.path == candidate_path for m in modifications]
+
+#     if not relevant_modifications:
+#         return False
+
+#     modified_nodes = [m.modified_node for m in relevant_modifications]
+#     modified_lines = [m.modified_line for m in relevant_modifications]
+
+#     if candidate_node in modified_nodes:
+#         return True
+#     if candidate_line in modified_lines:
+#         return True
+
+#     # The candidate node or line has not been modified during this run of py-bugger.
+#     return False

@@ -1,6 +1,6 @@
 """Utilities for introducing specific kinds of bugs."""
 
-import libcst as cst
+import libcst
 import random
 
 from py_bugger.utils import cst_utils
@@ -26,8 +26,20 @@ def module_not_found_bugger(py_files):
     if not paths_nodes:
         return False
 
-    # Randomly select a node to focus on.
-    path, node = random.choice(paths_nodes)
+    # Randomly select a node to focus on; make sure not to reuse a node.
+    random.shuffle(paths_nodes)
+    proceed = False
+    while paths_nodes:
+        path, node = paths_nodes.pop()
+        if file_utils.node_line_unmodified(path, candidate_node=node):
+            proceed = True
+            break
+
+    # Bail if all nodes have already been modified.
+    if not proceed:
+        return False
+
+
     source = path.read_text()
     tree = cst.parse_module(source)
 
