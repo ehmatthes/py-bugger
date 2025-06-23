@@ -1,0 +1,26 @@
+"""Model for modifications made to files to introduce bugs.
+
+This is used to track which modifications have been made, so we don't make multiple
+modifications to the same node or line.
+"""
+
+from dataclasses import dataclass
+from pathlib import Path
+
+import libcst as cst
+
+
+@dataclass
+class Modification:
+    path: Path = ""
+
+    # Only data for a line or node will be set, not both.
+    # DEV: For line, may want to store line number?
+    original_node: cst.CSTNode = None
+    modified_node: cst.CSTNode = None
+
+    original_line: str = ""
+    modified_line: str = ""
+
+# Only make one instance of this list.
+modifications = []

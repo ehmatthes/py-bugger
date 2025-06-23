@@ -12,7 +12,7 @@ from py_bugger.cli import cli_messages
 # Set a random seed when testing.
 if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
     random.seed(int(seed))
-    
+
 
 def main():
     # Get a list of .py files we can consider modifying.
