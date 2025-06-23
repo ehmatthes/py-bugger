@@ -99,7 +99,7 @@ def node_line_unmodified(candidate_path, candidate_node=None, candidate_line=Non
 
 
 def _get_py_files_git(target_dir):
-    """Get all relevant .py files from a directory manage.py by Git."""
+    """Get all relevant .py files from a directory managed by Git."""
     cmd = f'git -C {target_dir} ls-files "*.py"'
     cmd_parts = shlex.split(cmd)
     output = subprocess.run(cmd_parts, capture_output=True)
@@ -112,6 +112,9 @@ def _get_py_files_git(target_dir):
     py_files = [pf for pf in py_files if "test_code/" not in pf.as_posix()]
     py_files = [pf for pf in py_files if pf.name != "conftest.py"]
     py_files = [pf for pf in py_files if not pf.name.startswith("test_")]
+
+    # Build full paths.
+    py_files = [target_dir / pf for pf in py_files]
 
     return py_files
 
