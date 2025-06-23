@@ -1,6 +1,6 @@
 """Utilities for introducing specific kinds of bugs."""
 
-import libcst
+import libcst as cst
 import random
 
 from py_bugger.utils import cst_utils
