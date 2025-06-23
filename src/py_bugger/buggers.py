@@ -33,7 +33,7 @@ def module_not_found_bugger(py_files):
 
     # Modify user's code.
     try:
-        modified_tree = tree.visit(cst_utils.ImportModifier(node))
+        modified_tree = tree.visit(cst_utils.ImportModifier(node, path))
     except TypeError:
         # DEV: Figure out which nodes are ending up here, and update
         # modifier code to handle these nodes.

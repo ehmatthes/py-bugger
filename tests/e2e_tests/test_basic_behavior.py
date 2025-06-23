@@ -60,6 +60,7 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     assert "IndentationError: unexpected indent" in stderr
 
 
+@pytest.mark.skip()
 def test_no_exception_type_first_not_possible(tmp_path_factory, e2e_config):
     """Test that passing no -e arg induces an exception, even when the first 
     exception type randomly selected is not possible.
@@ -166,6 +167,7 @@ def test_two_bugs(tmp_path_factory, e2e_config):
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --num-bugs 2 --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 

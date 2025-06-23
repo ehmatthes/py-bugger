@@ -3,6 +3,7 @@
 import libcst as cst
 
 from py_bugger.utils import bug_utils
+from py_bugger.utils.modification import Modification, modifications
 
 
 class NodeCollector(cst.CSTVisitor):
@@ -41,8 +42,11 @@ class ImportModifier(cst.CSTTransformer):
     tree.
     """
 
-    def __init__(self, node_to_break):
+    def __init__(self, node_to_break, path):
         self.node_to_break = node_to_break
+
+        # Need this to record the modification we're making.
+        self.path = path
 
     def leave_Import(self, original_node, updated_node):
         """Modify a direct `import <package>` statement."""
@@ -56,6 +60,10 @@ class ImportModifier(cst.CSTTransformer):
 
             # Modify the node name.
             new_names = [cst.ImportAlias(name=cst.Name(new_name))]
+
+            # Record this modification.
+            modification = Modification(path=self.path, original_node=original_node, modified_node=updated_node)
+            modifications.append(modification)
 
             return updated_node.with_changes(names=new_names)
 
