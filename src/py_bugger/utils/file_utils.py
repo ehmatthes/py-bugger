@@ -100,7 +100,7 @@ def node_line_unmodified(candidate_path, candidate_node=None, candidate_line=Non
 
 def _get_py_files_git(target_dir):
     """Get all relevant .py files from a directory manage.py by Git."""
-    cmd = 'git ls-files "*.py"'
+    cmd = f'git -C {target_dir} ls-files "*.py"'
     cmd_parts = shlex.split(cmd)
     output = subprocess.run(cmd_parts, capture_output=True)
     py_files = output.stdout.decode().strip().splitlines()
