@@ -3,7 +3,7 @@
 import subprocess
 import shlex
 from pathlib import Path
-import pys
+import sys
 
 from py_bugger.utils.modification import modifications
 
