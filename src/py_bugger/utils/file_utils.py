@@ -33,7 +33,7 @@ def get_paths_lines(py_files, targets):
     for path in py_files:
         lines = path.read_text().splitlines()
         _remove_modified_lines(path, lines)
-        
+
         for line in lines:
             stripped_line = line.strip()
             if any([stripped_line.startswith(target) for target in targets]):
@@ -73,7 +73,7 @@ def check_unmodified(candidate_path, candidate_node=None, candidate_line=None):
 
 def _get_py_files_git(target_dir):
     """Get all relevant .py files from a directory managed by Git."""
-    cmd = f'git -C {target_dir} ls-files "*.py"'
+    cmd = f'git -C {target_dir.as_posix()} ls-files "*.py"'
     cmd_parts = shlex.split(cmd)
     output = subprocess.run(cmd_parts, capture_output=True)
     py_files = output.stdout.decode().strip().splitlines()
