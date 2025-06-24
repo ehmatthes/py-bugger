@@ -33,6 +33,7 @@ def get_paths_lines(py_files, targets):
     for path in py_files:
         lines = path.read_text().splitlines()
         _remove_modified_lines(path, lines)
+        
         for line in lines:
             stripped_line = line.strip()
             if any([stripped_line.startswith(target) for target in targets]):
@@ -116,8 +117,6 @@ def _get_py_files_non_git(target_dir):
 
 def _remove_modified_lines(path, lines):
     """Remove lines from the list that have already been modified."""
-    print("IN REMOVE MODIFIED LINES")
-    # breakpoint()
     for modification in modifications:
         if modification.path != path:
             continue
@@ -127,10 +126,7 @@ def _remove_modified_lines(path, lines):
         # This path has been modified. Check line.
         modified_line = modification.modified_line.rstrip()
         if modified_line in lines:
-            print("HERE HERE HERE")
             # DEV: We may want to look at line numbers. For now, remove all occurrences 
             # of this line.
-            # lines.remove(modified_line)
             while modified_line in lines:
                 lines.remove(modified_line)
-    # breakpoint()
