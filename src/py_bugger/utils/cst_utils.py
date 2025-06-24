@@ -62,7 +62,10 @@ class ImportModifier(cst.CSTTransformer):
             new_names = [cst.ImportAlias(name=cst.Name(new_name))]
 
             # Record this modification.
-            modification = Modification(path=self.path, original_node=original_node, modified_node=updated_node)
+            # DEV: modified node needs to be generated using new_names. Set breakpoint here to verify the modification
+            # is stored correctly.
+            modified_node = updated_node.with_changes(names=new_names)
+            modification = Modification(path=self.path, original_node=original_node, modified_node=modified_node)
             modifications.append(modification)
 
             return updated_node.with_changes(names=new_names)

@@ -86,8 +86,11 @@ def node_line_unmodified(candidate_path, candidate_node=None, candidate_line=Non
     modified_nodes = [m.modified_node for m in relevant_modifications]
     modified_lines = [m.modified_line for m in relevant_modifications]
 
-    if candidate_node in modified_nodes:
-        return False
+    # Need to use deep_equals for node comparisons.
+    for modified_node in modified_nodes:
+        if modified_node.deep_equals(candidate_node):
+            return False
+
     if candidate_line in modified_lines:
         return False
 
