@@ -1,8 +1,5 @@
 """Messages for use in CLI output."""
 
-from py_bugger.cli.config import pb_config
-from py_bugger.utils.modification import modifications
-
 # --- Static messages ---
 
 msg_target_file_dir = (
@@ -17,6 +14,9 @@ msg_unclean_git_status = "You have uncommitted changes in your project. It's hig
 # def success_msg(num_added, num_requested):
 def success_msg():
     """Generate a success message at end of run."""
+    # Importing these here makes for a faster test suite.
+    from py_bugger.cli.config import pb_config
+    from py_bugger.utils.modification import modifications
 
     # Show a final success/fail message.
     num_added = len(modifications)
