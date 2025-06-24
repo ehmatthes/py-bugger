@@ -26,10 +26,13 @@ def get_py_files(target_dir, target_file):
 
 
 def get_paths_lines(py_files, targets):
-    """Get all lines from all files matching targets."""
+    """Get all lines from all files matching targets, if they haven't already
+    been modified.
+    """
     paths_lines = []
     for path in py_files:
         lines = path.read_text().splitlines()
+        _remove_modified_lines(path, lines)
         for line in lines:
             stripped_line = line.strip()
             if any([stripped_line.startswith(target) for target in targets]):
@@ -110,3 +113,24 @@ def _get_py_files_non_git(target_dir):
     py_files = [pf for pf in py_files if not pf.name.startswith("test_")]
 
     return py_files
+
+def _remove_modified_lines(path, lines):
+    """Remove lines from the list that have already been modified."""
+    print("IN REMOVE MODIFIED LINES")
+    # breakpoint()
+    for modification in modifications:
+        if modification.path != path:
+            continue
+        if not modification.modified_line:
+            continue
+
+        # This path has been modified. Check line.
+        modified_line = modification.modified_line.rstrip()
+        if modified_line in lines:
+            print("HERE HERE HERE")
+            # DEV: We may want to look at line numbers. For now, remove all occurrences 
+            # of this line.
+            # lines.remove(modified_line)
+            while modified_line in lines:
+                lines.remove(modified_line)
+    # breakpoint()
