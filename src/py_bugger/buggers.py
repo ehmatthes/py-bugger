@@ -1,4 +1,10 @@
-"""Utilities for introducing specific kinds of bugs."""
+"""Utilities for introducing specific kinds of bugs.
+
+DEV: Don't rush to refactor bugger functions. for example, it's not yet clear whether this should
+be a class. Also, not sure we need separate bugger functions, or one bugger function with some
+conditional logic. Implement support for another exception type, and logical errors, and see what
+things are looking like.
+"""
 
 import libcst as cst
 import random
