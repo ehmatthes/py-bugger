@@ -4,6 +4,7 @@ import random
 import builtins
 
 from py_bugger.utils import file_utils
+from py_bugger.utils.modification import Modification, modifications
 
 
 def make_typo(name):
@@ -69,9 +70,13 @@ def add_indentation(path, target_line):
         # `line` contains leading whitespace and trailing newline.
         # `target_line` just contains code, so use `in` rather than `==`.
         if target_line in line:
-            line = f"    {line}"
-            modified_lines.append(line)
+            modified_line = f"    {line}"
+            modified_lines.append(modified_line)
             indentation_added = True
+
+            # Record this modification.
+            modification = Modification(path, original_line=line, modified_line=modified_line)
+            modifications.append(modification)
         else:
             modified_lines.append(line)
 

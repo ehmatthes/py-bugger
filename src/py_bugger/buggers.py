@@ -1,4 +1,10 @@
-"""Utilities for introducing specific kinds of bugs."""
+"""Utilities for introducing specific kinds of bugs.
+
+DEV: Don't rush to refactor bugger functions. for example, it's not yet clear whether this should
+be a class. Also, not sure we need separate bugger functions, or one bugger function with some
+conditional logic. Implement support for another exception type, and logical errors, and see what
+things are looking like.
+"""
 
 import libcst as cst
 import random
@@ -17,81 +23,68 @@ def module_not_found_bugger(py_files):
     """Induce a ModuleNotFoundError.
 
     Returns:
-        Int: Number of bugs made.
+        Bool: Whether a bug was introduced or not.
     """
-    # Find all relevant nodes.
-    paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Import)
+    # Get a random node that hasn't already been modified.
+    path, node = _get_random_node(py_files, node_type=cst.Import)
+    if not path:
+        return False
 
-    # Select the set of nodes to modify. If num_bugs is greater than the number
-    # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), pb_config.num_bugs)
-    paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
+    # Parse user's code.
+    source = path.read_text()
+    tree = cst.parse_module(source)
 
-    # Modify each relevant path.
-    bugs_added = 0
-    for path, node in paths_nodes_modify:
-        source = path.read_text()
-        tree = cst.parse_module(source)
-
-        # Modify user's code.
-        try:
-            modified_tree = tree.visit(cst_utils.ImportModifier(node))
-        except TypeError:
-            # DEV: Figure out which nodes are ending up here, and update
-            # modifier code to handle these nodes.
-            # For diagnostics, can run against Pillow with -n set to a
-            # really high number.
-            ...
-        else:
-            path.write_text(modified_tree.code)
-            _report_bug_added(path)
-            bugs_added += 1
-
-    return bugs_added
+    # Modify user's code
+    try:
+        modified_tree = tree.visit(cst_utils.ImportModifier(node, path))
+    except TypeError:
+        # DEV: Figure out which nodes are ending up here, and update
+        # modifier code to handle these nodes.
+        # For diagnostics, can run against Pillow with -n set to a
+        # really high number.
+        raise
+    else:
+        path.write_text(modified_tree.code)
+        _report_bug_added(path)
+        return True
 
 
 def attribute_error_bugger(py_files):
     """Induce an AttributeError.
 
     Returns:
-        Int: Number of bugs made.
+        Bool: Whether a bug was introduced or not.
     """
-    # Find all relevant nodes.
-    paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Attribute)
+    # Get a random node that hasn't already been modified.
+    path, node = _get_random_node(py_files, node_type=cst.Attribute)
+    if not path:
+        return False
 
-    # Select the set of nodes to modify. If num_bugs is greater than the number
-    # of nodes, just change each node.
-    num_changes = min(len(paths_nodes), pb_config.num_bugs)
-    paths_nodes_modify = random.sample(paths_nodes, k=num_changes)
+    # Parse user's code.
+    source = path.read_text()
+    tree = cst.parse_module(source)
 
-    # Modify each relevant path.
-    bugs_added = 0
-    for path, node in paths_nodes_modify:
-        source = path.read_text()
-        tree = cst.parse_module(source)
+    # Pick node to modify if more than one match in the file.
+    # Note that not all bugger functions need this step.
+    node_count = cst_utils.count_nodes(tree, node)
+    if node_count > 1:
+        node_index = random.randrange(0, node_count - 1)
+    else:
+        node_index = 0
 
-        # Pick node to modify if more than one match in the file.
-        node_count = cst_utils.count_nodes(tree, node)
-        if node_count > 1:
-            node_index = random.randrange(0, node_count - 1)
-        else:
-            node_index = 0
-
-        # Modify user's code.
-        try:
-            modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index))
-        except TypeError:
-            # DEV: Figure out which nodes are ending up here, and update
-            # modifier code to handle these nodes.
-            # For diagnostics, can run against Pillow with -n set to a
-            # really high number.
-            ...
-        else:
-            path.write_text(modified_tree.code)
-            _report_bug_added(path)
-            bugs_added += 1
-
-    return bugs_added
+    # Modify user's code.
+    try:
+        modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index, path))
+    except TypeError:
+        # DEV: Figure out which nodes are ending up here, and update
+        # modifier code to handle these nodes.
+        # For diagnostics, can run against Pillow with -n set to a
+        # really high number.
+        raise
+    else:
+        path.write_text(modified_tree.code)
+        _report_bug_added(path)
+        return True
 
 
 def indentation_error_bugger(py_files):
@@ -101,7 +94,7 @@ def indentation_error_bugger(py_files):
     doesn't make it easy to create invalid syntax.
 
     Returns:
-        Int: Number of bugs made.
+        Bool: Whether a bug was introduced or not.
     """
     # Find relevant files and lines.
     targets = [
@@ -116,19 +109,15 @@ def indentation_error_bugger(py_files):
     ]
     paths_lines = file_utils.get_paths_lines(py_files, targets=targets)
 
-    # Select the set of lines to modify. If num_bugs is greater than the number
-    # of lines, just change each line.
-    num_changes = min(len(paths_lines), pb_config.num_bugs)
-    paths_lines_modify = random.sample(paths_lines, k=num_changes)
+    # Bail if there are no relevant lines.
+    if not paths_lines:
+        return False
 
-    # Modify each relevant path.
-    bugs_added = 0
-    for path, target_line in paths_lines_modify:
-        if bug_utils.add_indentation(path, target_line):
-            _report_bug_added(path)
-            bugs_added += 1
+    path, target_line = random.choice(paths_lines)
 
-    return bugs_added
+    if bug_utils.add_indentation(path, target_line):
+        _report_bug_added(path)
+        return True
 
 
 # --- Helper functions ---
@@ -142,3 +131,23 @@ def _report_bug_added(path_modified):
         print(f"Added bug to: {path_modified.as_posix()}")
     else:
         print(f"Added bug.")
+
+def _get_random_node(py_files, node_type):
+    """Randomly select a node to modify.
+    
+    Make sure it's a node that hasn't already been modified.
+
+    Returns:
+        Tuple: (path, node) or (False, False)
+    """
+    # Find all relevant nodes. Bail if there are no relevant nodes.
+    if not (paths_nodes := cst_utils.get_paths_nodes(py_files, node_type)):
+        return False, False
+
+    random.shuffle(paths_nodes)
+    for path, node in paths_nodes:
+        if file_utils.check_unmodified(path, candidate_node=node):
+            return path, node
+    else:
+        # All nodes have already been modified to introduce a previous bug.
+        return False, False

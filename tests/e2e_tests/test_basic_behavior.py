@@ -11,37 +11,12 @@ import subprocess
 import filecmp
 import os
 import sys
+import platform
 
 import pytest
 
 
 # --- Test functions ---
-
-
-def test_no_exception_type(tmp_path_factory, e2e_config):
-    """Test output for not passing --exception-type."""
-
-    # Copy sample code to tmp dir.
-    tmp_path = tmp_path_factory.mktemp("sample_code")
-    print(f"\nCopying code to: {tmp_path.as_posix()}")
-
-    path_dst = tmp_path / e2e_config.path_name_picker.name
-    shutil.copyfile(e2e_config.path_name_picker, path_dst)
-
-    # Make bare py-bugger call.
-    cmd = f"py-bugger"
-    cmd_parts = shlex.split(cmd)
-    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
-
-    # Verify output.
-    assert (
-        "You must be explicit about what kinds of errors you want to induce in the project."
-        in stdout
-    )
-
-    # Check that .py file is unchanged.
-    assert filecmp.cmp(e2e_config.path_name_picker, path_dst)
-
 
 def test_help(e2e_config):
     """Test output of `py-bugger --help`."""
@@ -59,6 +34,101 @@ def test_help(e2e_config):
     )
 
 
+def test_no_exception_type(tmp_path_factory, e2e_config):
+    """Test that passing no -e arg chooses a random exception type to induce."""
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    print(stdout)
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert 'dog_bark.py", line 12' in stderr
+    assert "IndentationError: unexpected indent" in stderr
+
+@pytest.mark.parametrize("num_bugs", [2, 10])
+def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
+    """Test that passing no -e arg works with --num-bugs."""
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --num-bugs {num_bugs} --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    print(stdout)
+
+    if num_bugs == 2:
+        assert "All requested bugs inserted." in stdout
+    elif num_bugs == 10:
+        assert "Inserted " in stdout
+        assert "Unable to introduce additional bugs of the requested type." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+
+    assert 'dog_bark.py", line 12' in stderr
+    assert "IndentationError: unexpected indent" in stderr
+
+
+@pytest.mark.skip()
+def test_no_exception_type_first_not_possible(tmp_path_factory, e2e_config):
+    """Test that passing no -e arg induces an exception, even when the first 
+    exception type randomly selected is not possible.
+    """
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    # The first exception type chosen it will attempt is IndentationError.
+    # This sample script has no indented blocks, so py-bugger will have to 
+    # find another exception to induce.
+    path_src = e2e_config.path_sample_scripts / "system_info_script.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    print(stdout)
+
+    assert "All requested bugs inserted." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    assert 'dog_bark.py", line 12' in stderr
+    assert "IndentationError: unexpected indent" in stderr
+
+
+
 def test_modulenotfounderror(tmp_path_factory, e2e_config):
     """py-bugger --exception-type ModuleNotFoundError"""
 
@@ -71,6 +141,7 @@ def test_modulenotfounderror(tmp_path_factory, e2e_config):
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -132,6 +203,7 @@ def test_two_bugs(tmp_path_factory, e2e_config):
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --num-bugs 2 --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -146,9 +218,11 @@ def test_two_bugs(tmp_path_factory, e2e_config):
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Read modified file; should have changed both import statements.
-    modified_source = path_dst.read_text()
-    assert "import sys" not in modified_source
-    assert "import os" not in modified_source
+    # Note that `import os` can become `import osp`, so we can't just do:
+    #     assert "import os" not in modified_source
+    lines = path_dst.read_text().splitlines()
+    assert "import sys" not in lines
+    assert "import os" not in lines
 
 
 def test_random_import_affected(tmp_path_factory, e2e_config):
@@ -220,33 +294,51 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst_ten_imports.as_posix()}"
+    # When we collect files, the order is different on different OSes.
+    if platform.system() in ["Windows", "Linux"]:
+        path_modified = path_dst_ten_imports
+        path_unmodified = path_dst_system_info
+        path_unmodified_original = e2e_config.path_system_info
+    else:
+        path_modified = path_dst_system_info
+        path_unmodified = path_dst_ten_imports
+        path_unmodified_original = e2e_config.path_ten_imports
+    
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_modified.as_posix()}"
     cmd_parts = shlex.split(cmd)
-    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    stderr = subprocess.run(cmd_parts, capture_output=True, text=True).stderr
+
     assert "Traceback (most recent call last)" in stderr
-    assert 'ten_imports.py", line ' in stderr
+    assert f'{path_modified.name}", line ' in stderr
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.
-    assert filecmp.cmp(e2e_config.path_system_info, path_dst_system_info)
+    assert filecmp.cmp(path_unmodified_original, path_unmodified)
 
 
-def test_unable_insert_all_bugs(tmp_path_factory, e2e_config):
+@pytest.mark.parametrize(
+    "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
+)
+def test_unable_insert_all_bugs(tmp_path_factory, e2e_config, exception_type):
     """Test for appropriate message when unable to generate all requested bugs."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_system_info.name
-    shutil.copyfile(e2e_config.path_system_info, path_dst)
+    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError -n 3 --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    cmd = f"py-bugger --exception-type {exception_type} -n 10 --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    assert "Inserted 2 bugs." in stdout
+    # Check that at least one bug was inserted, but unable to introduce all requested.
+    assert "Added bug." in stdout
     assert "Unable to introduce additional bugs of the requested type." in stdout
+
 
 
 def test_no_bugs(tmp_path_factory, e2e_config):
