@@ -62,8 +62,6 @@ class ImportModifier(cst.CSTTransformer):
             new_names = [cst.ImportAlias(name=cst.Name(new_name))]
 
             # Record this modification.
-            # DEV: modified node needs to be generated using new_names. Set breakpoint here to verify the modification
-            # is stored correctly.
             modified_node = updated_node.with_changes(names=new_names)
             modification = Modification(path=self.path, original_node=original_node, modified_node=modified_node)
             modifications.append(modification)
@@ -76,7 +74,7 @@ class ImportModifier(cst.CSTTransformer):
 class AttributeModifier(cst.CSTTransformer):
     """Modify attributes in the user's project."""
 
-    def __init__(self, node_to_break, node_index):
+    def __init__(self, node_to_break, node_index, path):
         self.node_to_break = node_to_break
 
         # There may be identical nodes in the tree. node_index determines which to modify.
@@ -86,6 +84,9 @@ class AttributeModifier(cst.CSTTransformer):
         # Each use of this class should only generate one bug. But multiple nodes
         # can match node_to_break, so make sure we only modify one node.
         self.bug_generated = False
+
+        # Need this to record the modification we're making.
+        self.path = path
 
     def leave_Attribute(self, original_node, updated_node):
         """Modify an attribute name, to generate AttributeError."""
@@ -105,6 +106,11 @@ class AttributeModifier(cst.CSTTransformer):
 
             # Modify the node name.
             new_attr = cst.Name(new_identifier)
+
+            # Record this modification.
+            modified_node = updated_node.with_changes(attr=new_attr)
+            modification = Modification(path=self.path, original_node=original_node, modified_node=modified_node)
+            modifications.append(modification)
 
             self.bug_generated = True
 

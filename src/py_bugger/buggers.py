@@ -74,7 +74,7 @@ def attribute_error_bugger(py_files):
 
     # Modify user's code.
     try:
-        modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index))
+        modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index, path))
     except TypeError:
         # DEV: Figure out which nodes are ending up here, and update
         # modifier code to handle these nodes.

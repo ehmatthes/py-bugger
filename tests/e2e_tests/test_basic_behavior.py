@@ -285,7 +285,7 @@ def test_unable_insert_all_bugs(tmp_path_factory, e2e_config, exception_type):
     shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type {exception_type} -n 5 --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    cmd = f"py-bugger --exception-type {exception_type} -n 10 --target-dir {tmp_path.as_posix()} --ignore-git-status"
     print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
