@@ -11,6 +11,7 @@ import subprocess
 import filecmp
 import os
 import sys
+import platform
 
 import pytest
 
@@ -293,16 +294,26 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst_system_info.as_posix()}"
+    # When we collect files, the order is different on different OSes.
+    if platform.system() == "Windows":
+        path_modified = path_dst_ten_imports
+        path_unmodified = path_dst_system_info
+        path_unmodified_original = e2e_config.path_system_info
+    else:
+        path_modified = path_dst_system_info
+        path_unmodified = path_dst_ten_imports
+        path_unmodified_original = e2e_config.path_ten_imports
+    
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_modified.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True, text=True).stderr
 
     assert "Traceback (most recent call last)" in stderr
-    assert 'system_info_script.py", line ' in stderr
+    assert f'{path_modified.name}", line ' in stderr
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.
-    assert filecmp.cmp(e2e_config.path_ten_imports, path_dst_ten_imports)
+    assert filecmp.cmp(path_unmodified_original, path_unmodified)
 
 
 @pytest.mark.parametrize(
