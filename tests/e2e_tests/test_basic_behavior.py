@@ -60,6 +60,39 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     assert 'dog_bark.py", line 12' in stderr
     assert "IndentationError: unexpected indent" in stderr
 
+@pytest.mark.parametrize("num_bugs", [2, 10])
+def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
+    """Test that passing no -e arg works with --num-bugs."""
+
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Run py-bugger against directory.
+    cmd = f"py-bugger --num-bugs {num_bugs} --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
+    cmd_parts = shlex.split(cmd)
+    stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
+    print(stdout)
+
+    if num_bugs == 2:
+        assert "All requested bugs inserted." in stdout
+    elif num_bugs == 10:
+        assert "Inserted " in stdout
+        assert "Unable to introduce additional bugs of the requested type." in stdout
+
+    # Run file, should raise IndentationError.
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd_parts = shlex.split(cmd)
+    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+
+    assert 'dog_bark.py", line 12' in stderr
+    assert "IndentationError: unexpected indent" in stderr
+
 
 @pytest.mark.skip()
 def test_no_exception_type_first_not_possible(tmp_path_factory, e2e_config):
