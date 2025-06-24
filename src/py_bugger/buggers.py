@@ -23,14 +23,9 @@ def module_not_found_bugger(py_files):
     if not (paths_nodes := cst_utils.get_paths_nodes(py_files, node_type=cst.Import)):
         return False
 
-    # Randomly select a node to focus on. Make sure it's a node that hasn't
-    # already been modified.
-    random.shuffle(paths_nodes)
-    for path, node in paths_nodes:
-        if file_utils.check_unmodified(path, candidate_node=node):
-            break
-    else:
-        # All nodes have already been modified to introduce a previous bug.
+    # Get a random node that hasn't already been modified.
+    path, node = _get_random_node(paths_nodes)
+    if not path:
         return False
 
     source = path.read_text()
@@ -135,3 +130,17 @@ def _report_bug_added(path_modified):
         print(f"Added bug to: {path_modified.as_posix()}")
     else:
         print(f"Added bug.")
+
+def _get_random_node(paths_nodes):
+    """Randomly select a node to modify.
+    
+    Make sure it's a node that hasn't already been modified.
+    """
+    random.shuffle(paths_nodes)
+    for path, node in paths_nodes:
+        if file_utils.check_unmodified(path, candidate_node=node):
+            return path, node
+    else:
+        # All nodes have already been modified to introduce a previous bug.
+        # Returning two False values because we need to return a path and a node.
+        return False, False

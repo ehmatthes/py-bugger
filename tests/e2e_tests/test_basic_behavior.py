@@ -106,6 +106,7 @@ def test_modulenotfounderror(tmp_path_factory, e2e_config):
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
@@ -285,6 +286,7 @@ def test_unable_insert_all_bugs(tmp_path_factory, e2e_config, exception_type):
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type {exception_type} -n 5 --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
