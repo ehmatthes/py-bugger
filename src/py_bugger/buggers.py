@@ -25,17 +25,36 @@ def module_not_found_bugger(py_files):
 
     # Randomly select a node to focus on, making sure not to choose a node that's
     # already had a bug introduced to it.
-    random.shuffle(paths_nodes)
-    proceed = False
-    while paths_nodes:
-        path, node = paths_nodes.pop()
-        if file_utils.check_unmodified(path, candidate_node=node):
-            proceed = True
-            break
+    # random.shuffle(paths_nodes)
+    # proceed = False
+    # while paths_nodes:
+    #     path, node = paths_nodes.pop()
+    #     if file_utils.check_unmodified(path, candidate_node=node):
+    #         proceed = True
+    #         break
 
-    # Bail if all nodes have already been modified.
-    if not proceed:
+    # # Bail if all nodes have already been modified.
+    # if not proceed:
+    #     return False
+
+
+
+    # Randomly select a node to focus on, making sure not to choose a node that's
+    # already had a bug introduced to it.
+    random.shuffle(paths_nodes)
+    for path, node in paths_nodes:
+        if file_utils.check_unmodified(path, candidate_node=node):
+            break
+    else:
+        # All nodes have already been modified to introduce a previous bug.
         return False
+
+
+
+
+
+
+
 
     source = path.read_text()
     tree = cst.parse_module(source)
