@@ -49,19 +49,17 @@ def attribute_error_bugger(py_files):
     Returns:
         Bool: Whether a bug was introduced or not.
     """
-    # Find all relevant nodes.
-    paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Attribute)
-
-    # Bail if there are no relevant nodes.
-    if not paths_nodes:
+    # Get a random node that hasn't already been modified.
+    path, node = _get_random_node(py_files, node_type=cst.Attribute)
+    if not path:
         return False
 
-    # Randomly select a node to focus on.
-    path, node = random.choice(paths_nodes)
+    # Parse user's code.
     source = path.read_text()
     tree = cst.parse_module(source)
 
     # Pick node to modify if more than one match in the file.
+    # Note that not all bugger functions need this step.
     node_count = cst_utils.count_nodes(tree, node)
     if node_count > 1:
         node_index = random.randrange(0, node_count - 1)

@@ -291,7 +291,7 @@ def test_unable_insert_all_bugs(tmp_path_factory, e2e_config, exception_type):
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
     # Check that at least one bug was inserted, but unable to introduce all requested.
-    assert "Inserted " in stdout
+    assert "Added bug." in stdout
     assert "Unable to introduce additional bugs of the requested type." in stdout
 
 

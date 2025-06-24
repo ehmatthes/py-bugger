@@ -47,11 +47,8 @@ def test_preserve_file_ending_trailing_newline(
 
     # Check that last line has a trailing newline.
     lines = path_dst.read_text().splitlines(keepends=True)
-    if exception_type == "AttributeError":
-        # Random seed causes a bug in the last line, but we're just checking the line ending.
-        assert lines[-1] == "dog.sayhi()\n"
-    else:
-        assert lines[-1] == "dog.say_hi()\n"
+
+    assert lines[-1] == "dog.say_hi()\n"
 
 
 @pytest.mark.parametrize(
@@ -81,11 +78,8 @@ def test_preserve_file_ending_no_trailing_newline(
 
     # Check that last line is not blank.
     lines = path_dst.read_text().splitlines(keepends=True)
-    if exception_type == "AttributeError":
-        # Random seed causes a bug in the last line, but we're just checking the line ending.
-        assert lines[-1] == "dog.sayhi()"
-    else:
-        assert lines[-1] == "dog.say_hi()"
+    
+    assert lines[-1] == "dog.say_hi()"
 
 
 @pytest.mark.parametrize(
