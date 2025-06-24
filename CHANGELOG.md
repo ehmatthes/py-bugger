@@ -6,6 +6,22 @@ Changelog: python-bugger
 
 Looks for a clean Git status before introducing bugs.
 
+### 0.4.1
+
+#### External changes
+
+- The `--exception-type` argument is now optional. When it's omitted, one of the supported exception types is chosen randomly.
+- Passing `--num-args` still works, but each bug induces the same kind of exception.
+- If there's a typo in the value for `--exception-type`, a suggestion is made. Users still need to revise their command, it does not prompt to use the suggested value at this point.
+- Fixes a bug where running py-bugger from a directory under version control, against a target directory that's also under version control, runs Git commands against the first directory instead of the target.
+
+#### Internal changes
+
+- Uses `SUPPORTED_EXCEPTION_TYPES` from `py_bugger.cli.config` anywhere a list of supported exception types is needed.
+- All handling of `--num-args` takes place in the main py_bugger.py file.
+- Tracks each bug that's introduced, so each node or line can't be modified more than once. There's a new `Modification` model that's used to track each modification that's made to the user's code. This also simplifies tracking the number of bugs, which can always be determined from `len(modifications)`.
+- Some light ongoing refactoring work has been done through this point release.
+
 ### 0.4.0
 
 #### External changes
