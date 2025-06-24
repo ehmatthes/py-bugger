@@ -295,7 +295,7 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
 
     # Run file, should raise ModuleNotFoundError.
     # When we collect files, the order is different on different OSes.
-    if platform.system() == "Windows":
+    if platform.system() in ["Windows", "Linux"]:
         path_modified = path_dst_ten_imports
         path_unmodified = path_dst_system_info
         path_unmodified_original = e2e_config.path_system_info
