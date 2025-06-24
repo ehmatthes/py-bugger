@@ -3,7 +3,6 @@ import random
 
 from py_bugger import buggers
 from py_bugger.utils import file_utils
-from py_bugger.utils.modification import modifications
 
 from py_bugger.cli.config import pb_config
 from py_bugger.cli.config import SUPPORTED_EXCEPTION_TYPES
@@ -36,7 +35,5 @@ def main():
             buggers.indentation_error_bugger(py_files)
 
     # Show a final success/fail message.
-    bugs_added = len(modifications)
-    msg = cli_messages.success_msg(bugs_added, pb_config.num_bugs)
-    # msg = cli_messags.succes_msg()
+    msg = cli_messages.success_msg()
     print(msg)

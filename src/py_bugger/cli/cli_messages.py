@@ -1,5 +1,8 @@
 """Messages for use in CLI output."""
 
+from py_bugger.cli.config import pb_config
+from py_bugger.utils.modification import modifications
+
 # --- Static messages ---
 
 msg_target_file_dir = (
@@ -11,11 +14,13 @@ msg_git_not_available = "Git does not seem to be available. It's highly recommen
 msg_unclean_git_status = "You have uncommitted changes in your project. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
 
 
-def success_msg(num_added, num_requested):
+# def success_msg(num_added, num_requested):
+def success_msg():
     """Generate a success message at end of run."""
 
     # Show a final success/fail message.
-    if num_added == num_requested:
+    num_added = len(modifications)
+    if num_added == pb_config.num_bugs:
         return "All requested bugs inserted."
     elif num_added == 0:
         return "Unable to introduce any of the requested bugs."

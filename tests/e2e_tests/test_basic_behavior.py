@@ -46,6 +46,7 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    print(f"cmd: {cmd}")
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
     print(stdout)
