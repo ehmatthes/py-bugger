@@ -182,9 +182,11 @@ def test_two_bugs(tmp_path_factory, e2e_config):
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Read modified file; should have changed both import statements.
-    modified_source = path_dst.read_text()
-    assert "import sys" not in modified_source
-    assert "import os" not in modified_source
+    # Note that `import os` can become `import osp`, so we can't just do:
+    #     assert "import os" not in modified_source
+    lines = path_dst.read_text().splitlines()
+    assert "import sys" not in lines
+    assert "import os" not in lines
 
 
 def test_random_import_affected(tmp_path_factory, e2e_config):
