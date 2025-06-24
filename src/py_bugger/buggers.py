@@ -29,7 +29,7 @@ def module_not_found_bugger(py_files):
     proceed = False
     while paths_nodes:
         path, node = paths_nodes.pop()
-        if file_utils.node_line_unmodified(path, candidate_node=node):
+        if file_utils.check_unmodified(path, candidate_node=node):
             proceed = True
             break
 

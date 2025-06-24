@@ -37,7 +37,7 @@ def get_paths_lines(py_files, targets):
 
     return paths_lines
 
-def node_line_unmodified(candidate_path, candidate_node=None, candidate_line=None):
+def check_unmodified(candidate_path, candidate_node=None, candidate_line=None):
     """Check if it's safe to modify a node or line.
 
     If the node or line has not already been modified, return True. Otherwise,
