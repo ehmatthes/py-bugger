@@ -19,14 +19,12 @@ def module_not_found_bugger(py_files):
     Returns:
         Bool: Whether a bug was introduced or not.
     """
-    # Find all relevant nodes.
-    paths_nodes = cst_utils.get_paths_nodes(py_files, node_type=cst.Import)
-
-    # Bail if there are no relevant nodes.
-    if not paths_nodes:
+    # Find all relevant nodes. Bail if there are no relevant nodes.
+    if not (paths_nodes := cst_utils.get_paths_nodes(py_files, node_type=cst.Import)):
         return False
 
-    # Randomly select a node to focus on; make sure not to reuse a node.
+    # Randomly select a node to focus on, making sure not to choose a node that's
+    # already had a bug introduced to it.
     random.shuffle(paths_nodes)
     proceed = False
     while paths_nodes:
@@ -38,7 +36,6 @@ def module_not_found_bugger(py_files):
     # Bail if all nodes have already been modified.
     if not proceed:
         return False
-
 
     source = path.read_text()
     tree = cst.parse_module(source)
