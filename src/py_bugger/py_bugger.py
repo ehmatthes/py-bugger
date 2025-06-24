@@ -24,8 +24,6 @@ def main():
     # If --exception-type not specified, choose one.
     if not pb_config.exception_type:
         pb_config.exception_type = random.choice(SUPPORTED_EXCEPTION_TYPES)
-    print(pb_config.exception_type)
-    print("\nHERE")
 
     # Currently, handles just one exception type per call.
     # When multiple are supported, implement more complex logic for choosing which ones
