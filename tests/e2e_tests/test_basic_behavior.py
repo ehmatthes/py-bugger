@@ -258,15 +258,16 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst_ten_imports.as_posix()}"
+    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst_system_info.as_posix()}"
     cmd_parts = shlex.split(cmd)
-    stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
+    stderr = subprocess.run(cmd_parts, capture_output=True, text=True).stderr
+
     assert "Traceback (most recent call last)" in stderr
-    assert 'ten_imports.py", line ' in stderr
+    assert 'system_info_script.py", line ' in stderr
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.
-    assert filecmp.cmp(e2e_config.path_system_info, path_dst_system_info)
+    assert filecmp.cmp(e2e_config.path_ten_imports, path_dst_ten_imports)
 
 
 def test_unable_insert_all_bugs(tmp_path_factory, e2e_config):
