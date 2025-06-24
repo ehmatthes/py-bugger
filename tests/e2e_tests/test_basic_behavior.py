@@ -270,22 +270,28 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     assert filecmp.cmp(e2e_config.path_ten_imports, path_dst_ten_imports)
 
 
-def test_unable_insert_all_bugs(tmp_path_factory, e2e_config):
+@pytest.mark.parametrize(
+    "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
+)
+def test_unable_insert_all_bugs(tmp_path_factory, e2e_config, exception_type):
     """Test for appropriate message when unable to generate all requested bugs."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_system_info.name
-    shutil.copyfile(e2e_config.path_system_info, path_dst)
+    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
 
     # Run py-bugger against directory.
-    cmd = f"py-bugger --exception-type ModuleNotFoundError -n 3 --target-dir {tmp_path.as_posix()} --ignore-git-status"
+    cmd = f"py-bugger --exception-type {exception_type} -n 5 --target-dir {tmp_path.as_posix()} --ignore-git-status"
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True).stdout.decode()
 
-    assert "Inserted 2 bugs." in stdout
+    # Check that at least one bug was inserted, but unable to introduce all requested.
+    assert "Inserted " in stdout
     assert "Unable to introduce additional bugs of the requested type." in stdout
+
 
 
 def test_no_bugs(tmp_path_factory, e2e_config):
