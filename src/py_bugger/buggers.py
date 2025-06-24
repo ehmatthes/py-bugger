@@ -19,19 +19,16 @@ def module_not_found_bugger(py_files):
     Returns:
         Bool: Whether a bug was introduced or not.
     """
-    # Find all relevant nodes. Bail if there are no relevant nodes.
-    if not (paths_nodes := cst_utils.get_paths_nodes(py_files, node_type=cst.Import)):
-        return False
-
     # Get a random node that hasn't already been modified.
-    path, node = _get_random_node(paths_nodes)
+    path, node = _get_random_node(py_files, node_type=cst.Import)
     if not path:
         return False
 
+    # Parse user's code.
     source = path.read_text()
     tree = cst.parse_module(source)
 
-    # Modify user's code.
+    # Modify user's code
     try:
         modified_tree = tree.visit(cst_utils.ImportModifier(node, path))
     except TypeError:
@@ -131,16 +128,22 @@ def _report_bug_added(path_modified):
     else:
         print(f"Added bug.")
 
-def _get_random_node(paths_nodes):
+def _get_random_node(py_files, node_type):
     """Randomly select a node to modify.
     
     Make sure it's a node that hasn't already been modified.
+
+    Returns:
+        Tuple: (path, node) or (False, False)
     """
+    # Find all relevant nodes. Bail if there are no relevant nodes.
+    if not (paths_nodes := cst_utils.get_paths_nodes(py_files, node_type)):
+        return False, False
+
     random.shuffle(paths_nodes)
     for path, node in paths_nodes:
         if file_utils.check_unmodified(path, candidate_node=node):
             return path, node
     else:
         # All nodes have already been modified to introduce a previous bug.
-        # Returning two False values because we need to return a path and a node.
         return False, False
