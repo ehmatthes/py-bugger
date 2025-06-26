@@ -22,16 +22,20 @@ def main():
     if not pb_config.exception_type:
         pb_config.exception_type = random.choice(SUPPORTED_EXCEPTION_TYPES)
 
+    # Make a list of requested bugs to work from.
+    requested_bugs = [pb_config.exception_type for _ in range(pb_config.num_bugs)]
+
     # Currently, handles just one exception type per py-bugger call.
     # When multiple are supported, implement more complex logic for choosing which ones
     # to introduce, and tracking bugs. Also consider a more appropriate dispatch approach
     # as the project evolves.
-    for _ in range(pb_config.num_bugs):
-        if pb_config.exception_type == "ModuleNotFoundError":
+    # for _ in range(pb_config.num_bugs):
+    for bug in requested_bugs:
+        if bug == "ModuleNotFoundError":
             buggers.module_not_found_bugger(py_files)
-        elif pb_config.exception_type == "AttributeError":
+        elif bug == "AttributeError":
             buggers.attribute_error_bugger(py_files)
-        elif pb_config.exception_type == "IndentationError":
+        elif bug == "IndentationError":
             buggers.indentation_error_bugger(py_files)
 
     # Show a final success/fail message.
