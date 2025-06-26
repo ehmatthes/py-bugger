@@ -19,11 +19,17 @@ def main():
     py_files = file_utils.get_py_files(pb_config.target_dir, pb_config.target_file)
 
     # If --exception-type not specified, choose one.
-    if not pb_config.exception_type:
-        pb_config.exception_type = random.choice(SUPPORTED_EXCEPTION_TYPES)
+    # if not pb_config.exception_type:
+        # pb_config.exception_type = random.choice(SUPPORTED_EXCEPTION_TYPES)
+        # Make a list of random supported exception types.
+        # requested_bugs = random.choices(SUPPORTED_EXCEPTION_TYPES, k=pb_config.num_bugs)
 
     # Make a list of requested bugs to work from.
-    requested_bugs = [pb_config.exception_type for _ in range(pb_config.num_bugs)]
+    if pb_config.exception_type:
+        requested_bugs = [pb_config.exception_type for _ in range(pb_config.num_bugs)]
+    else:
+        # No -e arg passed; get a random sequence of bugs to introduce.
+        requested_bugs = random.choices(SUPPORTED_EXCEPTION_TYPES, k=pb_config.num_bugs)
 
     # Currently, handles just one exception type per py-bugger call.
     # When multiple are supported, implement more complex logic for choosing which ones
