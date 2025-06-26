@@ -18,24 +18,15 @@ def main():
     # Get a list of .py files we can consider modifying.
     py_files = file_utils.get_py_files(pb_config.target_dir, pb_config.target_file)
 
-    # If --exception-type not specified, choose one.
-    # if not pb_config.exception_type:
-        # pb_config.exception_type = random.choice(SUPPORTED_EXCEPTION_TYPES)
-        # Make a list of random supported exception types.
-        # requested_bugs = random.choices(SUPPORTED_EXCEPTION_TYPES, k=pb_config.num_bugs)
-
-    # Make a list of requested bugs to work from.
+    # Make a list of bugs to introduce.
     if pb_config.exception_type:
+        # User has requested a specific kind of bug.
         requested_bugs = [pb_config.exception_type for _ in range(pb_config.num_bugs)]
     else:
         # No -e arg passed; get a random sequence of bugs to introduce.
         requested_bugs = random.choices(SUPPORTED_EXCEPTION_TYPES, k=pb_config.num_bugs)
 
-    # Currently, handles just one exception type per py-bugger call.
-    # When multiple are supported, implement more complex logic for choosing which ones
-    # to introduce, and tracking bugs. Also consider a more appropriate dispatch approach
-    # as the project evolves.
-    # for _ in range(pb_config.num_bugs):
+    # Introduce bugs, one at a time.
     for bug in requested_bugs:
         if bug == "ModuleNotFoundError":
             buggers.module_not_found_bugger(py_files)
