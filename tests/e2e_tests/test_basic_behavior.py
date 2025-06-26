@@ -61,7 +61,7 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
 
     assert "AttributeError" in stderr
 
-@pytest.mark.parametrize("num_bugs", [2, 10])
+@pytest.mark.parametrize("num_bugs", [2, 15])
 def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
     """Test that passing no -e arg works with --num-bugs."""
 
@@ -82,7 +82,7 @@ def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
 
     if num_bugs == 2:
         assert "All requested bugs inserted." in stdout
-    elif num_bugs == 10:
+    elif num_bugs == 15:
         assert "Inserted " in stdout
         assert "Unable to introduce additional bugs of the requested type." in stdout
 
@@ -91,8 +91,7 @@ def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
 
-    assert 'dog_bark.py", line 12' in stderr
-    assert "IndentationError: unexpected indent" in stderr
+    assert "AttributeError" in stderr
 
 
 @pytest.mark.skip()
