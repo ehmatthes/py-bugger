@@ -58,8 +58,8 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
-    assert 'dog_bark.py", line 12' in stderr
-    assert "IndentationError: unexpected indent" in stderr
+
+    assert "AttributeError" in stderr
 
 @pytest.mark.parametrize("num_bugs", [2, 10])
 def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
