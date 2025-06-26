@@ -6,6 +6,16 @@ Changelog: python-bugger
 
 Looks for a clean Git status before introducing bugs.
 
+### Unreleased
+
+#### External changes
+
+- NA
+
+#### Internal changes
+
+- Main loop works from a list of bugs to introduce, rather than ranging over `num_bugs`.
+
 ### 0.4.1
 
 #### External changes
