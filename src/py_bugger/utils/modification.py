@@ -26,7 +26,7 @@ class Modification:
     original_line: str = ""
     modified_line: str = ""
 
-    exception_induced = None
+    exception_induced: str = ""
 
 # Only make one instance of this list.
 modifications = []
