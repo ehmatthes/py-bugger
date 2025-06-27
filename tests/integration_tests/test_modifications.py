@@ -3,9 +3,6 @@
 from pathlib import Path
 import shutil
 
-from py_bugger.cli import cli_utils
-
-
 
 def test_modifications_modulenotfounderror(tmp_path_factory):
     """Tests modifications after creating a ModuleNotFoundError."""
@@ -16,6 +13,7 @@ def test_modifications_modulenotfounderror(tmp_path_factory):
     path_sample_scripts = path_sample_code / "sample_scripts"
 
     from py_bugger.cli.config import pb_config
+    from py_bugger.cli import cli_utils
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
@@ -37,4 +35,7 @@ def test_modifications_modulenotfounderror(tmp_path_factory):
 
     from py_bugger.utils.modification import modifications
     assert len(modifications) == 1
-    
+
+    # Cleanup.
+    pb_config.target_dir = None
+    modifications.clear()
