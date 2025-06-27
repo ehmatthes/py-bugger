@@ -41,3 +41,7 @@ def main():
     # Show a final success/fail message.
     msg = cli_messages.success_msg()
     print(msg)
+
+    # Returning requested_bugs helps with testing.
+    breakpoint()
+    return requested_bugs
