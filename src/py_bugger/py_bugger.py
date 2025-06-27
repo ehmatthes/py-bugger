@@ -24,7 +24,10 @@ def main():
         requested_bugs = [pb_config.exception_type for _ in range(pb_config.num_bugs)]
     else:
         # No -e arg passed; get a random sequence of bugs to introduce.
+        # Reorder sequence so all regex parsing happens after CST parsing. CST parsing
+        # will fail if it's attempted after introducing a bug that affects parsing.
         requested_bugs = random.choices(SUPPORTED_EXCEPTION_TYPES, k=pb_config.num_bugs)
+        requested_bugs = sorted(requested_bugs, key=lambda b: b == "IndentationError")
 
     # Introduce bugs, one at a time.
     for bug in requested_bugs:
