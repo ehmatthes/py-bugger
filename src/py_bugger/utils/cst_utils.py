@@ -64,6 +64,7 @@ class ImportModifier(cst.CSTTransformer):
             # Record this modification.
             modified_node = updated_node.with_changes(names=new_names)
             modification = Modification(path=self.path, original_node=original_node, modified_node=modified_node)
+            modification.exception_induced="ModuleNotFoundError"
             modifications.append(modification)
 
             return updated_node.with_changes(names=new_names)
