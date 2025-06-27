@@ -8,8 +8,9 @@ the list of modifications can be used to stage all changes, and write them all a
 once if that becomes a better approach.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Type
 
 import libcst as cst
 
@@ -26,7 +27,7 @@ class Modification:
     original_line: str = ""
     modified_line: str = ""
 
-    exception_induced: str = ""
+    exception_induced: type[BaseException] = field(default=None)
 
 # Only make one instance of this list.
 modifications = []

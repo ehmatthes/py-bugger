@@ -35,7 +35,7 @@ def test_modifications_modulenotfounderror(tmp_path_factory):
 
     from py_bugger.utils.modification import modifications
     assert len(modifications) == 1
-    assert modifications[0].exception_induced == "ModuleNotFoundError"
+    assert modifications[0].exception_induced == ModuleNotFoundError
 
     # Cleanup.
     pb_config.target_dir = None
