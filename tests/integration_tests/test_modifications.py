@@ -25,7 +25,6 @@ def test_modifications_modulenotfounderror(tmp_path_factory,test_config):
     # Make modifications against this directory.
     pb_config.exception_type = "ModuleNotFoundError"
     pb_config.target_file = path_dst
-
     cli_utils.validate_config()
 
     py_bugger.main()
@@ -50,7 +49,6 @@ def test_4_random_bugs(tmp_path_factory, test_config):
     # Make modifications against this directory.
     pb_config.target_file = path_dst
     pb_config.num_bugs = 4
-
     cli_utils.validate_config()
 
     requested_bugs = py_bugger.main()
