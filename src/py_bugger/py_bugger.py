@@ -43,5 +43,4 @@ def main():
     print(msg)
 
     # Returning requested_bugs helps with testing.
-    breakpoint()
     return requested_bugs

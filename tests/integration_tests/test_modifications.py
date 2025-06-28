@@ -42,18 +42,11 @@ def test_modifications_modulenotfounderror(tmp_path_factory):
     pb_config.target_dir = None
     modifications.clear()
 
-def test_5_random_bugs(tmp_path_factory):
+def test_5_random_bugs(tmp_path_factory, test_config):
     """Test equivalent of `py-bugger -n 5`.
 
     Look for modifications that match bugs_requested.
     """
-    assert os.environ["PY_BUGGER_RANDOM_SEED"] == "10"
-    path_root = Path(__file__).parents[2]
-    path_tests = path_root / "tests"
-    path_reference_files = path_tests / "e2e_tests" / "reference_files"
-    path_sample_code = path_tests / "sample_code"
-    path_sample_scripts = path_sample_code / "sample_scripts"
-
     from py_bugger.cli.config import pb_config
     from py_bugger.cli import cli_utils
 
@@ -61,7 +54,7 @@ def test_5_random_bugs(tmp_path_factory):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = path_sample_scripts / "dog_bark.py"
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -77,6 +70,7 @@ def test_5_random_bugs(tmp_path_factory):
     from py_bugger.utils.modification import modifications
 
     requested_bugs = py_bugger.main()
+    breakpoint()
 
     assert len(modifications) == len(requested_bugs)
 
