@@ -25,3 +25,9 @@ def reset_state():
     # Reset list of modifications.
     modifications.clear()
 
+    # Customize some state. For some tests, you may need to override
+    # these customizations in specific test functions.
+
+    # For most integration tests, we're targeting a sample file or directory
+    # that has not been set up as a Git repo.
+    pb_config.ignore_git_status = True
