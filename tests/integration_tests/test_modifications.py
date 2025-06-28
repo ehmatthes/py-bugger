@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import shutil
+import os
 
 
 def test_modifications_modulenotfounderror(tmp_path_factory):
@@ -46,6 +47,7 @@ def test_5_random_bugs(tmp_path_factory):
 
     Look for modifications that match bugs_requested.
     """
+    assert os.environ["PY_BUGGER_RANDOM_SEED"] == "10"
     path_root = Path(__file__).parents[2]
     path_tests = path_root / "tests"
     path_reference_files = path_tests / "e2e_tests" / "reference_files"
