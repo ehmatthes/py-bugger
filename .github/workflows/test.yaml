@@ -53,7 +53,7 @@ jobs:
 
           # Run all tests
           source .venv/bin/activate
-          pytest -x
+          pytest -x -n auto
 
       - name: Run Windows tests
 
@@ -77,4 +77,4 @@ jobs:
           git config --global init.defaultBranch main
 
           # Run all tests
-          pytest -x
+          pytest -x -n auto
