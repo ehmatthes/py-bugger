@@ -11,14 +11,6 @@ from py_bugger.cli import cli_utils
 from py_bugger.utils.modification import modifications
 
 
-@pytest.fixture(autouse=True, scope="function")
-def reset_pbconfig():
-    """Reset the pb_config object for each test."""
-    # Cleanup.
-    pb_config.target_dir = None
-    modifications.clear()
-
-
 def test_modifications_modulenotfounderror(tmp_path_factory,test_config):
     """Tests modifications after creating a ModuleNotFoundError."""
     # Copy sample code to tmp dir.
