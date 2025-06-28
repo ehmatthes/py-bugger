@@ -4,7 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-SUPPORTED_EXCEPTION_TYPES = ["ModuleNotFoundError", "AttributeError", "IndentationError"]
+SUPPORTED_EXCEPTION_TYPES = [
+    "ModuleNotFoundError",
+    "AttributeError",
+    "IndentationError",
+]
 
 
 @dataclass

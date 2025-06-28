@@ -8,16 +8,19 @@ import pytest
 
 # --- Fixtures ---
 
+
 @pytest.fixture(autouse=True, scope="session")
 def set_random_seed_env():
     """Make random selections repeatable."""
     # To verify a random action, set autouse to False and run one test.
     os.environ["PY_BUGGER_RANDOM_SEED"] = "10"
 
+
 @pytest.fixture(scope="session")
 def on_windows():
     """Some tests need to run differently on Windows."""
     return platform.system() == "Windows"
+
 
 @pytest.fixture(scope="session")
 def test_config():

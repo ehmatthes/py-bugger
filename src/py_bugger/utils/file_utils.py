@@ -41,6 +41,7 @@ def get_paths_lines(py_files, targets):
 
     return paths_lines
 
+
 def check_unmodified(candidate_path, candidate_node=None, candidate_line=None):
     """Check if it's safe to modify a node or line.
 
@@ -115,6 +116,7 @@ def _get_py_files_non_git(target_dir):
 
     return py_files
 
+
 def _remove_modified_lines(path, lines):
     """Remove lines from the list that have already been modified."""
     for modification in modifications:
@@ -126,7 +128,7 @@ def _remove_modified_lines(path, lines):
         # This path has been modified. Check line.
         modified_line = modification.modified_line.rstrip()
         if modified_line in lines:
-            # DEV: We may want to look at line numbers. For now, remove all occurrences 
+            # DEV: We may want to look at line numbers. For now, remove all occurrences
             # of this line.
             while modified_line in lines:
                 lines.remove(modified_line)

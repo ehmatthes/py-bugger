@@ -29,5 +29,6 @@ class Modification:
 
     exception_induced: type[BaseException] = field(default=None)
 
+
 # Only make one instance of this list.
 modifications = []

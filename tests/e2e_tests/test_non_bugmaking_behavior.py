@@ -78,7 +78,7 @@ def test_preserve_file_ending_no_trailing_newline(
 
     # Check that last line is not blank.
     lines = path_dst.read_text().splitlines(keepends=True)
-    
+
     assert lines[-1] == "dog.say_hi()"
 
 

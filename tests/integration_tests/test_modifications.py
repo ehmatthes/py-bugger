@@ -32,15 +32,18 @@ def test_modifications_modulenotfounderror(tmp_path_factory):
     cli_utils.validate_config()
 
     from py_bugger import py_bugger
+
     py_bugger.main()
 
     from py_bugger.utils.modification import modifications
+
     assert len(modifications) == 1
     assert modifications[0].exception_induced == ModuleNotFoundError
 
     # Cleanup.
     pb_config.target_dir = None
     modifications.clear()
+
 
 def test_4_random_bugs(tmp_path_factory, test_config):
     """Test equivalent of `py-bugger -n 4`.

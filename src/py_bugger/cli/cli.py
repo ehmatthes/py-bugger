@@ -48,4 +48,5 @@ def cli(**kwargs):
     # Importing py_bugger here cuts test time significantly, as these resources are not
     # loaded for many calls. (6.7s -> 5.4s, for 20% speedup, 6/10/25.)
     from py_bugger import py_bugger
+
     py_bugger.main()

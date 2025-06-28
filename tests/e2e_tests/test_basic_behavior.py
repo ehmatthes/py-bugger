@@ -18,6 +18,7 @@ import pytest
 
 # --- Test functions ---
 
+
 def test_help(test_config):
     """Test output of `py-bugger --help`."""
     # Set an explicit column width, so output is consistent across systems.
@@ -61,6 +62,7 @@ def test_no_exception_type(tmp_path_factory, test_config):
 
     assert "AttributeError" in stderr
 
+
 @pytest.mark.parametrize("num_bugs", [2, 15])
 def test_no_exception_type_with_narg(tmp_path_factory, test_config, num_bugs):
     """Test that passing no -e arg works with --num-bugs."""
@@ -99,7 +101,7 @@ def test_no_exception_type_with_narg(tmp_path_factory, test_config, num_bugs):
 
 @pytest.mark.skip()
 def test_no_exception_type_first_not_possible(tmp_path_factory, test_config):
-    """Test that passing no -e arg induces an exception, even when the first 
+    """Test that passing no -e arg induces an exception, even when the first
     exception type randomly selected is not possible.
     """
 
@@ -108,7 +110,7 @@ def test_no_exception_type_first_not_possible(tmp_path_factory, test_config):
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
     # The first exception type chosen it will attempt is IndentationError.
-    # This sample script has no indented blocks, so py-bugger will have to 
+    # This sample script has no indented blocks, so py-bugger will have to
     # find another exception to induce.
     path_src = test_config.path_sample_scripts / "system_info_script.py"
     path_dst = tmp_path / path_src.name
@@ -128,7 +130,6 @@ def test_no_exception_type_first_not_possible(tmp_path_factory, test_config):
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert 'dog_bark.py", line 12' in stderr
     assert "IndentationError: unexpected indent" in stderr
-
 
 
 def test_modulenotfounderror(tmp_path_factory, test_config):
@@ -305,7 +306,7 @@ def test_random_py_file_affected(tmp_path_factory, test_config):
         path_modified = path_dst_system_info
         path_unmodified = path_dst_ten_imports
         path_unmodified_original = test_config.path_ten_imports
-    
+
     cmd = f"{test_config.python_cmd.as_posix()} {path_modified.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True, text=True).stderr
@@ -340,7 +341,6 @@ def test_unable_insert_all_bugs(tmp_path_factory, test_config, exception_type):
     # Check that at least one bug was inserted, but unable to introduce all requested.
     assert "Added bug." in stdout
     assert "Unable to introduce additional bugs of the requested type." in stdout
-
 
 
 def test_no_bugs(tmp_path_factory, test_config):
