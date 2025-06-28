@@ -14,13 +14,13 @@ from py_bugger.cli.config import pb_config
 def reset_state():
     """Reset the shared state objects for each test."""
 
-    # # Reset pb_config.
-    # pb_config.exception_type = ""
+    # Reset pb_config.
+    pb_config.exception_type = ""
     pb_config.target_dir = ""
-    # pb_config.target_file = ""
-    # pb_config.num_bugs = 1
-    # pb_config.ignore_git_status = False
-    # pb_config.verbose = True
+    pb_config.target_file = ""
+    pb_config.num_bugs = 1
+    pb_config.ignore_git_status = False
+    pb_config.verbose = True
 
     # Reset list of modifications.
     modifications.clear()
