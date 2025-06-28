@@ -11,8 +11,17 @@ from py_bugger.cli.config import pb_config
 
 
 @pytest.fixture(autouse=True, scope="function")
-def reset_pbconfig():
-    """Reset the pb_config object for each test."""
-    # Cleanup.
-    pb_config.target_dir = None
+def reset_state():
+    """Reset the shared state objects for each test."""
+
+    # # Reset pb_config.
+    # pb_config.exception_type = ""
+    pb_config.target_dir = ""
+    # pb_config.target_file = ""
+    # pb_config.num_bugs = 1
+    # pb_config.ignore_git_status = False
+    # pb_config.verbose = True
+
+    # Reset list of modifications.
     modifications.clear()
+

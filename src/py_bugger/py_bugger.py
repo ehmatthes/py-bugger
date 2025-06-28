@@ -9,12 +9,13 @@ from py_bugger.cli.config import SUPPORTED_EXCEPTION_TYPES
 from py_bugger.cli import cli_messages
 
 
-# Set a random seed when testing.
-if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
-    random.seed(int(seed))
 
 
 def main():
+    # Set a random seed when testing.
+    if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
+        random.seed(int(seed))
+        
     # Get a list of .py files we can consider modifying.
     py_files = file_utils.get_py_files(pb_config.target_dir, pb_config.target_file)
 
