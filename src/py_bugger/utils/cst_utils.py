@@ -115,7 +115,10 @@ class AttributeModifier(cst.CSTTransformer):
             # Record this modification.
             modified_node = updated_node.with_changes(attr=new_attr)
             modification = Modification(
-                path=self.path, original_node=original_node, modified_node=modified_node
+                path=self.path,
+                original_node=original_node,
+                modified_node=modified_node,
+                exception_induced=AttributeError,
             )
             modifications.append(modification)
 
