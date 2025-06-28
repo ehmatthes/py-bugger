@@ -86,12 +86,15 @@ def test_no_exception_type_with_narg(tmp_path_factory, test_config, num_bugs):
         assert "Inserted " in stdout
         assert "Unable to introduce additional bugs of the requested type." in stdout
 
-    # Run file, should raise IndentationError.
+    # Run file, should raise an error.
     cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
 
-    assert "AttributeError" in stderr
+    if num_bugs == 2:
+        assert "AttributeError" in stderr
+    else:
+        assert "IndentationError" in stderr
 
 
 @pytest.mark.skip()
