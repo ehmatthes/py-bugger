@@ -75,7 +75,12 @@ def add_indentation(path, target_line):
             indentation_added = True
 
             # Record this modification.
-            modification = Modification(path, original_line=line, modified_line=modified_line)
+            modification = Modification(
+                path,
+                original_line=line,
+                modified_line=modified_line,
+                exception_induced=IndentationError,
+            )
             modifications.append(modification)
         else:
             modified_lines.append(line)
