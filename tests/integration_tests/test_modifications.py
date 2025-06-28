@@ -4,6 +4,9 @@ from pathlib import Path
 import shutil
 import os
 
+from py_bugger.cli.config import pb_config
+from py_bugger.cli import cli_utils
+
 
 def test_modifications_modulenotfounderror(tmp_path_factory):
     """Tests modifications after creating a ModuleNotFoundError."""
@@ -12,9 +15,6 @@ def test_modifications_modulenotfounderror(tmp_path_factory):
     path_reference_files = path_tests / "e2e_tests" / "reference_files"
     path_sample_code = path_tests / "sample_code"
     path_sample_scripts = path_sample_code / "sample_scripts"
-
-    from py_bugger.cli.config import pb_config
-    from py_bugger.cli import cli_utils
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
@@ -50,9 +50,6 @@ def test_4_random_bugs(tmp_path_factory, test_config):
 
     Look for modifications that match bugs_requested.
     """
-    from py_bugger.cli.config import pb_config
-    from py_bugger.cli import cli_utils
-
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
