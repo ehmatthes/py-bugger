@@ -15,7 +15,12 @@ from py_bugger.cli import cli_messages
 
 
 @pytest.mark.parametrize(
-    "actual_expected", [("IndentationErrorr", "IndentationError"), ("AttributeErrorr", "AttributeError"), ("ModuleNotFoundErrorr", "ModuleNotFoundError")]
+    "actual_expected",
+    [
+        ("IndentationErrorr", "IndentationError"),
+        ("AttributeErrorr", "AttributeError"),
+        ("ModuleNotFoundErrorr", "ModuleNotFoundError"),
+    ],
 )
 def test_exception_type_typo(actual_expected):
     """Test appropriate handling of a typo in the exception type."""
@@ -29,6 +34,7 @@ def test_exception_type_typo(actual_expected):
 
     msg_expected = cli_messages.msg_apparent_typo(exception_type, correction)
     assert msg_expected in stdout
+
 
 def test_exception_type_unsupported():
     """Test appropriate handling of an unsupported exception type."""

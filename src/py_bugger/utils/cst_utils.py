@@ -63,7 +63,12 @@ class ImportModifier(cst.CSTTransformer):
 
             # Record this modification.
             modified_node = updated_node.with_changes(names=new_names)
-            modification = Modification(path=self.path, original_node=original_node, modified_node=modified_node)
+            modification = Modification(
+                path=self.path,
+                original_node=original_node,
+                modified_node=modified_node,
+                exception_induced=ModuleNotFoundError,
+            )
             modifications.append(modification)
 
             return updated_node.with_changes(names=new_names)
@@ -109,7 +114,12 @@ class AttributeModifier(cst.CSTTransformer):
 
             # Record this modification.
             modified_node = updated_node.with_changes(attr=new_attr)
-            modification = Modification(path=self.path, original_node=original_node, modified_node=modified_node)
+            modification = Modification(
+                path=self.path,
+                original_node=original_node,
+                modified_node=modified_node,
+                exception_induced=AttributeError,
+            )
             modifications.append(modification)
 
             self.bug_generated = True

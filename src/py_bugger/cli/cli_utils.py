@@ -66,7 +66,9 @@ def _validate_exception_type():
         return
 
     # Check for typos.
-    matches = difflib.get_close_matches(pb_config.exception_type, SUPPORTED_EXCEPTION_TYPES, n=1)
+    matches = difflib.get_close_matches(
+        pb_config.exception_type, SUPPORTED_EXCEPTION_TYPES, n=1
+    )
     if matches:
         msg = cli_messages.msg_apparent_typo(pb_config.exception_type, matches[0])
         click.echo(msg)
@@ -76,7 +78,6 @@ def _validate_exception_type():
     msg = cli_messages.msg_unsupported_exception_type(pb_config.exception_type)
     click.echo(msg)
     sys.exit()
-
 
 
 def _validate_target_dir():

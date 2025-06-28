@@ -9,27 +9,24 @@ from py_bugger.cli.config import SUPPORTED_EXCEPTION_TYPES
 from py_bugger.cli import cli_messages
 
 
-# Set a random seed when testing.
-if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
-    random.seed(int(seed))
-
-
 def main():
+    set_random_seed()
+
     # Get a list of .py files we can consider modifying.
     py_files = file_utils.get_py_files(pb_config.target_dir, pb_config.target_file)
 
-    # If --exception-type not specified, choose one.
-    if not pb_config.exception_type:
-        pb_config.exception_type = random.choice(SUPPORTED_EXCEPTION_TYPES)
+    # Make a list of bugs to introduce.
+    if pb_config.exception_type:
+        # User has requested a specific kind of bug.
+        requested_bugs = [pb_config.exception_type for _ in range(pb_config.num_bugs)]
+    else:
+        # No -e arg passed; get a random sequence of bugs to introduce.
+        # Reorder sequence so all regex parsing happens after CST parsing. CST parsing
+        # will fail if it's attempted after introducing a bug that affects parsing.
+        requested_bugs = random.choices(SUPPORTED_EXCEPTION_TYPES, k=pb_config.num_bugs)
+        requested_bugs = sorted(requested_bugs, key=lambda b: b == "IndentationError")
 
-    # Make a list of requested bugs to work from.
-    requested_bugs = [pb_config.exception_type for _ in range(pb_config.num_bugs)]
-
-    # Currently, handles just one exception type per py-bugger call.
-    # When multiple are supported, implement more complex logic for choosing which ones
-    # to introduce, and tracking bugs. Also consider a more appropriate dispatch approach
-    # as the project evolves.
-    # for _ in range(pb_config.num_bugs):
+    # Introduce bugs, one at a time.
     for bug in requested_bugs:
         if bug == "ModuleNotFoundError":
             buggers.module_not_found_bugger(py_files)
@@ -41,3 +38,15 @@ def main():
     # Show a final success/fail message.
     msg = cli_messages.success_msg()
     print(msg)
+
+    # Returning requested_bugs helps with testing.
+    return requested_bugs
+
+
+# --- Helper functions ---
+
+
+def set_random_seed():
+    # Set a random seed when testing.
+    if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
+        random.seed(int(seed))

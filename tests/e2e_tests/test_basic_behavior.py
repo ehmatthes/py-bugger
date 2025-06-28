@@ -18,7 +18,8 @@ import pytest
 
 # --- Test functions ---
 
-def test_help(e2e_config):
+
+def test_help(test_config):
     """Test output of `py-bugger --help`."""
     # Set an explicit column width, so output is consistent across systems.
     env = os.environ.copy()
@@ -28,20 +29,20 @@ def test_help(e2e_config):
     cmd_parts = shlex.split(cmd)
     stdout = subprocess.run(cmd_parts, capture_output=True, env=env).stdout.decode()
 
-    path_help_output = e2e_config.path_reference_files / "help.txt"
+    path_help_output = test_config.path_reference_files / "help.txt"
     assert stdout.replace("\r\n", "\n") == path_help_output.read_text().replace(
         "\r\n", "\n"
     )
 
 
-def test_no_exception_type(tmp_path_factory, e2e_config):
+def test_no_exception_type(tmp_path_factory, test_config):
     """Test that passing no -e arg chooses a random exception type to induce."""
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -55,21 +56,22 @@ def test_no_exception_type(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
-    assert 'dog_bark.py", line 12' in stderr
-    assert "IndentationError: unexpected indent" in stderr
 
-@pytest.mark.parametrize("num_bugs", [2, 10])
-def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
+    assert "AttributeError" in stderr
+
+
+@pytest.mark.parametrize("num_bugs", [2, 15])
+def test_no_exception_type_with_narg(tmp_path_factory, test_config, num_bugs):
     """Test that passing no -e arg works with --num-bugs."""
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -82,22 +84,24 @@ def test_no_exception_type_with_narg(tmp_path_factory, e2e_config, num_bugs):
 
     if num_bugs == 2:
         assert "All requested bugs inserted." in stdout
-    elif num_bugs == 10:
+    elif num_bugs == 15:
         assert "Inserted " in stdout
         assert "Unable to introduce additional bugs of the requested type." in stdout
 
-    # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    # Run file, should raise an error.
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
 
-    assert 'dog_bark.py", line 12' in stderr
-    assert "IndentationError: unexpected indent" in stderr
+    if num_bugs == 2:
+        assert "AttributeError" in stderr
+    else:
+        assert "IndentationError" in stderr
 
 
 @pytest.mark.skip()
-def test_no_exception_type_first_not_possible(tmp_path_factory, e2e_config):
-    """Test that passing no -e arg induces an exception, even when the first 
+def test_no_exception_type_first_not_possible(tmp_path_factory, test_config):
+    """Test that passing no -e arg induces an exception, even when the first
     exception type randomly selected is not possible.
     """
 
@@ -106,9 +110,9 @@ def test_no_exception_type_first_not_possible(tmp_path_factory, e2e_config):
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
     # The first exception type chosen it will attempt is IndentationError.
-    # This sample script has no indented blocks, so py-bugger will have to 
+    # This sample script has no indented blocks, so py-bugger will have to
     # find another exception to induce.
-    path_src = e2e_config.path_sample_scripts / "system_info_script.py"
+    path_src = test_config.path_sample_scripts / "system_info_script.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -121,23 +125,22 @@ def test_no_exception_type_first_not_possible(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert 'dog_bark.py", line 12' in stderr
     assert "IndentationError: unexpected indent" in stderr
 
 
-
-def test_modulenotfounderror(tmp_path_factory, e2e_config):
+def test_modulenotfounderror(tmp_path_factory, test_config):
     """py-bugger --exception-type ModuleNotFoundError"""
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_name_picker.name
-    shutil.copyfile(e2e_config.path_name_picker, path_dst)
+    path_dst = tmp_path / test_config.path_name_picker.name
+    shutil.copyfile(test_config.path_name_picker, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -148,7 +151,7 @@ def test_modulenotfounderror(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -156,7 +159,7 @@ def test_modulenotfounderror(tmp_path_factory, e2e_config):
     assert "ModuleNotFoundError: No module named" in stderr
 
 
-def test_default_one_error(tmp_path_factory, e2e_config):
+def test_default_one_error(tmp_path_factory, test_config):
     """py-bugger --exception-type ModuleNotFoundError
 
     Test that only one import statement is modified.
@@ -166,8 +169,8 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_system_info.name
-    shutil.copyfile(e2e_config.path_system_info, path_dst)
+    path_dst = tmp_path / test_config.path_system_info.name
+    shutil.copyfile(test_config.path_system_info, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -177,7 +180,7 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -189,7 +192,7 @@ def test_default_one_error(tmp_path_factory, e2e_config):
     assert "import sys" in modified_source or "import os" in modified_source
 
 
-def test_two_bugs(tmp_path_factory, e2e_config):
+def test_two_bugs(tmp_path_factory, test_config):
     """py-bugger --exception-type ModuleNotFoundError --num-bugs 2
 
     Test that both import statements are modified.
@@ -198,8 +201,8 @@ def test_two_bugs(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_system_info.name
-    shutil.copyfile(e2e_config.path_system_info, path_dst)
+    path_dst = tmp_path / test_config.path_system_info.name
+    shutil.copyfile(test_config.path_system_info, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --num-bugs 2 --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -210,7 +213,7 @@ def test_two_bugs(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -225,7 +228,7 @@ def test_two_bugs(tmp_path_factory, e2e_config):
     assert "import os" not in lines
 
 
-def test_random_import_affected(tmp_path_factory, e2e_config):
+def test_random_import_affected(tmp_path_factory, test_config):
     """py-bugger --exception-type ModuleNotFoundError
 
     Test that a random import statement is modified.
@@ -234,8 +237,8 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_ten_imports.name
-    shutil.copyfile(e2e_config.path_ten_imports, path_dst)
+    path_dst = tmp_path / test_config.path_ten_imports.name
+    shutil.copyfile(test_config.path_ten_imports, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -246,7 +249,7 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -270,7 +273,7 @@ def test_random_import_affected(tmp_path_factory, e2e_config):
     assert sum([p in modified_source for p in pkgs]) == 9
 
 
-def test_random_py_file_affected(tmp_path_factory, e2e_config):
+def test_random_py_file_affected(tmp_path_factory, test_config):
     """py-bugger --exception-type ModuleNotFoundError
 
     Test that a random .py file is modified.
@@ -279,11 +282,11 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst_ten_imports = tmp_path / e2e_config.path_ten_imports.name
-    shutil.copyfile(e2e_config.path_ten_imports, path_dst_ten_imports)
+    path_dst_ten_imports = tmp_path / test_config.path_ten_imports.name
+    shutil.copyfile(test_config.path_ten_imports, path_dst_ten_imports)
 
-    path_dst_system_info = tmp_path / e2e_config.path_system_info.name
-    shutil.copyfile(e2e_config.path_system_info, path_dst_system_info)
+    path_dst_system_info = tmp_path / test_config.path_system_info.name
+    shutil.copyfile(test_config.path_system_info, path_dst_system_info)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -298,13 +301,13 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
     if platform.system() in ["Windows", "Linux"]:
         path_modified = path_dst_ten_imports
         path_unmodified = path_dst_system_info
-        path_unmodified_original = e2e_config.path_system_info
+        path_unmodified_original = test_config.path_system_info
     else:
         path_modified = path_dst_system_info
         path_unmodified = path_dst_ten_imports
-        path_unmodified_original = e2e_config.path_ten_imports
-    
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_modified.as_posix()}"
+        path_unmodified_original = test_config.path_ten_imports
+
+    cmd = f"{test_config.python_cmd.as_posix()} {path_modified.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True, text=True).stderr
 
@@ -319,13 +322,13 @@ def test_random_py_file_affected(tmp_path_factory, e2e_config):
 @pytest.mark.parametrize(
     "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
 )
-def test_unable_insert_all_bugs(tmp_path_factory, e2e_config, exception_type):
+def test_unable_insert_all_bugs(tmp_path_factory, test_config, exception_type):
     """Test for appropriate message when unable to generate all requested bugs."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog_bark.py"
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -340,14 +343,13 @@ def test_unable_insert_all_bugs(tmp_path_factory, e2e_config, exception_type):
     assert "Unable to introduce additional bugs of the requested type." in stdout
 
 
-
-def test_no_bugs(tmp_path_factory, e2e_config):
+def test_no_bugs(tmp_path_factory, test_config):
     """Test for appropriate message when unable to introduce any requested bugs."""
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_zero_imports.name
-    shutil.copyfile(e2e_config.path_zero_imports, path_dst)
+    path_dst = tmp_path / test_config.path_zero_imports.name
+    shutil.copyfile(test_config.path_zero_imports, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -357,13 +359,13 @@ def test_no_bugs(tmp_path_factory, e2e_config):
     assert "Unable to introduce any of the requested bugs." in stdout
 
 
-def test_target_dir_and_file(tmp_path_factory, e2e_config):
+def test_target_dir_and_file(tmp_path_factory, test_config):
     """Test an invalid call including --target-dir and --target-file."""
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_zero_imports.name
-    shutil.copyfile(e2e_config.path_zero_imports, path_dst)
+    path_dst = tmp_path / test_config.path_zero_imports.name
+    shutil.copyfile(test_config.path_zero_imports, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-dir {tmp_path.as_posix()} --target-file {path_dst.as_posix()}"
@@ -376,17 +378,17 @@ def test_target_dir_and_file(tmp_path_factory, e2e_config):
     )
 
 
-def test_target_file(tmp_path_factory, e2e_config):
+def test_target_file(tmp_path_factory, test_config):
     """Test for passing --target-file."""
     # Copy two sample scripts to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst_ten_imports = tmp_path / e2e_config.path_ten_imports.name
-    shutil.copyfile(e2e_config.path_ten_imports, path_dst_ten_imports)
+    path_dst_ten_imports = tmp_path / test_config.path_ten_imports.name
+    shutil.copyfile(test_config.path_ten_imports, path_dst_ten_imports)
 
-    path_dst_system_info = tmp_path / e2e_config.path_system_info.name
-    shutil.copyfile(e2e_config.path_system_info, path_dst_system_info)
+    path_dst_system_info = tmp_path / test_config.path_system_info.name
+    shutil.copyfile(test_config.path_system_info, path_dst_system_info)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type ModuleNotFoundError --target-file {path_dst_system_info.as_posix()} --ignore-git-status"
@@ -397,7 +399,7 @@ def test_target_file(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise ModuleNotFoundError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst_system_info.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst_system_info.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -405,18 +407,18 @@ def test_target_file(tmp_path_factory, e2e_config):
     assert "ModuleNotFoundError: No module named " in stderr
 
     # Other file should not be changed.
-    assert filecmp.cmp(e2e_config.path_ten_imports, path_dst_ten_imports)
+    assert filecmp.cmp(test_config.path_ten_imports, path_dst_ten_imports)
 
 
-def test_attribute_error(tmp_path_factory, e2e_config):
+def test_attribute_error(tmp_path_factory, test_config):
     """py-bugger --exception-type AttributeError"""
 
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_name_picker.name
-    shutil.copyfile(e2e_config.path_name_picker, path_dst)
+    path_dst = tmp_path / test_config.path_name_picker.name
+    shutil.copyfile(test_config.path_name_picker, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -428,7 +430,7 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise AttributeError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -437,14 +439,14 @@ def test_attribute_error(tmp_path_factory, e2e_config):
     assert "Did you mean: " in stderr
 
 
-def test_one_node_changed(tmp_path_factory, e2e_config):
+def test_one_node_changed(tmp_path_factory, test_config):
     """Test that only one node in a file is modified for identical nodes."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_dog.name
-    shutil.copyfile(e2e_config.path_dog, path_dst)
+    path_dst = tmp_path / test_config.path_dog.name
+    shutil.copyfile(test_config.path_dog, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -455,7 +457,7 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise AttributeError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -469,14 +471,14 @@ def test_one_node_changed(tmp_path_factory, e2e_config):
     assert "self.nam" in modified_source
 
 
-def test_random_node_changed(tmp_path_factory, e2e_config):
+def test_random_node_changed(tmp_path_factory, test_config):
     """Test that a random node in a file is modified if it has numerous identical nodes."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_identical_attributes.name
-    shutil.copyfile(e2e_config.path_identical_attributes, path_dst)
+    path_dst = tmp_path / test_config.path_identical_attributes.name
+    shutil.copyfile(test_config.path_identical_attributes, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type AttributeError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -487,7 +489,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise AttributeError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -500,7 +502,7 @@ def test_random_node_changed(tmp_path_factory, e2e_config):
     assert modified_source.count("random.choice(") == 19
 
 
-def test_indentation_error_simple(tmp_path_factory, e2e_config):
+def test_indentation_error_simple(tmp_path_factory, test_config):
     """py-bugger --exception-type IndentationError
 
     Run against a file with a single indented block.
@@ -510,8 +512,8 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_simple_indent.name
-    shutil.copyfile(e2e_config.path_simple_indent, path_dst)
+    path_dst = tmp_path / test_config.path_simple_indent.name
+    shutil.copyfile(test_config.path_simple_indent, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -523,7 +525,7 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "IndentationError: unexpected indent" in stderr
@@ -535,7 +537,7 @@ def test_indentation_error_simple(tmp_path_factory, e2e_config):
 # in the function, induce an error that indents the for line, not the
 # def line, and assert not TabError.
 @pytest.mark.skip()
-def test_indentation_error_simple_tab(tmp_path_factory, e2e_config):
+def test_indentation_error_simple_tab(tmp_path_factory, test_config):
     """py-bugger --exception-type IndentationError
 
     Run against a file with a single indented block, using a tab delimiter.
@@ -544,7 +546,7 @@ def test_indentation_error_simple_tab(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "simple_indent_tab.py"
+    path_src = test_config.path_sample_scripts / "simple_indent_tab.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -558,14 +560,14 @@ def test_indentation_error_simple_tab(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "IndentationError: unexpected indent" in stderr
     assert 'simple_indent_tab.py", line 1' in stderr
 
 
-def test_indentation_error_complex(tmp_path_factory, e2e_config):
+def test_indentation_error_complex(tmp_path_factory, test_config):
     """py-bugger --exception-type IndentationError
 
     Run against a file with multiple indented blocks of different kinds.
@@ -574,8 +576,8 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_many_dogs.name
-    shutil.copyfile(e2e_config.path_many_dogs, path_dst)
+    path_dst = tmp_path / test_config.path_many_dogs.name
+    shutil.copyfile(test_config.path_many_dogs, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type IndentationError --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -587,14 +589,14 @@ def test_indentation_error_complex(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "IndentationError: unexpected indent" in stderr
     assert 'many_dogs.py", line 1' in stderr
 
 
-def test_all_indentation_blocks(tmp_path_factory, e2e_config):
+def test_all_indentation_blocks(tmp_path_factory, test_config):
     """Test that all kinds of indented blocks can be modified.
 
     Note: There are a couple blocks that aren't currently in all_indentation_blocks.py
@@ -604,8 +606,8 @@ def test_all_indentation_blocks(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_all_indentation_blocks.name
-    shutil.copyfile(e2e_config.path_all_indentation_blocks, path_dst)
+    path_dst = tmp_path / test_config.path_all_indentation_blocks.name
+    shutil.copyfile(test_config.path_all_indentation_blocks, path_dst)
 
     # Run py-bugger against directory.
     cmd = f"py-bugger --exception-type IndentationError --num-bugs 8 --target-dir {tmp_path.as_posix()} --ignore-git-status"
@@ -617,14 +619,14 @@ def test_all_indentation_blocks(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "IndentationError: unexpected indent" in stderr
     assert 'all_indentation_blocks.py", line 1' in stderr
 
 
-def test_indentation_else_block(tmp_path_factory, e2e_config):
+def test_indentation_else_block(tmp_path_factory, test_config):
     """Test that an indendented else block does not result in a SyntaxError.
 
     If the else block is moved to its own indentation level, -> IndentationError.
@@ -640,7 +642,7 @@ def test_indentation_else_block(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "else_block.py"
+    path_src = test_config.path_sample_scripts / "else_block.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -654,7 +656,7 @@ def test_indentation_else_block(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise IndentationError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "SyntaxError: invalid syntax" not in stderr

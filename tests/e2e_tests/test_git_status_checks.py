@@ -18,13 +18,13 @@ from py_bugger.cli import cli_messages
 from py_bugger.cli.config import PBConfig
 
 
-def test_git_not_available(tmp_path_factory, e2e_config, on_windows):
+def test_git_not_available(tmp_path_factory, test_config, on_windows):
     """Check appropriate message shown when Git not available."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_src = test_config.path_sample_scripts / "dog.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -45,13 +45,13 @@ def test_git_not_available(tmp_path_factory, e2e_config, on_windows):
     assert msg_expected in stdout
 
 
-def test_git_not_used(tmp_path_factory, e2e_config):
+def test_git_not_used(tmp_path_factory, test_config):
     """Check appropriate message shown when Git not being used."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_src = test_config.path_sample_scripts / "dog.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -71,13 +71,13 @@ def test_git_not_used(tmp_path_factory, e2e_config):
     assert msg_expected in stdout
 
 
-def test_unclean_git_status(tmp_path_factory, e2e_config):
+def test_unclean_git_status(tmp_path_factory, test_config):
     """Check appropriate message shown when Git status is not clean."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_src = test_config.path_sample_scripts / "dog.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -100,7 +100,7 @@ def test_unclean_git_status(tmp_path_factory, e2e_config):
     assert msg_expected in stdout
 
 
-def test_clean_git_status(tmp_path_factory, e2e_config):
+def test_clean_git_status(tmp_path_factory, test_config):
     """Run py-bugger against a tiny repo with a clean status, without passing
     --ignore-git-status.
     """
@@ -108,7 +108,7 @@ def test_clean_git_status(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_src = test_config.path_sample_scripts / "dog.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -138,7 +138,7 @@ def test_clean_git_status(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise AttributeError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr
@@ -147,7 +147,7 @@ def test_clean_git_status(tmp_path_factory, e2e_config):
     assert "Did you mean: " in stderr
 
 
-def test_ignore_git_status(tmp_path_factory, e2e_config):
+def test_ignore_git_status(tmp_path_factory, test_config):
     """Test that py-bugger runs when --ignore-git-status is passed.
 
     This is the test for Git not being used, with a different assertion.
@@ -156,7 +156,7 @@ def test_ignore_git_status(tmp_path_factory, e2e_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_src = test_config.path_sample_scripts / "dog.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -170,7 +170,7 @@ def test_ignore_git_status(tmp_path_factory, e2e_config):
     assert "All requested bugs inserted." in stdout
 
     # Run file, should raise AttributeError.
-    cmd = f"{e2e_config.python_cmd.as_posix()} {path_dst.as_posix()}"
+    cmd = f"{test_config.python_cmd.as_posix()} {path_dst.as_posix()}"
     cmd_parts = shlex.split(cmd)
     stderr = subprocess.run(cmd_parts, capture_output=True).stderr.decode()
     assert "Traceback (most recent call last)" in stderr

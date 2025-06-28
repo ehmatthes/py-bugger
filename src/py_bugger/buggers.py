@@ -132,9 +132,10 @@ def _report_bug_added(path_modified):
     else:
         print(f"Added bug.")
 
+
 def _get_random_node(py_files, node_type):
     """Randomly select a node to modify.
-    
+
     Make sure it's a node that hasn't already been modified.
 
     Returns:

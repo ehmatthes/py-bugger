@@ -25,7 +25,7 @@ from py_bugger.cli import cli_messages
     "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
 )
 def test_preserve_file_ending_trailing_newline(
-    tmp_path_factory, e2e_config, exception_type
+    tmp_path_factory, test_config, exception_type
 ):
     """Test that trailing newlines are preserved when present."""
 
@@ -33,8 +33,8 @@ def test_preserve_file_ending_trailing_newline(
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_dst = tmp_path / e2e_config.path_dog_bark.name
-    shutil.copyfile(e2e_config.path_dog_bark, path_dst)
+    path_dst = tmp_path / test_config.path_dog_bark.name
+    shutil.copyfile(test_config.path_dog_bark, path_dst)
 
     # Run py-bugger against file.
     cmd = f"py-bugger --exception-type {exception_type} --target-file {path_dst.as_posix()} --ignore-git-status"
@@ -55,7 +55,7 @@ def test_preserve_file_ending_trailing_newline(
     "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
 )
 def test_preserve_file_ending_no_trailing_newline(
-    tmp_path_factory, e2e_config, exception_type
+    tmp_path_factory, test_config, exception_type
 ):
     """Test that trailing newlines are not introduced when not originally present."""
 
@@ -63,7 +63,7 @@ def test_preserve_file_ending_no_trailing_newline(
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog_bark_no_trailing_newline.py"
+    path_src = test_config.path_sample_scripts / "dog_bark_no_trailing_newline.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -78,7 +78,7 @@ def test_preserve_file_ending_no_trailing_newline(
 
     # Check that last line is not blank.
     lines = path_dst.read_text().splitlines(keepends=True)
-    
+
     assert lines[-1] == "dog.say_hi()"
 
 
@@ -86,7 +86,7 @@ def test_preserve_file_ending_no_trailing_newline(
     "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
 )
 def test_preserve_file_ending_two_trailing_newline(
-    tmp_path_factory, e2e_config, exception_type
+    tmp_path_factory, test_config, exception_type
 ):
     """Test that two trailing newlines are preserved when present."""
 
@@ -94,7 +94,7 @@ def test_preserve_file_ending_two_trailing_newline(
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog_bark_two_trailing_newlines.py"
+    path_src = test_config.path_sample_scripts / "dog_bark_two_trailing_newlines.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -118,13 +118,13 @@ def test_preserve_file_ending_two_trailing_newline(
 @pytest.mark.parametrize(
     "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
 )
-def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
+def test_blank_file_behavior(tmp_path_factory, test_config, exception_type):
     """Make sure py-bugger handles a blank file correctly."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "blank_file.py"
+    path_src = test_config.path_sample_scripts / "blank_file.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -145,13 +145,13 @@ def test_blank_file_behavior(tmp_path_factory, e2e_config, exception_type):
 ### --- Tests for invalid --target-dir calls ---
 
 
-def test_file_passed_to_targetdir(tmp_path_factory, e2e_config):
+def test_file_passed_to_targetdir(tmp_path_factory, test_config):
     """Make sure passing a file to --target-dir fails appropriately."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "dog.py"
+    path_src = test_config.path_sample_scripts / "dog.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
@@ -278,13 +278,13 @@ def test_targetfile_exists_not_file():
     assert msg_expected in stdout
 
 
-def test_targetfile_py_file(tmp_path_factory, e2e_config):
+def test_targetfile_py_file(tmp_path_factory, test_config):
     """Test for appropriate message when passed a non-.py file."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = e2e_config.path_sample_scripts / "hello.txt"
+    path_src = test_config.path_sample_scripts / "hello.txt"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 

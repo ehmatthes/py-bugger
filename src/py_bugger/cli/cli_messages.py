@@ -29,11 +29,13 @@ def success_msg():
         msg += "\nUnable to introduce additional bugs of the requested type."
         return msg
 
+
 # Validation for exception type.
 def msg_apparent_typo(actual, expected):
     """Suggest a typo fix for an exception type."""
     msg = f"You specified {actual} for --exception-type. Did you mean {expected}?"
     return msg
+
 
 def msg_unsupported_exception_type(exception_type):
     """Specified an unsupported exception type."""
@@ -99,4 +101,3 @@ def msg_git_not_used(pb_config):
 
     msg = f"The {target} you're running py-bugger against does not seem to be under version control. It's highly recommended that you run py-bugger against a file or project with a clean Git status. You can ignore this check with the --ignore-git-status argument."
     return msg
-
