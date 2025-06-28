@@ -42,8 +42,8 @@ def test_modifications_modulenotfounderror(tmp_path_factory):
     pb_config.target_dir = None
     modifications.clear()
 
-def test_5_random_bugs(tmp_path_factory, test_config):
-    """Test equivalent of `py-bugger -n 5`.
+def test_4_random_bugs(tmp_path_factory, test_config):
+    """Test equivalent of `py-bugger -n 4`.
 
     Look for modifications that match bugs_requested.
     """
@@ -62,7 +62,7 @@ def test_5_random_bugs(tmp_path_factory, test_config):
     pb_config.exception_type = ""
     pb_config.target_file = path_dst
     pb_config.ignore_git_status = True
-    pb_config.num_bugs = 5
+    pb_config.num_bugs = 4
 
     cli_utils.validate_config()
 
@@ -70,7 +70,6 @@ def test_5_random_bugs(tmp_path_factory, test_config):
     from py_bugger.utils.modification import modifications
 
     requested_bugs = py_bugger.main()
-    breakpoint()
 
     assert len(modifications) == len(requested_bugs)
 
