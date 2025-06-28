@@ -10,11 +10,14 @@ Looks for a clean Git status before introducing bugs.
 
 #### External changes
 
-- NA
+- When no `-e` arg is passed, generates a random sequence of bugs to induce.
 
 #### Internal changes
 
 - Main loop works from a list of bugs to introduce, rather than ranging over `num_bugs`.
+- Reorders `requested_bugs` so CST-based parsing happens before regex-based parsing. Avoids writing syntax-related bugs before parsing nodes.
+- Started integration tests that should take the place of many current e2e tests. Calls `py_bugger.main()` directly, and checks `requested_bugs` and `modfications`.
+- `Modification` objects record the exception type that's induced.
 
 ### 0.4.1
 
