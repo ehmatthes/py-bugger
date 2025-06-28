@@ -7,6 +7,7 @@ charset-normalizer==3.4.1
 click==8.1.8
 colorama==0.4.6
 docutils==0.21.2
+execnet==2.1.1
 ghp-import==2.1.0
 id==1.5.0
 idna==3.10
@@ -38,6 +39,7 @@ pygments==2.19.1
 pymdown-extensions==10.14.3
 pyproject-hooks==1.2.0
 pytest==8.3.5
+pytest-xdist==3.7.0
 python-dateutil==2.9.0.post0
 pyyaml==6.0.2
 pyyaml-env-tag==0.1
