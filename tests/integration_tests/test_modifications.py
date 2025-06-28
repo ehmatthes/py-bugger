@@ -12,7 +12,7 @@ from py_bugger.cli import cli_utils
 from py_bugger.utils.modification import modifications
 
 
-def test_modifications_modulenotfounderror(tmp_path_factory,test_config):
+def test_modifications_modulenotfounderror(tmp_path_factory, test_config):
     """Tests modifications after creating a ModuleNotFoundError."""
     # Copy sample code to tmp dir.
     tmp_path = tmp_path_factory.mktemp("sample_code")

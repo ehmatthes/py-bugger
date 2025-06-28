@@ -45,6 +45,7 @@ def main():
 
 # --- Helper functions ---
 
+
 def set_random_seed():
     # Set a random seed when testing.
     if seed := os.environ.get("PY_BUGGER_RANDOM_SEED"):
