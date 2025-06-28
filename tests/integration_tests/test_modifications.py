@@ -6,6 +6,7 @@ import os
 
 import pytest
 
+from py_bugger import py_bugger
 from py_bugger.cli.config import pb_config
 from py_bugger.cli import cli_utils
 from py_bugger.utils.modification import modifications
@@ -27,8 +28,6 @@ def test_modifications_modulenotfounderror(tmp_path_factory,test_config):
     pb_config.ignore_git_status = True
 
     cli_utils.validate_config()
-
-    from py_bugger import py_bugger
 
     py_bugger.main()
 
@@ -56,8 +55,6 @@ def test_4_random_bugs(tmp_path_factory, test_config):
     pb_config.num_bugs = 4
 
     cli_utils.validate_config()
-
-    from py_bugger import py_bugger
 
     requested_bugs = py_bugger.main()
 
