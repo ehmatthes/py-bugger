@@ -33,8 +33,8 @@ def test_modifications_modulenotfounderror(tmp_path_factory, test_config):
     assert modifications[0].exception_induced == ModuleNotFoundError
 
 
-def test_4_random_bugs(tmp_path_factory, test_config):
-    """Test equivalent of `py-bugger -n 4`.
+def test_7_random_bugs(tmp_path_factory, test_config):
+    """Test equivalent of `py-bugger -n 7`.
 
     Look for modifications that match bugs_requested.
     """
@@ -47,8 +47,10 @@ def test_4_random_bugs(tmp_path_factory, test_config):
     shutil.copyfile(path_src, path_dst)
 
     # Make modifications against this directory.
+    # With the current random seed, 7 seems to be the max number of bugs before
+    # it can't add more.
     pb_config.target_file = path_dst
-    pb_config.num_bugs = 4
+    pb_config.num_bugs = 7
     cli_utils.validate_config()
 
     requested_bugs = py_bugger.main()
