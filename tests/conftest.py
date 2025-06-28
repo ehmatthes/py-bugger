@@ -8,7 +8,6 @@ import pytest
 
 # --- Fixtures ---
 
-
 @pytest.fixture(autouse=True, scope="session")
 def set_random_seed_env():
     """Make random selections repeatable."""

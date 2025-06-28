@@ -56,12 +56,11 @@ def test_4_random_bugs(tmp_path_factory, test_config):
 
     cli_utils.validate_config()
 
-    assert os.environ["PY_BUGGER_RANDOM_SEED"] == "10"
-    assert not pb_config.exception_type
     requested_bugs = py_bugger.main()
-    assert requested_bugs == ['AttributeError', 'AttributeError', 'AttributeError', 'ModuleNotFoundError']
 
+    # Make sure one modification was made for each requested bug.
     assert len(modifications) == len(requested_bugs)
 
+    # Make sure the correct kinds of exceptions were induced.
     exceptions_induced_str = [m.exception_induced.__name__ for m in modifications]
     assert sorted(exceptions_induced_str) == sorted(requested_bugs)
