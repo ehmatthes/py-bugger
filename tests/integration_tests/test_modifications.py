@@ -4,8 +4,19 @@ from pathlib import Path
 import shutil
 import os
 
+import pytest
+
 from py_bugger.cli.config import pb_config
 from py_bugger.cli import cli_utils
+from py_bugger.utils.modification import modifications
+
+
+@pytest.fixture(autouse=True, scope="function")
+def reset_pbconfig():
+    """Reset the pb_config object for each test."""
+    # Cleanup.
+    pb_config.target_dir = None
+    modifications.clear()
 
 
 def test_modifications_modulenotfounderror(tmp_path_factory,test_config):
@@ -29,14 +40,8 @@ def test_modifications_modulenotfounderror(tmp_path_factory,test_config):
 
     py_bugger.main()
 
-    from py_bugger.utils.modification import modifications
-
     assert len(modifications) == 1
     assert modifications[0].exception_induced == ModuleNotFoundError
-
-    # Cleanup.
-    pb_config.target_dir = None
-    modifications.clear()
 
 
 def test_4_random_bugs(tmp_path_factory, test_config):
@@ -61,7 +66,6 @@ def test_4_random_bugs(tmp_path_factory, test_config):
     cli_utils.validate_config()
 
     from py_bugger import py_bugger
-    from py_bugger.utils.modification import modifications
 
     requested_bugs = py_bugger.main()
 
@@ -69,7 +73,3 @@ def test_4_random_bugs(tmp_path_factory, test_config):
 
     exceptions_induced_str = [m.exception_induced.__name__ for m in modifications]
     assert sorted(exceptions_induced_str) == sorted(requested_bugs)
-
-    # Cleanup.
-    pb_config.target_dir = None
-    modifications.clear()
