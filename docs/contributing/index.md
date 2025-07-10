@@ -26,11 +26,12 @@ py-bugger$ source .venv/bin/activate
 ...
 
 (.venv) py-bugger$ pytest
-========== test session starts ==========
-tests/e2e_tests/test_basic_behavior.py .................
-tests/unit_tests/test_bug_utils.py .....
-tests/unit_tests/test_file_utils.py ...
-========== 25 passed in 3.29s ==========
+========== test session starts ================================
+tests/e2e_tests/test_basic_behavior.py ....s...............s...
+tests/e2e_tests/test_cli_flags.py ..
+tests/e2e_tests/test_git_status_checks.py .....
+...
+========== 64 passed, 2 skipped in 6.85s ======================
 ```
 
 ## Development work
@@ -185,3 +186,16 @@ The `e2e_config()` fixture returns a session-scoped config object containing pat
 Most e2e test functions copy sample code to a temp directory, and then make a `py-bugger` call using either `--target-dir` or `--target-file` aimed at that directory. Usually, they run the target file as well. We then make various assertions about the bugs that were introduced, and the results of running the file or project after running `py-bugger`.
 
 Long term, as we find a balance between integration tests and e2e tests, the e2e tests should probably focus on verifying that the changes listed in `modifications` are actually written to the user's project.
+
+### Running the test suite
+
+The first time you run the test suite, you should probably use the bare `pytest` call as shown at the top of this page. You'll see all the test files that are being run, and have a sense of what kinds of tests are being run. When you're running tests repeatedly, however, it's much faster to run tests in parallel:
+
+```sh
+(.venv) py-bugger$ pytest -n auto
+========== test session starts ======================================
+s...s.............................................................
+========== 64 passed, 2 skipped in 1.69s ============================
+```
+
+Keep in mind that parallel testing can introduce all kinds of complexity, so if you see unexpected failures when running tests like this, try running tests without the `-n auto` flag.
