@@ -16,11 +16,25 @@ $ pip install python-bugger
 
     The package name is `python-bugger`, because `py-bugger` was unavailable on PyPI.
 
-## Introducing a bug into a project
+## Introducing a random bug into a project
 
 If you don't specify a target directory or file, `py-bugger` will look at all *.py* files in the current directory before deciding where to insert a bug. If the directory is a Git repository, it will follow the rules in *.gitignore*. It will also avoid introducing bugs into test directories and virtual environments that follow familiar naming patterns.
 
-`py-bugger` creates bugs that induce specific exceptions. Here's how to create a bug that generates a `ModuleNotFoundError`:
+`py-bugger` creates bugs that induce specific exceptions. In the simplest usage, `py-bugger` will choose a random bug to introduce:
+
+```sh
+$ py-bugger
+Added bug.
+All requested bugs inserted.
+```
+
+If your project is under version control, you can see the bug that was introduced by running `git diff`.
+
+## Creating a specific kind of bug
+
+Currently, `py-bugger` can create bugs that induce three kinds of exceptions: `ModuleNotFoundError`, `AttributeError`, and `IndentationError`. You can let `py-bugger` choose from these randmly, or you can ask it to create a bug that induces a specific kind of error.
+
+Here's how to create a bug that generates a `ModuleNotFoundError`:
 
 ```sh
 $ py-bugger -e ModuleNotFoundError
