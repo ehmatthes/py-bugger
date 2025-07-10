@@ -156,7 +156,13 @@ With the documentation server running, you can open a browser to the address sho
 
 ## Testing
 
-`py-bugger` currently has a small set of unit and end-to-end tests. The project is still evolving, and there's likely some significant refactoring that will happen before it fully stabilizes internally. We're aiming for test coverage that preserves current functionality, but isn't overly fragile to refactoring. Currently, the focus is on e2e tests for all significant external behavior, and unit tests for critical and stable utilities.
+`py-bugger` currently has unit, integration, and end-to-end tests. The project is still evolving, and there's likely some significant refactoring that will happen before it fully stabilizes internally. We're aiming for test coverage that preserves current functionality, but isn't overly fragile to refactoring.
+
+The intial focus was on creating a series of e2e tests that make actual `py-bugger` calls in subprocesses against temp files and directories. This has been really effective for intial development, because it tests the project exactly as end-users experience it. That said, each test takes about 0.15s, which adds up quickly as the test suite grows.
+
+Integration tests now directly run the `py-bugger` code that modifies the user's codebase. We're still using temp files and directories, but integration tests don't depend on subprocess calls. Most new tests should be written as integration tests. One of the refactoring projects is to figure out which e2e tests really need to be kept, and which can be converted to much faster integration tests.
+
+Unit tests are only written for critical functions, and functions that are unlikely to change through the refactoring that should happen before a 1.0 release. An overemphaiss on unit tests would slow the project down at this point, with little benefit compared to integration and e2e tests.
 
 ### Unit tests
 
