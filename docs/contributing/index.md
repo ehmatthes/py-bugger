@@ -126,7 +126,9 @@ The main public interface is defined in `cli.py`. The `cli()` function updates t
 
 ### `src/py_bugger/py_bugger.py`
 
-The `main()` function in `py_bugger.py` collects the `py_files` that we can consider modifying. It then calls out to "bugger" functions that inspect the target code, identifying all the ways we could modify it to introduce the requested kind of bug. The actual bug that's introduced is chosen randomly on each run. After introducing bugs, a `success_msg` is generated showing whether the requested bugs were inserted.
+The `main()` function in `py_bugger.py` collects the `py_files` that we can consider modifying. It then calls out to "bugger" functions that inspect the target code, identifying all the ways we could modify it to introduce the requested kind of bug. The actual bug that's introduced is chosen randomly on each run. Each time a bug is introduced, it's added to the list `modifications`, which is created in `src/py_bugger/utils/modification.py`.
+
+After introducing bugs, a `success_msg` is generated showing whether the requested bugs were inserted.
 
 ### Notes
 
@@ -168,6 +170,10 @@ Unit tests are only written for critical functions, and functions that are unlik
 
 Unit tests currently require no setup.
 
+### Integration tests
+
+Integration tests create a `pb_config` object, and then call `py_bugger.main()`. Assertions are made against the list of modifications that are made to the user's project. An autouse fixture resets the `pb_config` object after each test function.
+
 ### End-to-end tests
 
 End-to-end tests run `py-bugger` commands just as end users would, against a variety of scripts and small projects. This requires a bit of setup that's helpful to understand.
@@ -177,3 +183,5 @@ Randomness plays an important role in creating all bugs, so a random seed is set
 The `e2e_config()` fixture returns a session-scoped config object containing paths used in most e2e tests. These include reference files, sample scripts, and the path to the Python interpreter for the current virtual environment. Note that this test config object is *not* the same as the `pb_config` object that's used in the main project.
 
 Most e2e test functions copy sample code to a temp directory, and then make a `py-bugger` call using either `--target-dir` or `--target-file` aimed at that directory. Usually, they run the target file as well. We then make various assertions about the bugs that were introduced, and the results of running the file or project after running `py-bugger`.
+
+Long term, as we find a balance between integration tests and e2e tests, the e2e tests should probably focus on verifying that the changes listed in `modifications` are actually written to the user's project.
