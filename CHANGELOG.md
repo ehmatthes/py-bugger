@@ -9,7 +9,7 @@ Previously, any single run of `py-bugger` could only create bugs that induce one
 
 #### External changes
 
-- When no `-e` arg is passed, generates a random sequence of bugs to induce.
+- When no `-e` arg is passed, generates a random sequence of bugs to induce. Bugs are generated in an order that makes it more likely to successfully create all requested bugs.
 - Docs updated to reflect current usage.
 
 #### Internal changes
