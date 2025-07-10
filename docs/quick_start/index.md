@@ -50,6 +50,18 @@ Added bug.
 All requested bugs inserted.
 ```
 
+## Creating multiple bugs
+
+You can create as many bugs as you like. `py-bugger` will do its best to introduce all the bugs you ask for:
+
+```sh
+$ py-bugger -n 3
+Added bug.
+Added bug.
+Added bug.
+All requested bugs inserted.
+```
+
 ## Creating a specific kind of bug
 
 Currently, `py-bugger` can create bugs that induce three kinds of exceptions: `ModuleNotFoundError`, `AttributeError`, and `IndentationError`. You can let `py-bugger` choose from these randmly, or you can ask it to create a bug that induces a specific kind of error.
