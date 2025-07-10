@@ -1,16 +1,16 @@
 Changelog: python-bugger
 ===
 
-0.4 - Git status checks
----
+0.5 - Support multiple exception types in one call
 
-Looks for a clean Git status before introducing bugs.
+Previously, any single run of `py-bugger` could only create bugs that induce one kind of exception. In the 0.5 series, a variety of bugs can be introduced in a single call.
 
-### Unreleased
+### 0.5.0
 
 #### External changes
 
 - When no `-e` arg is passed, generates a random sequence of bugs to induce.
+- Docs updated to reflect current usage.
 
 #### Internal changes
 
@@ -18,6 +18,11 @@ Looks for a clean Git status before introducing bugs.
 - Reorders `requested_bugs` so CST-based parsing happens before regex-based parsing. Avoids writing syntax-related bugs before parsing nodes.
 - Started integration tests that should take the place of many current e2e tests. Calls `py_bugger.main()` directly, and checks `requested_bugs` and `modfications`.
 - `Modification` objects record the exception type that's induced.
+
+0.4 - Git status checks
+---
+
+Looks for a clean Git status before introducing bugs.
 
 ### 0.4.1
 
