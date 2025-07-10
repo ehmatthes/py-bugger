@@ -15,7 +15,8 @@ Here's a brief roadmap of where I'm planning to take this project:
 - Generate logical (non-crashing) errors as well as specific exception types.
 - Expand usage to allow an arbitrary number and kind of bugs.
     - **(implemented)** Support an arbitrary number of one kind of bug.
-    - Support multiple kinds of bugs in one call.
+    - **(implemented)** When `-e` arg is omitted, randomly choose from supported bugs.
+    - Support multiple values for the `-e` arg, so user can have random bugs from a specific subset of exception types.
 - Develop a list of good projects to practice against. ie, clone <project> from GitHub, run its tests, run `py-bugger`, and practice debugging.
 
 If you have any feedback or suggestions, please jump into the [issues](https://github.com/ehmatthes/py-bugger/issues) or [discussions](https://github.com/ehmatthes/py-bugger/discussions).

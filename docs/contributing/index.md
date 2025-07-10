@@ -26,11 +26,12 @@ py-bugger$ source .venv/bin/activate
 ...
 
 (.venv) py-bugger$ pytest
-========== test session starts ==========
-tests/e2e_tests/test_basic_behavior.py .................
-tests/unit_tests/test_bug_utils.py .....
-tests/unit_tests/test_file_utils.py ...
-========== 25 passed in 3.29s ==========
+========== test session starts ================================
+tests/e2e_tests/test_basic_behavior.py ....s...............s...
+tests/e2e_tests/test_cli_flags.py ..
+tests/e2e_tests/test_git_status_checks.py .....
+...
+========== 64 passed, 2 skipped in 6.85s ======================
 ```
 
 ## Development work
@@ -126,7 +127,9 @@ The main public interface is defined in `cli.py`. The `cli()` function updates t
 
 ### `src/py_bugger/py_bugger.py`
 
-The `main()` function in `py_bugger.py` collects the `py_files` that we can consider modifying. It then calls out to "bugger" functions that inspect the target code, identifying all the ways we could modify it to introduce the requested kind of bug. The actual bug that's introduced is chosen randomly on each run. After introducing bugs, a `success_msg` is generated showing whether the requested bugs were inserted.
+The `main()` function in `py_bugger.py` collects the `py_files` that we can consider modifying. It then calls out to "bugger" functions that inspect the target code, identifying all the ways we could modify it to introduce the requested kind of bug. The actual bug that's introduced is chosen randomly on each run. Each time a bug is introduced, it's added to the list `modifications`, which is created in `src/py_bugger/utils/modification.py`.
+
+After introducing bugs, a `success_msg` is generated showing whether the requested bugs were inserted.
 
 ### Notes
 
@@ -156,11 +159,21 @@ With the documentation server running, you can open a browser to the address sho
 
 ## Testing
 
-`py-bugger` currently has a small set of unit and end-to-end tests. The project is still evolving, and there's likely some significant refactoring that will happen before it fully stabilizes internally. We're aiming for test coverage that preserves current functionality, but isn't overly fragile to refactoring. Currently, the focus is on e2e tests for all significant external behavior, and unit tests for critical and stable utilities.
+`py-bugger` currently has unit, integration, and end-to-end tests. The project is still evolving, and there's likely some significant refactoring that will happen before it fully stabilizes internally. We're aiming for test coverage that preserves current functionality, but isn't overly fragile to refactoring.
+
+The intial focus was on creating a series of e2e tests that make actual `py-bugger` calls in subprocesses against temp files and directories. This has been really effective for intial development, because it tests the project exactly as end-users experience it. That said, each test takes about 0.15s, which adds up quickly as the test suite grows.
+
+Integration tests now directly run the `py-bugger` code that modifies the user's codebase. We're still using temp files and directories, but integration tests don't depend on subprocess calls. Most new tests should be written as integration tests. One of the refactoring projects is to figure out which e2e tests really need to be kept, and which can be converted to much faster integration tests.
+
+Unit tests are only written for critical functions, and functions that are unlikely to change through the refactoring that should happen before a 1.0 release. An overemphaiss on unit tests would slow the project down at this point, with little benefit compared to integration and e2e tests.
 
 ### Unit tests
 
 Unit tests currently require no setup.
+
+### Integration tests
+
+Integration tests create a `pb_config` object, and then call `py_bugger.main()`. Assertions are made against the list of modifications that are made to the user's project. An autouse fixture resets the `pb_config` object after each test function.
 
 ### End-to-end tests
 
@@ -171,3 +184,18 @@ Randomness plays an important role in creating all bugs, so a random seed is set
 The `e2e_config()` fixture returns a session-scoped config object containing paths used in most e2e tests. These include reference files, sample scripts, and the path to the Python interpreter for the current virtual environment. Note that this test config object is *not* the same as the `pb_config` object that's used in the main project.
 
 Most e2e test functions copy sample code to a temp directory, and then make a `py-bugger` call using either `--target-dir` or `--target-file` aimed at that directory. Usually, they run the target file as well. We then make various assertions about the bugs that were introduced, and the results of running the file or project after running `py-bugger`.
+
+Long term, as we find a balance between integration tests and e2e tests, the e2e tests should probably focus on verifying that the changes listed in `modifications` are actually written to the user's project.
+
+### Running the test suite
+
+The first time you run the test suite, you should probably use the bare `pytest` call as shown at the top of this page. You'll see all the test files that are being run, and have a sense of what kinds of tests are being run. When you're running tests repeatedly, however, it's much faster to run tests in parallel:
+
+```sh
+(.venv) py-bugger$ pytest -n auto
+========== test session starts ======================================
+s...s.............................................................
+========== 64 passed, 2 skipped in 1.69s ============================
+```
+
+Keep in mind that parallel testing can introduce all kinds of complexity, so if you see unexpected failures when running tests like this, try running tests without the `-n auto` flag.
