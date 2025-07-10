@@ -29,30 +29,18 @@ Options:
   --help                     Show this message and exit.
 ```
 
-## Introducing multiple bugs
+## Introducing multiple bugs of specific types
 
-Currently, you can create multiple bugs that target any of the supported exception types. For example, this command will try to introduce three bugs that each induce an `IndentationError`:
+Currently, it's not possible to specify more than one exception type in a single `py-bugger` call. At the moment, you can either let `py-bugger` choose which kind of bug to introduce, or you can request a specific exception to induce.
 
-```sh
-$ py-bugger -e IndentationError --n 3
-```
-
-## Introducing a random bug
-
-The `--exception-type` argument is optional. If you leave it out, py-bugger will choose which type of exception to induce randomly:
+If you need to introduce several specific bugs, but not choose randomly from all possible bugs, you may have luck running `py-bugger` multiple times with different exception types:
 
 ```sh
-$ py-bugger
-```
-
-## Introducing multiple bugs of different types
-
-Currently, it's not possible to specify more than one exception type in a single `py-bugger` call. You may have luck running `py-bugger` multiple times, with different exception types:
-
-```sh
-$ py-bugger -e IndentationError -n 2
 $ py-bugger -e ModuleNotFoundError
+$ py-bugger -e IndentationError -n 2
 ```
+
+This can fail if a bug introduces a syntax error which prevents `py-bugger` from parsing your codebase. Support for specifying multiple exception types should be added shortly. If this kind of usage is important to you, please consider opening an [issue](https://github.com/ehmatthes/py-bugger/issues) or [discussion](https://github.com/ehmatthes/py-bugger/discussions), and I'll prioritize support for this.
 
 ## A note about speed
 
