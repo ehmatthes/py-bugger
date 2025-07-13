@@ -6,6 +6,11 @@ modifications to the same node or line.
 Not currently using original_node or original_line, but including these means
 the list of modifications can be used to stage all changes, and write them all at
 once if that becomes a better approach.
+
+Note: If we move to a deferred writing model, line_num will need to be handled carefully.
+  May want to stage all changes, then before writing, add a new attribute new_line_num.
+  Parse list of mods, and for any mod that adds or removes a line, adjust new_line_num
+  for all subsequent modification instances.
 """
 
 from dataclasses import dataclass, field
