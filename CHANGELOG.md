@@ -5,6 +5,17 @@ Changelog: python-bugger
 
 Previously, any single run of `py-bugger` could only create bugs that induce one kind of exception. In the 0.5 series, a variety of bugs can be introduced in a single call.
 
+### 0.5.1
+
+### External changes
+
+- Fixes bug where inducing an `IndentationError` would modify all `try` blocks in a file, if that's the kind of line that's chosen to be modified. (Issue [65](https://github.com/ehmatthes/py-bugger/issues/65))
+
+### Internal changes
+
+- Code that implements `IndentationError` bugs uses line numbers, not lines.
+- Added `line_num` attribute to `Modification`.
+
 ### 0.5.0
 
 #### External changes
