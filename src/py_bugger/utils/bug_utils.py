@@ -91,15 +91,15 @@ def add_indentation(path, target_line):
     return indentation_added
 
 
-def add_indentation_lineno(path, target_line_no):
-    """Add one level of indentation (four spaces) to line at lineno."""
+def add_indentation_linenum(path, target_line_num):
+    """Add one level of indentation (four spaces) to line at linenum."""
     indentation_added = False
 
     lines = path.read_text().splitlines(keepends=True)
 
     modified_lines = []
-    for line_no, line in enumerate(lines, start=1):
-        if line_no == target_line_no:
+    for line_num, line in enumerate(lines, start=1):
+        if line_num == target_line_num:
             modified_line = f"    {line}"
             modified_lines.append(modified_line)
             indentation_added = True
@@ -110,7 +110,7 @@ def add_indentation_lineno(path, target_line_no):
                 original_line=line,
                 modified_line=modified_line,
                 exception_induced=IndentationError,
-                lineno=line_no,
+                line_num=line_num,
             )
             modifications.append(modification)
         else:

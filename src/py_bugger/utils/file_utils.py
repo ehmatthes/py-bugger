@@ -41,22 +41,22 @@ def get_paths_lines(py_files, targets):
 
     return paths_lines
 
-def get_paths_linenos(py_files, targets):
+def get_paths_linenums(py_files, targets):
     """Get all line numbers from all files matching targets, if they haven't already
     been modified.
     """
-    paths_linenos = []
+    paths_linenums = []
     for path in py_files:
         lines = path.read_text().splitlines()
-        linenos_lines = enumerate(lines, start=1)
-        linenos_lines = _remove_modified_lines_with_linenos(path, linenos_lines)
+        linenums_lines = enumerate(lines, start=1)
+        linenums_lines = _remove_modified_lines_with_linenums(path, linenums_lines)
 
-        for lineno, line in linenos_lines:
+        for line_num, line in linenums_lines:
             stripped_line = line.strip()
             if any([stripped_line.startswith(target) for target in targets]):
-                paths_linenos.append((path, lineno))
+                paths_linenums.append((path, line_num))
 
-    return paths_linenos
+    return paths_linenums
 
 
 def check_unmodified(candidate_path, candidate_node=None, candidate_line=None):
@@ -150,15 +150,15 @@ def _remove_modified_lines(path, lines):
             while modified_line in lines:
                 lines.remove(modified_line)
 
-def _remove_modified_lines_with_linenos(path, linenos_lines):
+def _remove_modified_lines_with_linenums(path, linenums_lines):
     """Remove lines that have already been modified."""
     for modification in modifications:
         if modification.path != path:
             continue
-        if not modification.lineno:
+        if not modification.line_num:
             continue
 
-        # Remove the relevant lineno.
-        linenos_lines = [(lineno, line) for lineno, line in linenos_lines if lineno != modification.lineno]
+        # Remove the relevant line_num.
+        linenums_lines = [(line_num, line) for line_num, line in linenums_lines if line_num != modification.line_num]
 
-    return linenos_lines
+    return linenums_lines

@@ -28,7 +28,7 @@ class Modification:
     modified_line: str = ""
 
     # Line numbers are not zero-indexed. We count them like a user would.
-    lineno: int = 0
+    line_num: int = 0
 
     exception_induced: type[BaseException] = field(default=None)
 
