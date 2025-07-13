@@ -133,7 +133,7 @@ def test_first_try_not_indented(tmp_path_factory, test_config):
     tmp_path = tmp_path_factory.mktemp("sample_code")
     print(f"\nCopying code to: {tmp_path.as_posix()}")
 
-    path_src = test_config.path_sample_scripts / "many_trys.py"
+    path_src = test_config.path_sample_scripts / "five_trys.py"
     path_dst = tmp_path / path_src.name
     shutil.copyfile(path_src, path_dst)
 
