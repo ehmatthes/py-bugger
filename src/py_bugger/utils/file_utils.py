@@ -25,22 +25,6 @@ def get_py_files(target_dir, target_file):
         return _get_py_files_non_git(target_dir)
 
 
-def get_paths_lines(py_files, targets):
-    """Get all lines from all files matching targets, if they haven't already
-    been modified.
-    """
-    paths_lines = []
-    for path in py_files:
-        lines = path.read_text().splitlines()
-        _remove_modified_lines(path, lines)
-
-        for line in lines:
-            stripped_line = line.strip()
-            if any([stripped_line.startswith(target) for target in targets]):
-                paths_lines.append((path, line))
-
-    return paths_lines
-
 def get_paths_linenums(py_files, targets):
     """Get all line numbers from all files matching targets, if they haven't already
     been modified.
@@ -49,7 +33,7 @@ def get_paths_linenums(py_files, targets):
     for path in py_files:
         lines = path.read_text().splitlines()
         linenums_lines = enumerate(lines, start=1)
-        linenums_lines = _remove_modified_lines_with_linenums(path, linenums_lines)
+        linenums_lines = _remove_modified_lines(path, linenums_lines)
 
         for line_num, line in linenums_lines:
             stripped_line = line.strip()
@@ -133,24 +117,7 @@ def _get_py_files_non_git(target_dir):
 
     return py_files
 
-
-def _remove_modified_lines(path, lines):
-    """Remove lines from the list that have already been modified."""
-    for modification in modifications:
-        if modification.path != path:
-            continue
-        if not modification.modified_line:
-            continue
-
-        # This path has been modified. Check line.
-        modified_line = modification.modified_line.rstrip()
-        if modified_line in lines:
-            # DEV: We may want to look at line numbers. For now, remove all occurrences
-            # of this line.
-            while modified_line in lines:
-                lines.remove(modified_line)
-
-def _remove_modified_lines_with_linenums(path, linenums_lines):
+def _remove_modified_lines(path, linenums_lines):
     """Remove lines that have already been modified."""
     for modification in modifications:
         if modification.path != path:
