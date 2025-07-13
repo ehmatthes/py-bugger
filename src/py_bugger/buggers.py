@@ -107,6 +107,8 @@ def indentation_error_bugger(py_files):
         "match",
         "try",
     ]
+
+    # We only need line numbers, not actual lines.
     paths_linenums = file_utils.get_paths_linenums(py_files, targets=targets)
 
     # Bail if there are no relevant lines.

@@ -31,10 +31,12 @@ def get_paths_linenums(py_files, targets):
     """
     paths_linenums = []
     for path in py_files:
+        # Get lines and line numbers, and remove lines that have already been modified.
         lines = path.read_text().splitlines()
         linenums_lines = enumerate(lines, start=1)
         linenums_lines = _remove_modified_lines(path, linenums_lines)
 
+        # Only keep line numbers for lines that match targets.
         for line_num, line in linenums_lines:
             stripped_line = line.strip()
             if any([stripped_line.startswith(target) for target in targets]):
@@ -122,10 +124,7 @@ def _remove_modified_lines(path, linenums_lines):
     for modification in modifications:
         if modification.path != path:
             continue
-        if not modification.line_num:
-            continue
-
-        # Remove the relevant line_num.
-        linenums_lines = [(line_num, line) for line_num, line in linenums_lines if line_num != modification.line_num]
+        if modification.line_num:
+            linenums_lines = [(line_num, line) for line_num, line in linenums_lines if line_num != modification.line_num]
 
     return linenums_lines
