@@ -41,6 +41,23 @@ def get_paths_lines(py_files, targets):
 
     return paths_lines
 
+def get_paths_linenos(py_files, targets):
+    """Get all line numbers from all files matching targets, if they haven't already
+    been modified.
+    """
+    paths_linenos = []
+    for path in py_files:
+        lines = path.read_text().splitlines()
+        linenos_lines = enumerate(lines, start=1)
+        linenos_lines = _remove_modified_lines_with_linenos(path, linenos_lines)
+
+        for lineno, line in linenos_lines:
+            stripped_line = line.strip()
+            if any([stripped_line.startswith(target) for target in targets]):
+                paths_linenos.append((path, lineno))
+
+    return paths_linenos
+
 
 def check_unmodified(candidate_path, candidate_node=None, candidate_line=None):
     """Check if it's safe to modify a node or line.
@@ -132,3 +149,16 @@ def _remove_modified_lines(path, lines):
             # of this line.
             while modified_line in lines:
                 lines.remove(modified_line)
+
+def _remove_modified_lines_with_linenos(path, linenos_lines):
+    """Remove lines that have already been modified."""
+    for modification in modifications:
+        if modification.path != path:
+            continue
+        if not modification.lineno:
+            continue
+
+        # Remove the relevant lineno.
+        linenos_lines = [(lineno, line) for lineno, line in linenos_lines if lineno != modification.lineno]
+
+    return linenos_lines

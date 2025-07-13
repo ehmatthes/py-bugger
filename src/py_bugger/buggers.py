@@ -107,15 +107,17 @@ def indentation_error_bugger(py_files):
         "match",
         "try",
     ]
-    paths_lines = file_utils.get_paths_lines(py_files, targets=targets)
+    # paths_lines = file_utils.get_paths_lines(py_files, targets=targets)
+    paths_linenos = file_utils.get_paths_linenos(py_files, targets=targets)
 
     # Bail if there are no relevant lines.
-    if not paths_lines:
+    # if not paths_lines:
+    if not paths_linenos:
         return False
 
-    path, target_line = random.choice(paths_lines)
+    path, target_lineno = random.choice(paths_linenos)
 
-    if bug_utils.add_indentation(path, target_line):
+    if bug_utils.add_indentation_lineno(path, target_lineno):
         _report_bug_added(path)
         return True
 
