@@ -107,11 +107,9 @@ def indentation_error_bugger(py_files):
         "match",
         "try",
     ]
-    # paths_lines = file_utils.get_paths_lines(py_files, targets=targets)
     paths_linenums = file_utils.get_paths_linenums(py_files, targets=targets)
 
     # Bail if there are no relevant lines.
-    # if not paths_lines:
     if not paths_linenums:
         return False
 
