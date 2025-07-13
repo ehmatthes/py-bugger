@@ -89,3 +89,34 @@ def add_indentation(path, target_line):
     path.write_text(modified_source)
 
     return indentation_added
+
+
+def add_indentation_linenum(path, target_line_num):
+    """Add one level of indentation (four spaces) to line at linenum."""
+    indentation_added = False
+
+    lines = path.read_text().splitlines(keepends=True)
+
+    modified_lines = []
+    for line_num, line in enumerate(lines, start=1):
+        if line_num == target_line_num:
+            modified_line = f"    {line}"
+            modified_lines.append(modified_line)
+            indentation_added = True
+
+            # Record this modification.
+            modification = Modification(
+                path,
+                original_line=line,
+                modified_line=modified_line,
+                exception_induced=IndentationError,
+                line_num=line_num,
+            )
+            modifications.append(modification)
+        else:
+            modified_lines.append(line)
+
+    modified_source = "".join(modified_lines)
+    path.write_text(modified_source)
+
+    return indentation_added
