@@ -153,3 +153,26 @@ def test_first_try_not_indented(tmp_path_factory, test_config):
     lines = path_dst.read_text().splitlines()
     assert lines[2] == "try:"
     assert lines.count("    try:") == 1
+
+@pytest.mark.parametrize(
+    "exception_type", ["IndentationError", "AttributeError", "ModuleNotFoundError"]
+)
+def test_linenums_recorded(tmp_path_factory, test_config, exception_type):
+    """Test that a line number is recorded for each exception type."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make modifications against this file.
+    pb_config.target_file = path_dst
+    pb_config.exception_type = exception_type
+    cli_utils.validate_config()
+
+    requested_bugs = py_bugger.main()
+
+    assert len(modifications) == 1
+    assert modifications[0].line_num > 0
