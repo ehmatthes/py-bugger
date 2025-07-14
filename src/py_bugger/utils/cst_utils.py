@@ -1,9 +1,12 @@
 """Utilities for working with the CST."""
 
 import libcst as cst
+from libcst.metadata import MetadataWrapper, PositionProvider
 
 from py_bugger.utils import bug_utils
 from py_bugger.utils.modification import Modification, modifications
+
+from py_bugger.cli.config import pb_config
 
 
 class NodeCollector(cst.CSTVisitor):
@@ -148,11 +151,20 @@ def get_paths_nodes(py_files, node_type):
         source = path.read_text()
         tree = cst.parse_module(source)
 
+        wrapper = MetadataWrapper(tree)
+        metadata = wrapper.resolve(PositionProvider)
+
         node_collector = NodeCollector(node_type=node_type)
-        tree.visit(node_collector)
+        wrapper.module.visit(node_collector)
 
         for node in node_collector.collected_nodes:
-            paths_nodes.append((path, node))
+            position = metadata.get(node)
+            line_num = position.start.line
+
+            if not pb_config.target_lines:
+                paths_nodes.append((path, node))
+            elif line_num in pb_config.target_lines:
+                paths_nodes.append((path, node))
 
     return paths_nodes
 
