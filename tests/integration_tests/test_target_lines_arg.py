@@ -12,6 +12,63 @@ from py_bugger.cli import cli_utils
 from py_bugger.utils.modification import modifications
 
 
+def test_invalid_no_target_file(tmp_path_factory, test_config):
+    """Test exits when no target file provided."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make modifications against this file.
+    pb_config.target_file = ""
+    pb_config.target_lines = "19-22"
+
+    with pytest.raises(SystemExit) as excinfo:
+        cli_utils.validate_config()
+
+    assert excinfo.type == SystemExit
+
+def test_invalid_target_line_too_large(tmp_path_factory, test_config):
+    """Test exits when target line not in target file."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make modifications against this file.
+    pb_config.target_file = path_dst
+    pb_config.target_lines = "100"
+
+    with pytest.raises(SystemExit) as excinfo:
+        cli_utils.validate_config()
+
+    assert excinfo.type == SystemExit
+
+def test_invalid_target_block_too_large(tmp_path_factory, test_config):
+    """Test exits when target line not in target file."""
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make modifications against this file.
+    pb_config.target_file = path_dst
+    pb_config.target_lines = "25-30"
+
+    with pytest.raises(SystemExit) as excinfo:
+        cli_utils.validate_config()
+
+    assert excinfo.type == SystemExit
+
 def test_target_lines_block_indentation_error(tmp_path_factory, test_config):
     """Test that the modified line is in the targeted block.
 
