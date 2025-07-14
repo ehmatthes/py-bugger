@@ -35,11 +35,11 @@ def module_not_found_bugger(py_files):
     source = path.read_text()
     tree = cst.parse_module(source)
     wrapper = MetadataWrapper(tree)
-    position_metadata = wrapper.resolve(PositionProvider)
+    metadata = wrapper.resolve(PositionProvider)
 
     # Modify user's code
     try:
-        modified_tree = wrapper.module.visit(cst_utils.ImportModifier(node, path, position_metadata))
+        modified_tree = wrapper.module.visit(cst_utils.ImportModifier(node, path, metadata))
     except TypeError:
         # DEV: Figure out which nodes are ending up here, and update
         # modifier code to handle these nodes.
