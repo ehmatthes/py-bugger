@@ -2,16 +2,27 @@ Changelog: python-bugger
 ===
 
 0.5 - Support multiple exception types in one call
+---
 
 Previously, any single run of `py-bugger` could only create bugs that induce one kind of exception. In the 0.5 series, a variety of bugs can be introduced in a single call.
 
+### 0.5.2
+
+#### External changes
+
+- Supports the `--target-lines` argument, which can be a single line or a range of lines.
+
+#### Internal changes
+
+- All modifications record a line number.
+
 ### 0.5.1
 
-### External changes
+#### External changes
 
 - Fixes bug where inducing an `IndentationError` would modify all `try` blocks in a file, if that's the kind of line that's chosen to be modified. (Issue [65](https://github.com/ehmatthes/py-bugger/issues/65))
 
-### Internal changes
+#### Internal changes
 
 - Code that implements `IndentationError` bugs uses line numbers, not lines.
 - Added `line_num` attribute to `Modification`.
