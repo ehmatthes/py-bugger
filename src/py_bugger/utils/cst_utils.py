@@ -85,7 +85,7 @@ class ImportModifier(cst.CSTTransformer):
 class AttributeModifier(cst.CSTTransformer):
     """Modify attributes in the user's project."""
 
-    def __init__(self, node_to_break, node_index, path):
+    def __init__(self, node_to_break, node_index, path, metadata):
         self.node_to_break = node_to_break
 
         # There may be identical nodes in the tree. node_index determines which to modify.
@@ -98,6 +98,7 @@ class AttributeModifier(cst.CSTTransformer):
 
         # Need this to record the modification we're making.
         self.path = path
+        self.metadata = metadata
 
     def leave_Attribute(self, original_node, updated_node):
         """Modify an attribute name, to generate AttributeError."""
@@ -120,10 +121,15 @@ class AttributeModifier(cst.CSTTransformer):
 
             # Record this modification.
             modified_node = updated_node.with_changes(attr=new_attr)
+
+            position = self.metadata[original_node]
+            line_num = position.start.line
+
             modification = Modification(
                 path=self.path,
                 original_node=original_node,
                 modified_node=modified_node,
+                line_num=line_num,
                 exception_induced=AttributeError,
             )
             modifications.append(modification)

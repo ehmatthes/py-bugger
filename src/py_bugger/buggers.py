@@ -66,6 +66,8 @@ def attribute_error_bugger(py_files):
     # Parse user's code.
     source = path.read_text()
     tree = cst.parse_module(source)
+    wrapper = MetadataWrapper(tree)
+    metadata = wrapper.resolve(PositionProvider)
 
     # Pick node to modify if more than one match in the file.
     # Note that not all bugger functions need this step.
@@ -77,7 +79,7 @@ def attribute_error_bugger(py_files):
 
     # Modify user's code.
     try:
-        modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index, path))
+        modified_tree = wrapper.module.visit(cst_utils.AttributeModifier(node, node_index, path, metadata))
     except TypeError:
         # DEV: Figure out which nodes are ending up here, and update
         # modifier code to handle these nodes.
