@@ -34,6 +34,9 @@ def validate_config():
     if pb_config.target_file:
         _validate_target_file()
 
+    if pb_config.target_lines:
+        _validate_target_lines()
+
     # Update all options before running Git status checks. Info like target_dir
     # is used for those checks.
     _update_options()
@@ -121,6 +124,13 @@ def _validate_target_file():
     elif path_target_file.suffix != ".py":
         msg = cli_messages.msg_file_not_py(path_target_file)
         click.echo(msg)
+        sys.exit()
+
+def _validate_target_lines():
+    """Make sure an appropriate block of lines was passed."""
+    # You can only pass target lines if you're also passing a target file.
+    if not pb_config.target_file:
+        click.echo(cli_messages.msg_target_lines_no_target_file)
         sys.exit()
 
 

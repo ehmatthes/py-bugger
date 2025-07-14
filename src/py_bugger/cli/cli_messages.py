@@ -91,6 +91,10 @@ def msg_file_not_py(target_file):
     return msg
 
 
+# Messages for --target-lines.
+msg_target_lines_no_target_file = "You specified --target-lines, without a --target-file. If you want to use --target-lines, please also specify a target file."
+
+
 # Messages for Git status-related issues.
 def msg_git_not_used(pb_config):
     """Git is not being used to manage target file or directory."""
