@@ -10,6 +10,8 @@ Options:
   --target-dir TEXT          What code directory to target. (Be careful when
                              using this arg!)
   --target-file TEXT         Target a single .py file.
+  --target-lines TEXT        Target a specific block of lines. A single
+                             integer, or a range.
   -n, --num-bugs INTEGER     How many bugs to introduce.
   --ignore-git-status        Don't check Git status before inserting bugs.
   -v, --verbose              Enable verbose output.
