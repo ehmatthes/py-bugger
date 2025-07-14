@@ -18,6 +18,7 @@ def reset_state():
     pb_config.exception_type = ""
     pb_config.target_dir = ""
     pb_config.target_file = ""
+    pb_config.target_lines = ""
     pb_config.num_bugs = 1
     pb_config.ignore_git_status = False
     pb_config.verbose = True

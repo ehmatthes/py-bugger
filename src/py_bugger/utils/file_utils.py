@@ -7,6 +7,8 @@ import sys
 
 from py_bugger.utils.modification import modifications
 
+from py_bugger.cli.config import pb_config
+
 
 # --- Public functions ---
 
@@ -37,10 +39,14 @@ def get_paths_linenums(py_files, targets):
         linenums_lines = _remove_modified_lines(path, linenums_lines)
 
         # Only keep line numbers for lines that match targets.
+        # Also, filter for --target-lines if that was passed.
         for line_num, line in linenums_lines:
             stripped_line = line.strip()
             if any([stripped_line.startswith(target) for target in targets]):
-                paths_linenums.append((path, line_num))
+                if not pb_config.target_lines:
+                    paths_linenums.append((path, line_num))
+                elif line_num in pb_config.target_lines:
+                    paths_linenums.append((path, line_num))
 
     return paths_linenums
 

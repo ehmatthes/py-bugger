@@ -34,6 +34,9 @@ def validate_config():
     if pb_config.target_file:
         _validate_target_file()
 
+    if pb_config.target_lines:
+        _validate_target_lines()
+
     # Update all options before running Git status checks. Info like target_dir
     # is used for those checks.
     _update_options()
@@ -51,10 +54,6 @@ def _update_options():
         pb_config.target_dir = Path(pb_config.target_dir)
     else:
         pb_config.target_dir = Path(os.getcwd())
-
-    # Make sure target_file is a Path.
-    if pb_config.target_file:
-        pb_config.target_file = Path(pb_config.target_file)
 
 
 def _validate_exception_type():
@@ -122,6 +121,44 @@ def _validate_target_file():
         msg = cli_messages.msg_file_not_py(path_target_file)
         click.echo(msg)
         sys.exit()
+
+    # It's valid, set it to a Path.
+    pb_config.target_file = path_target_file
+
+def _validate_target_lines():
+    """Make sure an appropriate block of lines was passed."""
+    # You can only pass target lines if you're also passing a target file.
+    if not pb_config.target_file:
+        click.echo(cli_messages.msg_target_lines_no_target_file)
+        sys.exit()
+
+    # Handle a single target line.
+    if "-" not in pb_config.target_lines:
+        target_line = int(pb_config.target_lines.strip())
+
+        # Make sure this line is in the target file.
+        lines = pb_config.target_file.read_text().splitlines()
+        if target_line > len(lines):
+            msg = cli_messages.msg_invalid_target_line(target_line, pb_config.target_file, len(lines))
+            click.echo(msg)
+            sys.exit()
+
+        # Wrap target_line in a list, and return.
+        pb_config.target_lines = [target_line]
+        return
+
+    # Handle a block of lines.
+    start, end = pb_config.target_lines.strip().split("-")
+    start, end = int(start), int(end)
+
+    # Make sure end line is in the target file.
+    lines = pb_config.target_file.read_text().splitlines()
+    if end > len(lines):
+        msg = cli_messages.msg_invalid_target_lines(end, pb_config.target_file, len(lines))
+        click.echo(msg)
+        sys.exit()
+
+    pb_config.target_lines = list(range(start, end+1))
 
 
 def _validate_git_status():

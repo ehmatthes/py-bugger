@@ -16,6 +16,7 @@ class PBConfig:
     exception_type: str = ""
     target_dir: Path = ""
     target_file: Path = ""
+    target_lines: str = ""
     num_bugs: int = 1
     ignore_git_status: bool = False
     verbose: bool = True

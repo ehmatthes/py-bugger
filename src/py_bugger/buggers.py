@@ -5,9 +5,10 @@ be a class. Also, not sure we need separate bugger functions, or one bugger func
 conditional logic. Implement support for another exception type, and logical errors, and see what
 things are looking like.
 """
+import random
 
 import libcst as cst
-import random
+from libcst.metadata import MetadataWrapper, PositionProvider
 
 from py_bugger.utils import cst_utils
 from py_bugger.utils import file_utils
@@ -33,10 +34,12 @@ def module_not_found_bugger(py_files):
     # Parse user's code.
     source = path.read_text()
     tree = cst.parse_module(source)
+    wrapper = MetadataWrapper(tree)
+    metadata = wrapper.resolve(PositionProvider)
 
     # Modify user's code
     try:
-        modified_tree = tree.visit(cst_utils.ImportModifier(node, path))
+        modified_tree = wrapper.module.visit(cst_utils.ImportModifier(node, path, metadata))
     except TypeError:
         # DEV: Figure out which nodes are ending up here, and update
         # modifier code to handle these nodes.
@@ -63,6 +66,8 @@ def attribute_error_bugger(py_files):
     # Parse user's code.
     source = path.read_text()
     tree = cst.parse_module(source)
+    wrapper = MetadataWrapper(tree)
+    metadata = wrapper.resolve(PositionProvider)
 
     # Pick node to modify if more than one match in the file.
     # Note that not all bugger functions need this step.
@@ -74,7 +79,7 @@ def attribute_error_bugger(py_files):
 
     # Modify user's code.
     try:
-        modified_tree = tree.visit(cst_utils.AttributeModifier(node, node_index, path))
+        modified_tree = wrapper.module.visit(cst_utils.AttributeModifier(node, node_index, path, metadata))
     except TypeError:
         # DEV: Figure out which nodes are ending up here, and update
         # modifier code to handle these nodes.

@@ -23,11 +23,24 @@ Options:
   --target-dir TEXT          What code directory to target. (Be careful when
                              using this arg!)
   --target-file TEXT         Target a single .py file.
+  --target-lines TEXT        Target a specific block of lines. A single
+                             integer, or a range.
   -n, --num-bugs INTEGER     How many bugs to introduce.
   --ignore-git-status        Don't check Git status before inserting bugs.
   -v, --verbose              Enable verbose output.
   --help                     Show this message and exit.
 ```
+
+## Targeting specific lines
+
+You can target a specific line or block of lines in a file:
+
+```sh
+$ py-bugger --target-file dog.py --target-lines 15
+$ py-bugger --target-file dog.py --target-lines 15-20
+```
+
+The `--target-lines` argument only works if you're also passing a value for `--target-file`.
 
 ## Introducing multiple bugs of specific types
 

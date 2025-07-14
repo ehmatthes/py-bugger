@@ -1,9 +1,12 @@
 """Utilities for working with the CST."""
 
 import libcst as cst
+from libcst.metadata import MetadataWrapper, PositionProvider
 
 from py_bugger.utils import bug_utils
 from py_bugger.utils.modification import Modification, modifications
+
+from py_bugger.cli.config import pb_config
 
 
 class NodeCollector(cst.CSTVisitor):
@@ -42,11 +45,12 @@ class ImportModifier(cst.CSTTransformer):
     tree.
     """
 
-    def __init__(self, node_to_break, path):
+    def __init__(self, node_to_break, path, metadata):
         self.node_to_break = node_to_break
 
         # Need this to record the modification we're making.
         self.path = path
+        self.metadata = metadata
 
     def leave_Import(self, original_node, updated_node):
         """Modify a direct `import <package>` statement."""
@@ -63,10 +67,15 @@ class ImportModifier(cst.CSTTransformer):
 
             # Record this modification.
             modified_node = updated_node.with_changes(names=new_names)
+
+            position = self.metadata[original_node]
+            line_num = position.start.line
+
             modification = Modification(
                 path=self.path,
                 original_node=original_node,
                 modified_node=modified_node,
+                line_num=line_num,
                 exception_induced=ModuleNotFoundError,
             )
             modifications.append(modification)
@@ -79,7 +88,7 @@ class ImportModifier(cst.CSTTransformer):
 class AttributeModifier(cst.CSTTransformer):
     """Modify attributes in the user's project."""
 
-    def __init__(self, node_to_break, node_index, path):
+    def __init__(self, node_to_break, node_index, path, metadata):
         self.node_to_break = node_to_break
 
         # There may be identical nodes in the tree. node_index determines which to modify.
@@ -92,6 +101,7 @@ class AttributeModifier(cst.CSTTransformer):
 
         # Need this to record the modification we're making.
         self.path = path
+        self.metadata = metadata
 
     def leave_Attribute(self, original_node, updated_node):
         """Modify an attribute name, to generate AttributeError."""
@@ -114,10 +124,15 @@ class AttributeModifier(cst.CSTTransformer):
 
             # Record this modification.
             modified_node = updated_node.with_changes(attr=new_attr)
+
+            position = self.metadata[original_node]
+            line_num = position.start.line
+
             modification = Modification(
                 path=self.path,
                 original_node=original_node,
                 modified_node=modified_node,
+                line_num=line_num,
                 exception_induced=AttributeError,
             )
             modifications.append(modification)
@@ -136,11 +151,20 @@ def get_paths_nodes(py_files, node_type):
         source = path.read_text()
         tree = cst.parse_module(source)
 
+        wrapper = MetadataWrapper(tree)
+        metadata = wrapper.resolve(PositionProvider)
+
         node_collector = NodeCollector(node_type=node_type)
-        tree.visit(node_collector)
+        wrapper.module.visit(node_collector)
 
         for node in node_collector.collected_nodes:
-            paths_nodes.append((path, node))
+            position = metadata.get(node)
+            line_num = position.start.line
+
+            if not pb_config.target_lines:
+                paths_nodes.append((path, node))
+            elif line_num in pb_config.target_lines:
+                paths_nodes.append((path, node))
 
     return paths_nodes
 

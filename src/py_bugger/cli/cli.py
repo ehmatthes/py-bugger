@@ -22,6 +22,11 @@ from py_bugger.cli.config import pb_config
     help="Target a single .py file.",
 )
 @click.option(
+    "--target-lines",
+    type=str,
+    help="Target a specific block of lines. A single integer, or a range.",
+)
+@click.option(
     "--num-bugs",
     "-n",
     type=int,
