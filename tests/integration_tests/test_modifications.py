@@ -370,3 +370,81 @@ def test_target_lines_block_modulenotfound_error(tmp_path_factory, test_config):
     # was modified with --target-lines is the target line.
     assert len(modifications) == 1
     assert modifications[0].line_num in pb_config.target_lines
+
+
+
+
+
+
+
+def test_single_target_line_indentation_error_not_possible(tmp_path_factory, test_config):
+    """Test that a target line where the error can't be induced results in no modifications.
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make modifications against this file.
+    pb_config.target_file = path_dst
+    pb_config.exception_type = "IndentationError"
+    pb_config.target_lines = "9"
+    cli_utils.validate_config()
+
+    # Check that the --target-lines arg was converted correctly.
+    assert pb_config.target_lines == [9]
+
+    requested_bugs = py_bugger.main()
+
+    assert not modifications
+
+def test_single_target_line_attribute_error_not_possible(tmp_path_factory, test_config):
+    """Test that a target line where the error can't be induced results in no modifications.
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make modifications against this file.
+    pb_config.target_file = path_dst
+    pb_config.exception_type = "AttributeError"
+    pb_config.target_lines = "12"
+    cli_utils.validate_config()
+
+    # Check that the --target-lines arg was converted correctly.
+    assert pb_config.target_lines == [12]
+
+    requested_bugs = py_bugger.main()
+
+    assert not modifications
+
+def test_target_lines_block_modulenotfound_error_not_possible(tmp_path_factory, test_config):
+    """Test that a target line where the error can't be induced results in no modifications.
+    """
+    # Copy sample code to tmp dir.
+    tmp_path = tmp_path_factory.mktemp("sample_code")
+    print(f"\nCopying code to: {tmp_path.as_posix()}")
+
+    path_src = test_config.path_sample_scripts / "dog_bark.py"
+    path_dst = tmp_path / path_src.name
+    shutil.copyfile(path_src, path_dst)
+
+    # Make modifications against this file.
+    pb_config.target_file = path_dst
+    pb_config.exception_type = "ModuleNotFoundError"
+    pb_config.target_lines = "12"
+    cli_utils.validate_config()
+
+    # Check that the --target-lines arg was converted correctly.
+    assert pb_config.target_lines == [12]
+
+    requested_bugs = py_bugger.main()
+
+    assert not modifications
