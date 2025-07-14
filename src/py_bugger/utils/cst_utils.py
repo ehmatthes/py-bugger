@@ -1,6 +1,7 @@
 """Utilities for working with the CST."""
 
 import libcst as cst
+from libcst.metadata import MetadataWrapper, PositionProvider
 
 from py_bugger.utils import bug_utils
 from py_bugger.utils.modification import Modification, modifications
@@ -41,12 +42,14 @@ class ImportModifier(cst.CSTTransformer):
     whether a bug was introduced. node_to_break should only match one node in the
     tree.
     """
+    METADATA_DEPENDENCIES = (PositionProvider,)
 
-    def __init__(self, node_to_break, path):
+    def __init__(self, node_to_break, path, metadata):
         self.node_to_break = node_to_break
 
         # Need this to record the modification we're making.
         self.path = path
+        self.metadata = metadata
 
     def leave_Import(self, original_node, updated_node):
         """Modify a direct `import <package>` statement."""
@@ -63,10 +66,15 @@ class ImportModifier(cst.CSTTransformer):
 
             # Record this modification.
             modified_node = updated_node.with_changes(names=new_names)
+
+            position = self.metadata[original_node]
+            line_num = position.start.line
+
             modification = Modification(
                 path=self.path,
                 original_node=original_node,
                 modified_node=modified_node,
+                line_num=line_num,
                 exception_induced=ModuleNotFoundError,
             )
             modifications.append(modification)
