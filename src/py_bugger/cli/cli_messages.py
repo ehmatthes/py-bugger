@@ -94,6 +94,15 @@ def msg_file_not_py(target_file):
 # Messages for --target-lines.
 msg_target_lines_no_target_file = "You specified --target-lines, without a --target-file. If you want to use --target-lines, please also specify a target file."
 
+def msg_invalid_target_line(target_line, target_file, file_length):
+    """Passed a target line that's not in the target file."""
+    msg = f"You asked to target line {target_line}, but {target_file.as_posix()} only has {file_length} lines."
+    return msg
+
+def msg_invalid_target_lines(end_line, target_file, file_length):
+    """Passed a block that's not in the target file."""
+    msg = f"You asked to target a block ending at line {end_line}, but {target_file.as_posix()} only has {file_length} lines."
+    return msg
 
 # Messages for Git status-related issues.
 def msg_git_not_used(pb_config):
