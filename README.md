@@ -2,8 +2,9 @@
 
 This repository has been forked for the purpose of completing Assignment 1: Comprehensive Code Review.
 
-A baseline pull request has been created to initiate the code review workflow. Inline comments and issue tracking will be performed as part of the review process.
+A baseline pull request has been created to initiate the code review workflow. Inline comments will be added within the pull request, and all identified defects will be tracked using GitHub Issues with appropriate severity labels and recommendations.
 
+### Team Members
 1. Faruk E Azam Chowdhury (Student ID: 60328)
 2. Forkhan Mahmud Shuvo (Student ID: 59629)
 3. Md Montasir Hossen Rakib (Student ID: 60026)
