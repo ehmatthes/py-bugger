@@ -1,4 +1,4 @@
-
+Initial setup for group code review assignment
 ![py-bugger logo](https://raw.githubusercontent.com/ehmatthes/py-bugger/main/assets/logo_raw_bordered.png)
 
 py-bugger
