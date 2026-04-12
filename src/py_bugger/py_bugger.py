@@ -8,7 +8,7 @@ from py_bugger.cli.config import pb_config
 from py_bugger.cli.config import SUPPORTED_EXCEPTION_TYPES
 from py_bugger.cli import cli_messages
 
-
+a
 def main():
     set_random_seed()
 
