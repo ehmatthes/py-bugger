@@ -1,6 +1,6 @@
 
 ![py-bugger logo](https://raw.githubusercontent.com/ehmatthes/py-bugger/main/assets/logo_raw_bordered.png)
-
+Assignment 1 Code Review Setup
 py-bugger
 ===
 
