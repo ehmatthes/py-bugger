@@ -1,4 +1,6 @@
+# Code Review – ITAP2013 | Reviewed by scoresmart
 """Utilities for introducing specific kinds of bugs.
+
 
 DEV: Don't rush to refactor bugger functions. for example, it's not yet clear whether this should
 be a class. Also, not sure we need separate bugger functions, or one bugger function with some
