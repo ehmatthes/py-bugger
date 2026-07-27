@@ -40,3 +40,5 @@ Contributing
 ---
 
 If you're interested in this project, please feel free to get in touch. If you have general feedback or just want to see the project progress, please share your thoughts in the [Initial feedback](https://github.com/ehmatthes/py-bugger/discussions/7) discussion. Also, feel free to [open a new issue](https://github.com/ehmatthes/py-bugger/issues/new). The [contributing](https://py-bugger.readthedocs.io/en/latest/contributing/) section in the official docs has more information about how to contribute.
+
+test gh-profiler PR behavior
