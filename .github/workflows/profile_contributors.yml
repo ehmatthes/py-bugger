@@ -31,7 +31,6 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           PR_USER_LOGIN: ${{ github.event.pull_request.user.login }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          
         run: |
           if [ "$EVENT_NAME" = "issues" ]; then
             echo "login=$ISSUE_USER_LOGIN" >> "$GITHUB_OUTPUT"
@@ -49,13 +48,6 @@ jobs:
           LOGIN: ${{ steps.meta.outputs.login }}
         run: |
           uvx gh-profiler@latest "$LOGIN" --concise > profiler.txt
-          echo
-          echo "======================= Concise profile ======================="
-          echo
-          cat profiler.txt
-          echo
-          echo "==============================================================="
-          echo
           echo
           echo "======================== Full profile ========================="
           echo
@@ -75,7 +67,13 @@ jobs:
         run: |
           {
             echo "<!-- gh-profiler:profile-link run-id=$RUN_ID -->"
-            echo "<a href=\"$SERVER_URL/$REPOSITORY/actions/runs/$RUN_ID/job/$CHECK_RUN_ID\">Contributor profile</a>"
+            echo "Profile summary:"
+            echo
+            echo '```text'
+            cat profiler.txt
+            echo '```'
+            echo
+            echo "<a href=\"$SERVER_URL/$REPOSITORY/actions/runs/$RUN_ID/job/$CHECK_RUN_ID\">Full profile</a>"
             echo
             echo "(This comment and the linked profile output will auto-delete when this $ISSUE_PR is closed.)"
           } > body.txt
